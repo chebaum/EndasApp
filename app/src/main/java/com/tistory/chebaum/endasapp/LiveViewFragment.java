@@ -1,13 +1,18 @@
 package com.tistory.chebaum.endasapp;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
 /**
@@ -64,8 +69,46 @@ public class LiveViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_live_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_live_view, container, false);
+        final VideoView video = (VideoView)view.findViewById(R.id.videoView);
+        video.setVideoURI(Uri.parse("https://www.youtube.com/watch?v=jT8DDmJBzaM"));
+
+        //video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        //    @Override
+        //    public void onPrepared(MediaPlayer mediaPlayer) {
+        //        video.start();
+        //    }
+        //});
+
+        //video.setVideoURI(Uri.parse("rtsp://192.168.56.1:8554/stream"));
+        video.requestFocus();
+        video.start();
+
+
+
+        Button one_screen_btn = (Button)view.findViewById(R.id.one_screen);
+        one_screen_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "one screen", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Button four_screen_btn = (Button)view.findViewById(R.id.four_screens);
+        four_screen_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "four screen", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Button nine_screen_btn = (Button)view.findViewById(R.id.nine_screens);
+        nine_screen_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "nine screen", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
