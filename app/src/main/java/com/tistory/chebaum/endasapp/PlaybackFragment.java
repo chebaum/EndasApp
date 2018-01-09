@@ -9,8 +9,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -19,8 +22,10 @@ import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -47,6 +52,9 @@ public class PlaybackFragment extends Fragment {
     private SimpleDateFormat mToastDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 a hh:mm");
     private SimpleDateFormat mTextViewFormat = new SimpleDateFormat("yy년 M월 d일 (E)");
     private TextView mTextView;
+    private Spinner mSpinner;
+    private String selected_channel;
+    private List<String> spinner_items = new ArrayList<String>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -85,7 +93,35 @@ public class PlaybackFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_playback, container, false);
-        mTimePicker = view.findViewById(R.id.timePicker);
+        mSpinner = (Spinner)view.findViewById(R.id.channel_spinner);
+        mTimePicker = (TimePicker)view.findViewById(R.id.timePicker);
+
+        // 채널 선택 관련 부분
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selected_channel = adapterView.getItemAtPosition(i).toString();
+                mSpinner.setSelection(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        // 임시데이터... 실제로는 channel 목록들 가져와서 하나씩 add 해야한다. ******
+        spinner_items.add("사무실");
+        spinner_items.add("자택1");
+        spinner_items.add("자택2");
+        spinner_items.add("주차장");
+        spinner_items.add("현관");
+
+        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, spinner_items);
+
+        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(spinner_adapter);
+
 
         // 현재 날짜 시간 화면에 표시
         mTextView=(TextView)view.findViewById(R.id.textview_date);
@@ -128,9 +164,10 @@ public class PlaybackFragment extends Fragment {
                 }
 
                 // 재생 전 입력한 채널 체크
-
+                String str = selected_channel;
+                str+=" 채널 \n";
                 // 재생 전 입력한 날짜 / 시간 체크
-                String str = mToastDateFormat.format(mDatetime.getTime());
+                str += mToastDateFormat.format(mDatetime.getTime());
                 Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
             }
         });
