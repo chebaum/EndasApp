@@ -2,6 +2,7 @@ package com.tistory.chebaum.endasapp;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -169,6 +170,9 @@ public class PlaybackFragment extends Fragment {
                 // 재생 전 입력한 날짜 / 시간 체크
                 str += mToastDateFormat.format(mDatetime.getTime());
                 Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(view.getContext(),PlaybackActivity.class);
+                startActivity(intent);
             }
         });
 

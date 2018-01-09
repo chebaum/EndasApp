@@ -1,10 +1,12 @@
 package com.tistory.chebaum.endasapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +34,8 @@ public class LiveViewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ProgressDialog pDialog;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,12 +75,38 @@ public class LiveViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_live_view, container, false);
         final VideoView video = (VideoView)view.findViewById(R.id.videoView);
-        video.setVideoURI(Uri.parse("http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
 
-        //video.setVideoURI(Uri.parse("rtsp://192.168.56.1:8554/stream"));
+        // 버퍼링임을 알려주는 다이얼로그
+        pDialog = new ProgressDialog(view.getContext());
+        pDialog.setTitle("실시간 영상 재생준비중");
+        pDialog.setMessage("Buffering...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        // 주소 설정. 일단은 임의 주소사용한다.
+        //String urlPath = "rtsp://192.168.56.1:8554/stream"
+        String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+
+        try{
+            //MediaController mediaController = new MediaController(view.getContext());
+            //mediaController.setAnchorView(video);
+            Uri uri = Uri.parse(urlPath);
+            //video.setMediaController(mediaController);
+            video.setVideoURI(uri);
+        }catch (Exception e){
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+        }
+
         video.requestFocus();
-        video.start();
-
+        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                pDialog.dismiss();
+                video.start();
+            }
+        });
 
 
         Button one_screen_btn = (Button)view.findViewById(R.id.one_screen);
