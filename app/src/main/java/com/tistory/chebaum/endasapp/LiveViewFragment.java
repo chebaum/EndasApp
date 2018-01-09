@@ -71,14 +71,7 @@ public class LiveViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_live_view, container, false);
         final VideoView video = (VideoView)view.findViewById(R.id.videoView);
-        video.setVideoURI(Uri.parse("https://www.youtube.com/watch?v=jT8DDmJBzaM"));
-
-        //video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-        //    @Override
-        //    public void onPrepared(MediaPlayer mediaPlayer) {
-        //        video.start();
-        //    }
-        //});
+        video.setVideoURI(Uri.parse("http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
 
         //video.setVideoURI(Uri.parse("rtsp://192.168.56.1:8554/stream"));
         video.requestFocus();

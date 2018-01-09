@@ -1,13 +1,26 @@
 package com.tistory.chebaum.endasapp;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -27,6 +40,13 @@ public class PlaybackFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TimePicker mTimePicker;
+    //private DatePicker mDatePicker;
+    private Calendar mDatetime = Calendar.getInstance();
+    private SimpleDateFormat mToastDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 a hh:mm");
+    private SimpleDateFormat mTextViewFormat = new SimpleDateFormat("yy년 M월 d일 (E)");
+    private TextView mTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,8 +84,58 @@ public class PlaybackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playback, container, false);
+        final View view = inflater.inflate(R.layout.fragment_playback, container, false);
+        mTimePicker = view.findViewById(R.id.timePicker);
+
+        // 현재 날짜 시간 화면에 표시
+        mTextView=(TextView)view.findViewById(R.id.textview_date);
+        mTextView.setText(mTextViewFormat.format(mDatetime.getTime()));
+
+        Button date_select_Btn = (Button)view.findViewById(R.id.select_date);
+        date_select_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View v = view;
+                new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        // month에 계속 실제로 선택된 값보다 1씩 작은 값이 전달됨...임시방편으로 직접 month 인자에 (+1) 함.....근본적인 해결책? ******************
+                        Toast.makeText(v.getContext(), Integer.toString(year)+"년 "+Integer.toString(month+1)+"월 "+Integer.toString(day)+"일이 선택되었습니다.",Toast.LENGTH_SHORT).show();
+                        //여기까지 임시코드
+
+                        // 실제 코드 시작
+                        mDatetime.set(year, month, day);
+                        mTextView.setText(mTextViewFormat.format(mDatetime.getTime()));
+                    }
+                },mDatetime.get(Calendar.YEAR), mDatetime.get(Calendar.MONTH), mDatetime.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        // 재생버튼 클릭 시 설정한 채널/날짜/시간을 바탕으로 새로운 액티비티에서 영상을 재생한다.
+        // 일단은 새 액티비티로 넘어가지 않고, Toast를 사용하여 입력값만 확인한다. - valid 입력값 까지 확인완료
+        Button playBtn = (Button)view.findViewById(R.id.start_playback);
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // *** 미래의 시점을 선택한 경우 에러 메세지 dialog 표시하기...아직 구현 안함! ***
+
+                if(Build.VERSION.SDK_INT < 23){
+                    mDatetime.set(Calendar.HOUR_OF_DAY, mTimePicker.getCurrentHour());
+                    mDatetime.set(Calendar.MINUTE, mTimePicker.getCurrentMinute());
+                } else{
+                    mDatetime.set(Calendar.HOUR_OF_DAY, mTimePicker.getHour());
+                    mDatetime.set(Calendar.MINUTE, mTimePicker.getMinute());
+                }
+
+                // 재생 전 입력한 채널 체크
+
+                // 재생 전 입력한 날짜 / 시간 체크
+                String str = mToastDateFormat.format(mDatetime.getTime());
+                Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

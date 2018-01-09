@@ -34,6 +34,8 @@
             android:layout_weight="20"
             android:text="화면구성"
             android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
             android:gravity="bottom"/>
 
         <LinearLayout

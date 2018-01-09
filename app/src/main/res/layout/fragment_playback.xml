@@ -1,13 +1,85 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
     tools:context="com.tistory.chebaum.endasapp.PlaybackFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Playback" />
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:text="채널 선택"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:textSize="19sp"/>
+    <Spinner
+        android:id="@+id/channel_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10">
 
-</FrameLayout>
+    </Spinner>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:gravity="center"
+        android:text="날짜/시간 선택"
+        android:textColor="@color/colorPrimary"
+        android:textSize="19sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <TextView
+            android:id="@+id/textview_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp" />
+        <Button
+            android:id="@+id/select_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:text="날짜변경"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
+        android:timePickerMode="spinner" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10">
+        <Button
+            android:id="@+id/start_playback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="재생"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+    </LinearLayout>
+
+</LinearLayout>
