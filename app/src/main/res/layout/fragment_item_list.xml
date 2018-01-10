@@ -23,6 +23,6 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.tistory.chebaum.endasapp.HomeFragment"
-        tools:listitem="@layout/fragment_item" />
+        tools:listitem="@layout/fragment_items_layout" />
 
 </LinearLayout>

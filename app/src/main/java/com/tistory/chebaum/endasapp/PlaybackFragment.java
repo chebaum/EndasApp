@@ -172,6 +172,10 @@ public class PlaybackFragment extends Fragment {
                 Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(view.getContext(),PlaybackActivity.class);
+                intent.putExtra("startingPoint",mDatetime);
+                // 일단은 채널의 이름만을 string객체로 보낸다
+                // 후에는 채널의 모든 속성값을 가지고 있는 직접 작성한 클래스의 객체를 넘기면 될듯싶다.
+                intent.putExtra("channel", selected_channel);
                 startActivity(intent);
             }
         });

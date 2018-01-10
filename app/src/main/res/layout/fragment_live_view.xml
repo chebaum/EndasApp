@@ -21,12 +21,136 @@
             app:srcCompat="@drawable/ic_screen_rotation_black_24dp"
             android:backgroundTint="?android:attr/windowBackground"/>
 
-        <VideoView
-            android:id="@+id/videoView"
+        <LinearLayout
+            android:id="@+id/videoLayout_one_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="50"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="15dp"
+            android:visibility="visible">
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/videoLayout_four_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50"
+            android:weightSum="100"
+            android:orientation="vertical"
+            android:layout_marginBottom="15dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:orientation="horizontal">
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:layout_margin="1dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:orientation="horizontal">
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:layout_margin="1dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/videoLayout_nine_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50"
+            android:weightSum="100"
+            android:orientation="vertical"
+            android:layout_marginBottom="15dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="33"
+                android:orientation="horizontal">
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="33"
+                android:orientation="horizontal">
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="33"
+                android:orientation="horizontal">
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+                <VideoView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="33"
+                    android:layout_margin="1dp"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -46,7 +170,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/one_screen"
+                android:id="@+id/btn_one_screen"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33"
@@ -54,7 +178,7 @@
                 android:background="@drawable/ic_one_screen"/>
 
             <Button
-                android:id="@+id/four_screens"
+                android:id="@+id/btn_four_screens"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33"
@@ -62,7 +186,7 @@
                 android:background="@drawable/ic_four_screens"/>
 
             <Button
-                android:id="@+id/nine_screens"
+                android:id="@+id/btn_nine_screens"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33"

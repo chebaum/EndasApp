@@ -6,12 +6,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -73,13 +75,13 @@ public class LiveViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_live_view, container, false);
+        final View view = inflater.inflate(R.layout.fragment_live_view, container, false);
         final VideoView video = (VideoView)view.findViewById(R.id.videoView);
 
         // 버퍼링임을 알려주는 다이얼로그
         pDialog = new ProgressDialog(view.getContext());
         pDialog.setTitle("실시간 영상 재생준비중");
-        pDialog.setMessage("Buffering...");
+        pDialog.setMessage("Connecting...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -109,25 +111,34 @@ public class LiveViewFragment extends Fragment {
         });
 
 
-        Button one_screen_btn = (Button)view.findViewById(R.id.one_screen);
+        Button one_screen_btn = (Button)view.findViewById(R.id.btn_one_screen);
         one_screen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "one screen", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                //Toast.makeText(view.getContext(), "one screen", Toast.LENGTH_SHORT).show();
+                view.findViewById(R.id.videoLayout_one_view).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.videoLayout_four_view).setVisibility(View.GONE);
+                view.findViewById(R.id.videoLayout_nine_view).setVisibility(View.GONE);
             }
         });
-        Button four_screen_btn = (Button)view.findViewById(R.id.four_screens);
+        Button four_screen_btn = (Button)view.findViewById(R.id.btn_four_screens);
         four_screen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "four screen", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                //Toast.makeText(view.getContext(), "four screen", Toast.LENGTH_SHORT).show();
+                view.findViewById(R.id.videoLayout_one_view).setVisibility(View.GONE);
+                view.findViewById(R.id.videoLayout_four_view).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.videoLayout_nine_view).setVisibility(View.GONE);
             }
         });
-        Button nine_screen_btn = (Button)view.findViewById(R.id.nine_screens);
+        Button nine_screen_btn = (Button)view.findViewById(R.id.btn_nine_screens);
         nine_screen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "nine screen", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                //Toast.makeText(view.getContext(), "nine screen", Toast.LENGTH_SHORT).show();
+                view.findViewById(R.id.videoLayout_one_view).setVisibility(View.GONE);
+                view.findViewById(R.id.videoLayout_four_view).setVisibility(View.GONE);
+                view.findViewById(R.id.videoLayout_nine_view).setVisibility(View.VISIBLE);
             }
         });
 
