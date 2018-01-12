@@ -2,6 +2,7 @@ package com.tistory.chebaum.endasapp;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -77,7 +79,7 @@ public class LiveViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_live_view, container, false);
         final VideoView video = (VideoView)view.findViewById(R.id.videoView);
-
+/*
         // 버퍼링임을 알려주는 다이얼로그
         pDialog = new ProgressDialog(view.getContext());
         pDialog.setTitle("실시간 영상 재생준비중");
@@ -109,7 +111,19 @@ public class LiveViewFragment extends Fragment {
                 video.start();
             }
         });
+*/
 
+        ImageButton convert_screen_btn = (ImageButton)view.findViewById(R.id.btn_convert_screen);
+        convert_screen_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // play video full screen
+                Intent intent = new Intent(view.getContext(), FullScreenPlayActivity.class);
+                String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                intent.putExtra("urlPath", urlPath);
+                startActivity(intent);
+            }
+        });
 
         Button one_screen_btn = (Button)view.findViewById(R.id.btn_one_screen);
         one_screen_btn.setOnClickListener(new View.OnClickListener() {
