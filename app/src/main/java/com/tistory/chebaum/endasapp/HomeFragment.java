@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -130,7 +131,14 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onLongItemClick(View v, int position) {
                         Toast.makeText(view.getContext(), "long click at view", Toast.LENGTH_SHORT).show();
-
+                        if(!selection_mode) {
+                            /*
+                            left off at 1/15
+                            여기에다가 이제 새로운 툴바 생성되도록 하면됨
+                            https://androidkennel.org/contextual-toolbar-actionbar-tutorial/
+                            이 링크보고 하는중!
+                             */
+                        }
                         selection_mode=true;
 
                         // 이미 선택된 항목이라면, 선택취소
