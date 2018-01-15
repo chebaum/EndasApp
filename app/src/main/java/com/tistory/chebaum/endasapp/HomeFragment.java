@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private List<Channel> channels;
     private List<Channel> selected_channels;
+    private static SparseBooleanArray selected_items;
 
     private boolean selection_mode;
 
@@ -81,7 +83,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        selection_mode = false;
+        selected_items=new SparseBooleanArray();
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -89,31 +91,39 @@ public class HomeFragment extends Fragment {
 
         get_channels_from_database();
 
-        recyclerView.setAdapter(new MyRecyclerAdapter(channels,R.layout.row_layout));
+
+
+        recyclerView.setAdapter(adapter = new MyRecyclerAdapter(channels,R.layout.row_layout));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        if(!selection_mode) {
+                        if(((MyRecyclerAdapter)recyclerView.getAdapter()).getSelection_mode()) {
+                            // 채널 선택 모드
+                            //v.setSelected(true);
+                            //((TextView)v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorWhite));
+                            //view.findViewById(R.id.row_checkbox).setVisibility(View.VISIBLE);
+                        }
+                        else{
                             Toast.makeText(view.getContext(), "click " + channels.get(position).getC_name(), Toast.LENGTH_SHORT).show();
                             // 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
                             Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
                             intent.putExtra("urlPath", channels.get(position).getC_url());
                             startActivity(intent);
                         }
-                        else{
-                            // 채널 선택 모드
-                        }
                     }
 
                     @Override
                     public void onLongItemClick(View v, int position) {
-                        Toast.makeText(view.getContext(), "long click", Toast.LENGTH_SHORT).show();
-                        selection_mode=true;
-                        ((CheckBox)view.findViewById(R.id.row_checkbox)).setVisibility(View.VISIBLE);
-                        recyclerView.setAdapter(new MyRecyclerAdapter(channels,R.layout.row_layout));
+                        Toast.makeText(view.getContext(), "long click at view", Toast.LENGTH_SHORT).show();
+
+                        //v.setSelected(true);
+                        //((TextView)v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorWhite));
+
+                        //channels.clear();
+                        //adapter.notifyDataSetChanged();
                         // left off at 1.12 (fri) *************************************************************************************
 
                         // listview 로 구현된 선택모드
