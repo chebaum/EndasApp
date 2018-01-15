@@ -19,16 +19,18 @@ import java.util.List;
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
 
     final private List<Channel> channels;
+    final private List<Channel> selected_channels;
     private int itemLayout;
-    private static SparseBooleanArray selectedItems;
-    private static boolean selection_mode;
+    View view;
 
 
-    public MyRecyclerAdapter(List<Channel> channels, int itemLayout){
+
+
+    public MyRecyclerAdapter(List<Channel> channels, List<Channel> selected_channels, View view, int itemLayout){
         this.channels=channels;
+        this.selected_channels=selected_channels;
         this.itemLayout=itemLayout;
-        selectedItems=new SparseBooleanArray();
-        selection_mode=false;
+        this.view=view;
     }
 
     @Override
@@ -41,7 +43,14 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         Channel channel=channels.get(position);
         holder.c_name.setText(channel.getC_name());
-        holder.itemView.setSelected(selectedItems.get(position,false));
+        if(selected_channels.contains(channel)){
+            ((TextView)holder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorWhite));
+            holder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
+        }
+        else{
+            ((TextView)holder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorPrimaryDark));
+            holder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorWhite));
+        }
     }
 
     @Override
@@ -55,56 +64,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
 
         public ViewHolder(View itemView){
             super(itemView);
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    selection_mode=true;
-                    Toast.makeText(v.getContext(), "long click at adapter", Toast.LENGTH_SHORT).show();
-
-                    if (selectedItems.get(getAdapterPosition(), false)) {
-                        selectedItems.delete(getAdapterPosition());
-                        v.setSelected(false);
-                        ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(v.getResources().getColor(R.color.colorWhite));
-                        return true;
-                    } else {
-                        selectedItems.put(getAdapterPosition(), true);
-                        v.setSelected(true);
-                        ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(v.getResources().getColor(R.color.colorPrimaryDark));
-                        return true;
-                    }
-                }
-            });
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(selection_mode) {
-                        // 이미 선택된 아이템이라면, 취소
-                        if (selectedItems.get(getAdapterPosition(), false)) {
-                            selectedItems.delete(getAdapterPosition());
-                            v.setSelected(false);
-                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(v.getResources().getColor(R.color.colorWhite));
-
-                        } else {
-                            selectedItems.put(getAdapterPosition(), true);
-                            v.setSelected(true);
-                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(v.getResources().getColor(R.color.colorPrimaryDark));
-
-                        }
-                    }
-                }
-            });
-
             c_name = (TextView)itemView.findViewById(R.id.row_c_name);
         }
     }
 
-    public static boolean getSelection_mode() {
-        return selection_mode;
-    }
-
-    public static void setSelection_mode(boolean selection_mode) {
-        MyRecyclerAdapter.selection_mode = selection_mode;
-    }
 }

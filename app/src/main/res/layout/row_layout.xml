@@ -2,12 +2,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_layout"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:paddingTop="15dp"
-    android:paddingBottom="15dp"
-    android:background="@drawable/selected_row_background_color">
+    android:paddingBottom="15dp">
 
 <!--
     <CheckBox
