@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -247,13 +249,17 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
-                    for(Channel channel : selected_channels){
+                    for(Channel channel : selected_channels) {
                         int idx = channels.indexOf(channel);
                         // show user the contents of channel
-                        
+                        channel = modify_channel_by_user(channel);
                         // let user modify the contents of channel
-                        channels.set(idx,channel);
+                        channels.set(idx, channel);
                     }
+                    // 여기부분이 안된다. 스낵바가 아예 나오지도않아.... 원인파악!!! 1/17 cont! /***************************************************************************************************
+                    selected_channels.clear();
+                    adapter.notifyDataSetChanged();
+                    Snackbar.make(getView(), "정상적으로 수정되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
                 break;
             case R.id.channel_delete:
@@ -324,5 +330,54 @@ public class HomeFragment extends Fragment {
     public void restartFragment(){
         ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
+    }
+
+    public Channel modify_channel_by_user(Channel channel){
+        final Channel ch = channel;
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this.getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View DialogView = inflater.inflate(R.layout.dialog_modify_channel_layout, null);
+        builder.setView(DialogView);
+
+        EditText editText = (EditText)DialogView.findViewById(R.id.dialog_channel_title);
+        editText.setText(channel.getC_name());
+
+        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_url);
+        editText.setText(channel.getC_url());
+/*
+        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_webport);
+        editText.setText(channel.getC_web_port());
+
+        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_videoport);
+        editText.setText(channel.getC_video_port());
+
+        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_id);
+        editText.setText(channel.getC_login_id());
+
+        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_pw);
+        editText.setText(channel.getC_login_pw());*/
+
+        builder.setMessage("값을 입력하십시오 - 채널이름과 URL만!");
+        builder.setTitle("채널 속성값 수정")
+                .setCancelable(false)
+                .setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 입력받은값 channel객체에 업데이트
+                        ch.setC_name(((EditText) DialogView.findViewById(R.id.dialog_channel_title)).getText().toString());
+                        ch.setC_url(((EditText) DialogView.findViewById(R.id.dialog_channel_url)).getText().toString());
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alert=builder.create();
+        alert.show();
+
+        return ch;
     }
 }
