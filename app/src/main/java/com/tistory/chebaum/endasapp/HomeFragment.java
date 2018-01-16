@@ -1,6 +1,7 @@
 package com.tistory.chebaum.endasapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -117,6 +120,10 @@ public class HomeFragment extends Fragment {
                                 ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
                                 (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                             }
+
+                            // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
+                            getActivity().invalidateOptionsMenu();
+
                         }
                         // 선택한 채널 실시간 영상 재생
                         else{
@@ -126,18 +133,17 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("urlPath", channels.get(position).getC_url());
                             startActivity(intent);
                         }
+
+                        if(isSelectedMultiple())
+                            Toast.makeText(view.getContext(),"2개이상!",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onLongItemClick(View v, int position) {
                         Toast.makeText(view.getContext(), "long click at view", Toast.LENGTH_SHORT).show();
                         if(!selection_mode) {
-                            /*
-                            left off at 1/15
-                            여기에다가 이제 새로운 툴바 생성되도록 하면됨
-                            https://androidkennel.org/contextual-toolbar-actionbar-tutorial/
-                            이 링크보고 하는중!
-                             */
+                            setHasOptionsMenu(true); // this triggers onCreateOptionsMenu() 메소드
+                            ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
                         }
                         selection_mode=true;
 
@@ -155,8 +161,9 @@ public class HomeFragment extends Fragment {
                             ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
                             (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         }
-                        //channels.clear();
-                        //adapter.notifyDataSetChanged();
+
+                        // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
+                        getActivity().invalidateOptionsMenu();
                     }
                 })
         );
@@ -203,6 +210,57 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_modify_channel_list, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if(isSelectedMultiple())
+            menu.findItem(R.id.channel_edit).setVisible(false);
+        else
+            menu.findItem(R.id.channel_edit).setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // 수정,완료,삭제 버튼 기능 구현해야함
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.channel_edit:
+                Toast.makeText(getView().getContext(), "edit", Toast.LENGTH_SHORT).show();
+                // 얘는 채널이 단 한 개 선택되었을때만 클릭 가능한 버튼(혹은 암것도 클릭안한경우)
+                // 아무것도 선택되지 않은 경우 toast 메세지 짧게 띄워주자 그냥.
+                if(selected_channels.isEmpty())
+                    Toast.makeText(getView().getContext(),"채널을 선택해 주십시오.", Toast.LENGTH_SHORT).show();
+                else{
+                    // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
+                    for(Channel channel : selected_channels){
+                        int idx = channels.indexOf(channel);
+                        // show user the contents of channel
+                        
+                        // let user modify the contents of channel
+                        channels.set(idx,channel);
+                    }
+                }
+                break;
+            case R.id.channel_delete:
+                Toast.makeText(getView().getContext(), "channel_delete", Toast.LENGTH_SHORT).show();
+                // 선택된 채널을 삭제하고
+                // channels.clear();
+                //adapter.notifyDataSetChanged(); 등등
+                break;
+            case R.id.channel_exit_mode:
+                // 선택모드를 종료하고 다시 메인화면으로 돌아간다.
+                restartFragment();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
     private void get_channels_from_database(){
         channels=new ArrayList<>();
         selected_channels=new ArrayList<>();
@@ -234,8 +292,18 @@ public class HomeFragment extends Fragment {
         channels.add(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
         channels.add(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
         channels.add(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+    }
 
+    // 첫화면의 채널 리스트에서 2개 이상이 선택된 경우 true리턴
+    public boolean isSelectedMultiple(){
+        if(selected_channels.size() > 1)
+            return true;
+        else
+            return false;
+    }
 
-
+    public void restartFragment(){
+        ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
     }
 }

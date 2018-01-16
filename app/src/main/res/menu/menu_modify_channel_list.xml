@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/channel_edit"
-        android:icon="@drawable/ic_edit_black_24dp"
-        android:title="edit" />
+    android:id="@+id/channel_edit"
+    android:icon="@drawable/ic_edit_black_24dp"
+    android:title="edit"
+    app:showAsAction="always"/>
 
     <item
         android:id="@+id/channel_delete"
         android:icon="@drawable/ic_delete_black_24dp"
-        android:title="delete" />
+        android:title="delete"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/channel_exit_mode"
         android:icon="@drawable/ic_close_black_24dp"
-        android:title="exit" />
+        android:title="exit"
+        app:showAsAction="always"/>
 
 </menu>
