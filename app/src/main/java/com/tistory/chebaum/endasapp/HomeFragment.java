@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -96,8 +98,6 @@ public class HomeFragment extends Fragment {
 
         get_channels_from_database();
 
-
-
         recyclerView.setAdapter(adapter = new MyRecyclerAdapter(channels,selected_channels,view,R.layout.row_layout));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
@@ -168,6 +168,18 @@ public class HomeFragment extends Fragment {
                 })
         );
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                // 여기에 채널 추가할 수 있도록 다이얼로그 팝업띄워야해!!!!!
+                //**********************************************************************************************************************************************************************************
+                //**********************************************************************************************************************************************************************************
+                }
+        });
+
         return view;
     }
 
@@ -185,7 +197,6 @@ public class HomeFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             Toast.makeText(context, "HomeViewFragment", Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -233,7 +244,7 @@ public class HomeFragment extends Fragment {
                 // 얘는 채널이 단 한 개 선택되었을때만 클릭 가능한 버튼(혹은 암것도 클릭안한경우)
                 // 아무것도 선택되지 않은 경우 toast 메세지 짧게 띄워주자 그냥.
                 if(selected_channels.isEmpty())
-                    Toast.makeText(getView().getContext(),"채널을 선택해 주십시오.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
                     for(Channel channel : selected_channels){
@@ -246,10 +257,18 @@ public class HomeFragment extends Fragment {
                 }
                 break;
             case R.id.channel_delete:
-                Toast.makeText(getView().getContext(), "channel_delete", Toast.LENGTH_SHORT).show();
-                // 선택된 채널을 삭제하고
-                // channels.clear();
-                //adapter.notifyDataSetChanged(); 등등
+                if(selected_channels.isEmpty())
+                    Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                else {
+                    // 선택된 채널을 삭제하고
+                    for(Channel channel : selected_channels){
+                        channels.remove(channel);
+                        // 실제로 DB에서도 지워야 한다!!!*************************************************
+                    }
+                    selected_channels.clear();
+                    adapter.notifyDataSetChanged();
+                    Snackbar.make(getView(), "정상적으로 삭제되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
                 break;
             case R.id.channel_exit_mode:
                 // 선택모드를 종료하고 다시 메인화면으로 돌아간다.
