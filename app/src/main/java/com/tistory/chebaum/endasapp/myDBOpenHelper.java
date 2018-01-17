@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by cheba on 2018-01-02.
@@ -18,6 +19,8 @@ public class myDBOpenHelper {
     public static SQLiteDatabase mDB;
     private DataBaseHelper mDBHelper;
     private Context mContext;
+
+    private static final String TAG = "TestDataBase";
 
     private class DataBaseHelper extends SQLiteOpenHelper {
         public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -77,6 +80,7 @@ public class myDBOpenHelper {
         values.put("cVideoPort", channel.getC_video_port());
         values.put("cLoginId", channel.getC_login_id());
         values.put("cLoginPw", channel.getC_login_pw());
+        Log.d(TAG,"cId="+Integer.toString(channel.getC_id()) +" change**************");
         return mDB.update("channelDB",values,"cId="+Integer.toString(channel.getC_id()),null)>0;
     }
 

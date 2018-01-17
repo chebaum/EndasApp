@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -207,8 +208,11 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
         mListener = null;
+        channels.clear();
+        selected_channels.clear();
+        mDBOpenHelper.close();
+        super.onDetach();
     }
 
     /**
@@ -256,6 +260,7 @@ public class HomeFragment extends Fragment {
                     int idx = channels.indexOf(channel);
                     // show user the contents of channel
                     modify_channel_by_user(channel, idx);
+                    mDBOpenHelper.updateColumn(channel);
                 }
                 break;
             case R.id.channel_delete:
@@ -266,6 +271,7 @@ public class HomeFragment extends Fragment {
                     for(Channel channel : selected_channels){
                         channels.remove(channel);
                         // 실제로 DB에서도 지워야 한다!!!*************************************************
+                        mDBOpenHelper.deleteColumn(channel);
                     }
                     selected_channels.clear();
                     adapter.notifyDataSetChanged();
@@ -285,43 +291,40 @@ public class HomeFragment extends Fragment {
     private void get_channels_from_database(){
         channels=new ArrayList<>();
         selected_channels=new ArrayList<>();
-        /*
+
         mDBOpenHelper = new myDBOpenHelper(getContext());
         try{
             mDBOpenHelper.open();
         } catch (SQLException e){
             e.printStackTrace();
         }
-        */
 
-        // for(elements in database) channels.add(channel_element);
+        mDBOpenHelper.insertColumn(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
+        mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
+        mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
+        mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
+        mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
 
-        channels.add(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        channels.add(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        channels.add(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        channels.add(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        channels.add(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+        // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
+        cursor = null;
+        cursor=mDBOpenHelper.getAllColumns();
+        // 로그에 개수 찍음
+        Log.i(TAG,"column count = "+cursor.getCount());
 
-        channels.add(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        channels.add(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        channels.add(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        channels.add(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        channels.add(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
-        channels.add(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        channels.add(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        channels.add(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        channels.add(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        channels.add(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
-        channels.add(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        channels.add(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        channels.add(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        channels.add(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        channels.add(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
-        channels.add(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        channels.add(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        channels.add(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        channels.add(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        channels.add(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+        while(cursor.moveToNext()){
+            Channel channel = new Channel(
+                    cursor.getInt(cursor.getColumnIndex("cId")),
+                    cursor.getString(cursor.getColumnIndex("cTitle")),
+                    cursor.getString(cursor.getColumnIndex("cUrl"))
+            );
+            channels.add(channel);
+
+            Log.d(TAG,"cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url());
+        }
+
+        cursor.close();
+
+
     }
 
     // 첫화면의 채널 리스트에서 2개 이상이 선택된 경우 true리턴

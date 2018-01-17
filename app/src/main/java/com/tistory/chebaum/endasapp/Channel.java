@@ -1,5 +1,7 @@
 package com.tistory.chebaum.endasapp;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by cheba on 2018-01-11.
  */
@@ -16,6 +18,12 @@ public class Channel {
     // 이거는 테스트용! 첫번째 생성자는 후에 지운다.
     public Channel(String c_title) {
         this.c_title = c_title;
+    }
+
+    public Channel(int c_id, String c_title, String c_url) {
+        this.c_id=c_id;
+        this.c_title = c_title;
+        this.c_url = c_url;
     }
 
     public Channel(String c_title, String c_url) {
