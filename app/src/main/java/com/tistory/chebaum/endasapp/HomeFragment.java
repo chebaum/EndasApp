@@ -3,6 +3,8 @@ package com.tistory.chebaum.endasapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,17 +15,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +53,10 @@ public class HomeFragment extends Fragment {
     private List<Channel> selected_channels;
 
     private boolean selection_mode;
+
+    private static final String TAG = "TestDataBase";
+    private myDBOpenHelper mDBOpenHelper;
+    private Cursor cursor;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -129,7 +131,7 @@ public class HomeFragment extends Fragment {
                         }
                         // 선택한 채널 실시간 영상 재생
                         else{
-                            Toast.makeText(view.getContext(), "click " + channels.get(position).getC_name(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(view.getContext(), "click " + channels.get(position).getC_title(), Toast.LENGTH_SHORT).show();
                             // 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
                             Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
                             intent.putExtra("urlPath", channels.get(position).getC_url());
@@ -181,6 +183,7 @@ public class HomeFragment extends Fragment {
                 //**********************************************************************************************************************************************************************************
                 }
         });
+
 
         return view;
     }
@@ -249,17 +252,10 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
-                    for(Channel channel : selected_channels) {
-                        int idx = channels.indexOf(channel);
-                        // show user the contents of channel
-                        channel = modify_channel_by_user(channel);
-                        // let user modify the contents of channel
-                        channels.set(idx, channel);
-                    }
-                    // 여기부분이 안된다. 스낵바가 아예 나오지도않아.... 원인파악!!! 1/17 cont! /***************************************************************************************************
-                    selected_channels.clear();
-                    adapter.notifyDataSetChanged();
-                    Snackbar.make(getView(), "정상적으로 수정되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Channel channel = selected_channels.get(0);
+                    int idx = channels.indexOf(channel);
+                    // show user the contents of channel
+                    modify_channel_by_user(channel, idx);
                 }
                 break;
             case R.id.channel_delete:
@@ -289,6 +285,15 @@ public class HomeFragment extends Fragment {
     private void get_channels_from_database(){
         channels=new ArrayList<>();
         selected_channels=new ArrayList<>();
+        /*
+        mDBOpenHelper = new myDBOpenHelper(getContext());
+        try{
+            mDBOpenHelper.open();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        */
+
         // for(elements in database) channels.add(channel_element);
 
         channels.add(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
@@ -332,7 +337,7 @@ public class HomeFragment extends Fragment {
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
     }
 
-    public Channel modify_channel_by_user(Channel channel){
+    public void modify_channel_by_user(Channel channel, final int idx){
         final Channel ch = channel;
 
         AlertDialog.Builder builder=new AlertDialog.Builder(this.getContext());
@@ -341,7 +346,7 @@ public class HomeFragment extends Fragment {
         builder.setView(DialogView);
 
         EditText editText = (EditText)DialogView.findViewById(R.id.dialog_channel_title);
-        editText.setText(channel.getC_name());
+        editText.setText(channel.getC_title());
 
         editText = (EditText)DialogView.findViewById(R.id.dialog_channel_url);
         editText.setText(channel.getC_url());
@@ -365,8 +370,13 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // 입력받은값 channel객체에 업데이트
-                        ch.setC_name(((EditText) DialogView.findViewById(R.id.dialog_channel_title)).getText().toString());
+                        ch.setC_title(((EditText) DialogView.findViewById(R.id.dialog_channel_title)).getText().toString());
                         ch.setC_url(((EditText) DialogView.findViewById(R.id.dialog_channel_url)).getText().toString());
+                        channels.set(idx, ch);
+                        selected_channels.clear();
+                        adapter.notifyDataSetChanged();
+                        Snackbar.make(getView(), "정상적으로 수정되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
                     }
                 })
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -377,7 +387,5 @@ public class HomeFragment extends Fragment {
                 });
         AlertDialog alert=builder.create();
         alert.show();
-
-        return ch;
     }
 }

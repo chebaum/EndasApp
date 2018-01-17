@@ -1,10 +1,13 @@
 package com.tistory.chebaum.endasapp;
 
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -43,15 +46,9 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //Menu menu = navigation.getMenu();
-        //MenuItem menuItem = menu.getItem(0);
-        //menuItem.setChecked(true);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction =   fragmentManager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
         getSupportActionBar().setTitle("채널 관리");
-
     }
-
 }

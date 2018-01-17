@@ -6,7 +6,7 @@ package com.tistory.chebaum.endasapp;
 
 public class Channel {
     private int c_id;
-    private String c_name;
+    private String c_title;
     private String c_url;
     private int c_web_port;
     private int c_video_port;
@@ -14,17 +14,17 @@ public class Channel {
     private String c_login_pw;
 
     // 이거는 테스트용! 첫번째 생성자는 후에 지운다.
-    public Channel(String c_name) {
-        this.c_name = c_name;
+    public Channel(String c_title) {
+        this.c_title = c_title;
     }
 
-    public Channel(String c_name, String c_url) {
-        this.c_name = c_name;
+    public Channel(String c_title, String c_url) {
+        this.c_title = c_title;
         this.c_url = c_url;
     }
 
-    public Channel(String c_name, int c_web_port, int c_video_port, String c_login_id, String c_login_pw) {
-        this.c_name = c_name;
+    public Channel(String c_title, int c_web_port, int c_video_port, String c_login_id, String c_login_pw) {
+        this.c_title = c_title;
         this.c_web_port = c_web_port;
         this.c_video_port = c_video_port;
         this.c_login_id = c_login_id;
@@ -38,11 +38,11 @@ public class Channel {
     public void setC_id(int c_id) {
         this.c_id = c_id;
     }
-    public String getC_name() {
-        return c_name;
+    public String getC_title() {
+        return c_title;
     }
-    public void setC_name(String c_name) {
-        this.c_name = c_name;
+    public void setC_title(String c_title) {
+        this.c_title = c_title;
     }
     public String getC_url() {
         return c_url;
