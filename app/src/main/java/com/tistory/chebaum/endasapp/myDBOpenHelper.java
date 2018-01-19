@@ -53,14 +53,6 @@ public class myDBOpenHelper {
         mDB.close();
     }
 
-    int cId ;
-    private String cTitle;
-    private String cUrl;
-    private int cWebPort;
-    private int cVideoPort;
-    private String cLoginId;
-    private String cLoginPw;
-
     public long insertColumn(Channel channel){
         ContentValues values = new ContentValues();
         values.put("cTitle", channel.getC_title());

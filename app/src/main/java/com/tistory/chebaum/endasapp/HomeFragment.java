@@ -26,6 +26,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +51,15 @@ public class HomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private List<Channel> channels;
-    private List<Channel> selected_channels;
+    private MyRecyclerAdapter adapter;
+    private List<ParentObject> channels;
+    private List<ParentObject> selected_channels;
 
     private boolean selection_mode;
 
     private static final String TAG = "TestDataBase";
     private myDBOpenHelper mDBOpenHelper;
-    private Cursor cursor;
+    private myChildDBOpenHelper mChildDBOpenHelper;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -94,84 +96,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         selection_mode=false;
 
-        recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView = view.findViewById(R.id.recycler_view);
 
         get_channels_from_database();
-
-        recyclerView.setAdapter(adapter = new MyRecyclerAdapter(channels,selected_channels,view,R.layout.row_layout));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View v, int position) {
-                        if(selection_mode) {
-                            // 선택모드인데, 이미 선택된 항목이라면, 선택취소
-                            if (selected_channels.contains(channels.get(position))) {
-                                selected_channels.remove(channels.get(position));
-                                //selected_items.delete(position);
-                                ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                                (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
-                            }
-                            // 선택한 항목 추가
-                            else {
-                                selected_channels.add(channels.get(position));
-                                //selected_items.put(position, true);
-                                ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
-                                (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            }
-
-                            // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
-                            getActivity().invalidateOptionsMenu();
-
-                        }
-                        // 선택한 채널 실시간 영상 재생
-                        else{
-                            Toast.makeText(view.getContext(), "click " + channels.get(position).getC_title(), Toast.LENGTH_SHORT).show();
-                            // 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
-                            Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
-                            intent.putExtra("urlPath", channels.get(position).getC_url());
-                            startActivity(intent);
-                        }
-
-                        if(isSelectedMultiple())
-                            Toast.makeText(view.getContext(),"2개이상!",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onLongItemClick(View v, int position) {
-                        Toast.makeText(view.getContext(), "long click at view", Toast.LENGTH_SHORT).show();
-                        if(!selection_mode) {
-                            setHasOptionsMenu(true); // this triggers onCreateOptionsMenu() 메소드
-                            ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
-                        }
-                        selection_mode=true;
-
-                        // 이미 선택된 항목이라면, 선택취소
-                        if (selected_channels.contains(channels.get(position))) {
-                            selected_channels.remove(channels.get(position));
-                            //selected_items.delete(position);
-                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                            (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
-                        }
-                        // 선택한 항목 추가
-                        else {
-                            selected_channels.add(channels.get(position));
-                            //selected_items.put(position, true);
-                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
-                            (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                        }
-
-                        // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
-                        getActivity().invalidateOptionsMenu();
-                    }
-                })
-        );
+        setAdapterToRecyclerView(view);
+        setRecyclerViewAttrs(view);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +115,6 @@ public class HomeFragment extends Fragment {
                 //**********************************************************************************************************************************************************************************
                 }
         });
-
 
         return view;
     }
@@ -205,26 +135,16 @@ public class HomeFragment extends Fragment {
             Toast.makeText(context, "HomeViewFragment", Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     public void onDetach() {
         mListener = null;
         channels.clear();
         selected_channels.clear();
         mDBOpenHelper.close();
+        mChildDBOpenHelper.close();
         super.onDetach();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -245,7 +165,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // 수정,완료,삭제 버튼 기능 구현해야함
+        // 수정,완료,삭제 버튼 기능 구현
         int id = item.getItemId();
         switch (id) {
             case R.id.channel_edit:
@@ -256,7 +176,7 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
-                    Channel channel = selected_channels.get(0);
+                    Channel channel = (Channel)selected_channels.get(0);
                     int idx = channels.indexOf(channel);
                     // show user the contents of channel
                     modify_channel_by_user(channel, idx);
@@ -268,10 +188,12 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else {
                     // 선택된 채널을 삭제하고
-                    for(Channel channel : selected_channels){
+                    for(ParentObject pObj : selected_channels){
+                        Channel channel = (Channel)pObj;
                         channels.remove(channel);
-                        // 실제로 DB에서도 지워야 한다!!!*************************************************
+                        // TODO : 실제로 DB에서도 지워야 한다!!!*************************************************
                         mDBOpenHelper.deleteColumn(channel);
+                        // TODO : channel 객체의 id값을 가진 childchannel 들도 모두 지워줘야한다.
                     }
                     selected_channels.clear();
                     adapter.notifyDataSetChanged();
@@ -287,39 +209,59 @@ public class HomeFragment extends Fragment {
         }
         return true;
     }
-
     private void get_channels_from_database(){
+        Cursor cursor = null;
+        Cursor childCursor = null;
+
         channels=new ArrayList<>();
         selected_channels=new ArrayList<>();
 
         mDBOpenHelper = new myDBOpenHelper(getContext());
+        mChildDBOpenHelper = new myChildDBOpenHelper(getContext());
         try{
             mDBOpenHelper.open();
+            mChildDBOpenHelper.open();
         } catch (SQLException e){
             e.printStackTrace();
         }
 
-        mDBOpenHelper.insertColumn(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+        // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
+        insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
-        cursor = null;
-        cursor=mDBOpenHelper.getAllColumns();
+        cursor = mDBOpenHelper.getAllColumns();
         // 로그에 개수 찍음
         Log.i(TAG,"column count = "+cursor.getCount());
 
-        while(cursor.moveToNext()){
+        // 장비를 한개씩 가져옵니다.
+        while(cursor.moveToNext())
+        {
+            int id = cursor.getColumnIndex("cId");
+            childCursor = mChildDBOpenHelper.getColumnByParentID(id);
+            // 해당 장비에 속하는 채널들을 담게 될 ArrayList입니다.
+            ArrayList<Object> childList = new ArrayList<>();
+
+            // 배열에 현재 장비에 속하는 채널들(childChannels)을 모두 담은 뒤에, 배열을 장비 객체(channels)에 넣어줍니다.
+            while(childCursor.moveToNext())
+            {
+                ChildChannel childChannel = new ChildChannel(
+                        childCursor.getInt(childCursor.getColumnIndex("ccNum")),
+                        childCursor.getString(childCursor.getColumnIndex("ccTitle")),
+                        childCursor.getInt(childCursor.getColumnIndex("cParentID"))
+                );
+                childList.add(childChannel);
+            }
+            // 이제 childList 배열에 해당 장비에 속하는 채널들이 모두 들어가있다.
+            // 장비 객체에 연결 시켜주면 된다.
+
             Channel channel = new Channel(
                     cursor.getInt(cursor.getColumnIndex("cId")),
                     cursor.getString(cursor.getColumnIndex("cTitle")),
-                    cursor.getString(cursor.getColumnIndex("cUrl"))
+                    cursor.getString(cursor.getColumnIndex("cUrl")),
+                    childList
             );
             channels.add(channel);
-
-            Log.d(TAG,"cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url());
+            Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()); // for DEBUG
         }
 
         cursor.close();
@@ -390,5 +332,94 @@ public class HomeFragment extends Fragment {
                 });
         AlertDialog alert=builder.create();
         alert.show();
+    }
+    public void setAdapterToRecyclerView(View view){
+        adapter = new MyRecyclerAdapter(getContext(),channels,selected_channels,R.layout.parent_row_layout,view);
+        adapter.setCustomParentAnimationViewId(R.id.parent_list_item_expand_arrow);
+        adapter.setParentClickableViewAnimationDefaultDuration();
+        adapter.setParentAndIconExpandOnClick(true);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void setRecyclerViewAttrs(final View view){
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        if(selection_mode) {
+                            // 선택모드인데, 이미 선택된 항목이라면, 선택취소
+                            if (selected_channels.contains(channels.get(position))) {
+                                selected_channels.remove(channels.get(position));
+                                //selected_items.delete(position);
+                                ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
+                            }
+                            // 선택한 항목 추가
+                            else {
+                                selected_channels.add(channels.get(position));
+                                //selected_items.put(position, true);
+                                ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
+                                (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                            }
+
+                            // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
+                            getActivity().invalidateOptionsMenu();
+
+                        }
+                        // 선택한 채널 실시간 영상 재생
+                        else{
+                            Toast.makeText(view.getContext(), "click " + ((Channel)channels.get(position)).getC_title(), Toast.LENGTH_SHORT).show();
+                            // 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
+                            Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
+                            intent.putExtra("urlPath", ((Channel)channels.get(position)).getC_url());
+                            startActivity(intent);
+                        }
+
+                        if(isSelectedMultiple())
+                            Toast.makeText(view.getContext(),"2개이상!",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onLongItemClick(View v, int position) {
+                        Toast.makeText(view.getContext(), "long click at view", Toast.LENGTH_SHORT).show();
+                        if(!selection_mode) {
+                            setHasOptionsMenu(true); // this triggers onCreateOptionsMenu() 메소드
+                            ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
+                        }
+                        selection_mode=true;
+
+                        // 이미 선택된 항목이라면, 선택취소
+                        if (selected_channels.contains(channels.get(position))) {
+                            selected_channels.remove(channels.get(position));
+                            //selected_items.delete(position);
+                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                            (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
+                        }
+                        // 선택한 항목 추가
+                        else {
+                            selected_channels.add(channels.get(position));
+                            //selected_items.put(position, true);
+                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
+                            (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                        }
+
+                        // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
+                        getActivity().invalidateOptionsMenu();
+                    }
+                })
+        );
+    }
+
+    public void insertExampleInputsToDB(){
+        //ChildChannel childChannel=new ChildChannel(1,"Channel 1", 1)
+        mDBOpenHelper.insertColumn(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
+        mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
+        mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
+        mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
+        mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
     }
 }

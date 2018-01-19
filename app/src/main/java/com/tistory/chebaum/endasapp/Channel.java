@@ -2,11 +2,15 @@ package com.tistory.chebaum.endasapp;
 
 import android.support.annotation.Nullable;
 
+import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+
+import java.util.List;
+
 /**
  * Created by cheba on 2018-01-11.
  */
 
-public class Channel {
+public class Channel implements ParentObject{
     private int c_id;
     private String c_title;
     private String c_url;
@@ -15,15 +19,18 @@ public class Channel {
     private String c_login_id;
     private String c_login_pw;
 
+    private List<Object> c_child_list;
+
     // 이거는 테스트용! 첫번째 생성자는 후에 지운다.
     public Channel(String c_title) {
         this.c_title = c_title;
     }
 
-    public Channel(int c_id, String c_title, String c_url) {
+    public Channel(int c_id, String c_title, String c_url, List<Object> c_child_list) {
         this.c_id=c_id;
         this.c_title = c_title;
         this.c_url = c_url;
+        this.c_child_list=c_child_list;
     }
 
     public Channel(String c_title, String c_url) {
@@ -37,6 +44,15 @@ public class Channel {
         this.c_video_port = c_video_port;
         this.c_login_id = c_login_id;
         this.c_login_pw = c_login_pw;
+    }
+
+    @Override
+    public List<Object> getChildObjectList() {
+        return c_child_list;
+    }
+    @Override
+    public void setChildObjectList(List<Object> list) {
+        c_child_list=list;
     }
 
     // getters and setters!
@@ -82,6 +98,4 @@ public class Channel {
     public void setC_login_pw(String c_login_pw) {
         this.c_login_pw = c_login_pw;
     }
-
-
 }
