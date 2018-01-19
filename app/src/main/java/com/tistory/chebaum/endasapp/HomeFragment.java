@@ -115,6 +115,8 @@ public class HomeFragment extends Fragment {
                 //**********************************************************************************************************************************************************************************
                 }
         });
+        //TODO 여기서 https://stackoverflow.com/questions/4452538/location-of-sqlite-database-on-the-device
+        //view.getContext().getDatabasePath("") 가져오기!!! left off here
 
         return view;
     }
@@ -183,6 +185,7 @@ public class HomeFragment extends Fragment {
                     mDBOpenHelper.updateColumn(channel);
                 }
                 break;
+            // TODO : 리스트 항목이 많을 때 한번 다 삭제해보자! 이상하게 몇 개 남을때가 있는것 같은데 확실치않다.
             case R.id.channel_delete:
                 if(selected_channels.isEmpty())
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -226,11 +229,11 @@ public class HomeFragment extends Fragment {
         }
 
         // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
-        insertExampleInputsToDB();
+        //insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
         cursor = mDBOpenHelper.getAllColumns();
-        // 로그에 개수 찍음
+        // 로그에 개수 찍음ㅇ
         Log.i(TAG,"column count = "+cursor.getCount());
 
         // 장비를 한개씩 가져옵니다.
@@ -260,6 +263,7 @@ public class HomeFragment extends Fragment {
                     cursor.getString(cursor.getColumnIndex("cUrl")),
                     childList
             );
+            channel.setChildObjectList(childList);
             channels.add(channel);
             Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()); // for DEBUG
         }
@@ -346,7 +350,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
-        recyclerView.addOnItemTouchListener(
+        /*recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
@@ -376,7 +380,8 @@ public class HomeFragment extends Fragment {
                             // 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
                             Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
                             intent.putExtra("urlPath", ((Channel)channels.get(position)).getC_url());
-                            startActivity(intent);
+                            //TODO 지워
+                            //startActivity(intent);
                         }
 
                         if(isSelectedMultiple())
@@ -411,12 +416,16 @@ public class HomeFragment extends Fragment {
                         getActivity().invalidateOptionsMenu();
                     }
                 })
-        );
+        );*/
     }
 
     public void insertExampleInputsToDB(){
-        //ChildChannel childChannel=new ChildChannel(1,"Channel 1", 1)
-        mDBOpenHelper.insertColumn(new Channel("사무실","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
+        List<Object> child_list = new ArrayList<>();
+        child_list.add(new ChildChannel(1,"Channel 1", 1));
+        child_list.add(new ChildChannel(1,"Channel 1", 1));
+        child_list.add(new ChildChannel(2,"Channel 2", 1));
+        child_list.add(new ChildChannel(3,"Channel 3", 1));
+        mDBOpenHelper.insertColumn(new Channel(1,"장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp",child_list));
         mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
         mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
         mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
