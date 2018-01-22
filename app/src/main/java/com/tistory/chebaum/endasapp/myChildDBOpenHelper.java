@@ -1,5 +1,6 @@
 package com.tistory.chebaum.endasapp;
 
+import android.accessibilityservice.FingerprintGestureController;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,7 +31,7 @@ public class myChildDBOpenHelper {
         // 최초 DB를 만들때 한번 호출됨
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE IF NOT EXISTS childChannelDB (ccNum INTEGER PRIMARY KEY, ccTitle CHAR(100), cParentID INTEGER);");
+            db.execSQL("CREATE TABLE IF NOT EXISTS childChannelDB (ccNum INTEGER, ccTitle CHAR(100), cParentID INTEGER);");
         }
 
         @Override
@@ -54,10 +55,12 @@ public class myChildDBOpenHelper {
     }
 
     public long insertColumn(ChildChannel cChannel){
+        Log.d(TAG,"insert column 출력됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         ContentValues values = new ContentValues();
         values.put("ccNum", cChannel.getChild_c_num());
         values.put("ccTitle", cChannel.getChild_c_title());
         values.put("cParentID", cChannel.getChild_parent_id());
+        Log.d(TAG, "ccNum"+ Integer.toString(cChannel.getChild_c_num())+"ccTitle"+cChannel.getChild_c_title()+"cParentID"+Integer.toString(cChannel.getChild_parent_id()));
         return mDB.insert("childChannelDB", null, values);
     }
 
@@ -79,7 +82,9 @@ public class myChildDBOpenHelper {
     }
 
     public Cursor getColumnByParentID(int id){
-        return mDB.query("childChannelDB",null,"cParentID="+Integer.toString(id),null,null,null,null);
+        Log.d(TAG, "getColumnByParent method entered");
+        String []args={Integer.toString(id)};
+        return mDB.query("childChannelDB",null,"cParentID=?",args,null,null,null);
     }
 
 

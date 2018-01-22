@@ -116,7 +116,8 @@ public class HomeFragment extends Fragment {
                 }
         });
         //TODO 여기서 https://stackoverflow.com/questions/4452538/location-of-sqlite-database-on-the-device
-        //view.getContext().getDatabasePath("") 가져오기!!! left off here
+        Log.d(TAG, (view.getContext().getDatabasePath("channelDB.db")).getPath()+"*****************************************************************************");
+        //data/user/0/com.tistory.chebaum.endasapp/databases/channelDB.db
 
         return view;
     }
@@ -219,6 +220,9 @@ public class HomeFragment extends Fragment {
         channels=new ArrayList<>();
         selected_channels=new ArrayList<>();
 
+        //getContext().deleteDatabase("channelDB.db");
+        //getContext().deleteDatabase("childChannelDB.db");
+
         mDBOpenHelper = new myDBOpenHelper(getContext());
         mChildDBOpenHelper = new myChildDBOpenHelper(getContext());
         try{
@@ -227,32 +231,35 @@ public class HomeFragment extends Fragment {
         } catch (SQLException e){
             e.printStackTrace();
         }
-
         // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
-        //insertExampleInputsToDB();
+        insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
         cursor = mDBOpenHelper.getAllColumns();
         // 로그에 개수 찍음ㅇ
-        Log.i(TAG,"column count = "+cursor.getCount());
+        Log.i(TAG,"row count = "+cursor.getCount());
 
         // 장비를 한개씩 가져옵니다.
         while(cursor.moveToNext())
         {
-            int id = cursor.getColumnIndex("cId");
+            int id = cursor.getInt(cursor.getColumnIndex("cId"));
+            Log.d(TAG, Integer.toString(id)+"번째 장비 볼 차례입니다.");
             childCursor = mChildDBOpenHelper.getColumnByParentID(id);
+            //childCursor=mChildDBOpenHelper.getAllColumns();
             // 해당 장비에 속하는 채널들을 담게 될 ArrayList입니다.
             ArrayList<Object> childList = new ArrayList<>();
-
+            Log.i(TAG,"row count = "+childCursor.getCount());
             // 배열에 현재 장비에 속하는 채널들(childChannels)을 모두 담은 뒤에, 배열을 장비 객체(channels)에 넣어줍니다.
             while(childCursor.moveToNext())
             {
+                Log.d(TAG, "child adding part 진입함");
                 ChildChannel childChannel = new ChildChannel(
                         childCursor.getInt(childCursor.getColumnIndex("ccNum")),
                         childCursor.getString(childCursor.getColumnIndex("ccTitle")),
                         childCursor.getInt(childCursor.getColumnIndex("cParentID"))
                 );
                 childList.add(childChannel);
+                Log.d(TAG, Integer.toString(childChannel.getChild_parent_id())+" 번째 parent의 channel  "+ childChannel.getChild_c_title());
             }
             // 이제 childList 배열에 해당 장비에 속하는 채널들이 모두 들어가있다.
             // 장비 객체에 연결 시켜주면 된다.
@@ -265,7 +272,13 @@ public class HomeFragment extends Fragment {
             );
             channel.setChildObjectList(childList);
             channels.add(channel);
-            Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()); // for DEBUG
+
+            Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()+"자식개수"+channel.getChildObjectList().size()); // for DEBUG
+            Log.d(TAG, "DEBUG ***");
+            for(Object childChannel:childList){
+                Log.d(TAG, ((ChildChannel)childChannel).getChild_c_title());
+            }
+
         }
 
         cursor.close();
@@ -420,15 +433,13 @@ public class HomeFragment extends Fragment {
     }
 
     public void insertExampleInputsToDB(){
-        List<Object> child_list = new ArrayList<>();
-        child_list.add(new ChildChannel(1,"Channel 1", 1));
-        child_list.add(new ChildChannel(1,"Channel 1", 1));
-        child_list.add(new ChildChannel(2,"Channel 2", 1));
-        child_list.add(new ChildChannel(3,"Channel 3", 1));
-        mDBOpenHelper.insertColumn(new Channel(1,"장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp",child_list));
-        mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+
+        //mChildDBOpenHelper.insertColumn(new ChildChannel(1,"1",1));
+
+        //mDBOpenHelper.insertColumn(new Channel("장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
+        //mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
+        //mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
+        //mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
+        //mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
     }
 }
