@@ -53,7 +53,7 @@ public class myDBOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn(Channel channel){
+    public long insertColumn(Group channel){
         ContentValues values = new ContentValues();
         values.put("cTitle", channel.getC_title());
         values.put("cUrl", channel.getC_url());
@@ -64,7 +64,7 @@ public class myDBOpenHelper {
         return mDB.insert("channelDB", null, values);
     }
 
-    public boolean updateColumn(Channel channel){
+    public boolean updateColumn(Group channel){
         ContentValues values = new ContentValues();
         values.put("cTitle", channel.getC_title());
         values.put("cUrl", channel.getC_url());
@@ -76,7 +76,7 @@ public class myDBOpenHelper {
         return mDB.update("channelDB",values,"cId="+Integer.toString(channel.getC_id()),null)>0;
     }
 
-    public boolean deleteColumn(Channel channel){
+    public boolean deleteColumn(Group channel){
         return mDB.delete("channelDB","cId="+Integer.toString(channel.getC_id()),null)>0;
     }
 

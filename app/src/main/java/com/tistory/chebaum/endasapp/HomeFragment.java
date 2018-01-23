@@ -2,7 +2,6 @@ package com.tistory.chebaum.endasapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
@@ -24,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
@@ -180,7 +178,7 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
-                    Channel channel = (Channel)selected_channels.get(0);
+                    Group channel = (Group)selected_channels.get(0);
                     int idx = channels.indexOf(channel);
                     // show user the contents of channel
                     modify_channel_by_user(channel, idx);
@@ -194,7 +192,7 @@ public class HomeFragment extends Fragment {
                 else {
                     // 선택된 채널을 삭제하고
                     for(ParentObject pObj : selected_channels){
-                        Channel channel = (Channel)pObj;
+                        Group channel = (Group)pObj;
                         channels.remove(channel);
                         // TODO : 실제로 DB에서도 지워야 한다!!!*************************************************
                         mDBOpenHelper.deleteColumn(channel);
@@ -233,7 +231,7 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
         // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
-       insertExampleInputsToDB();
+       //insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
         cursor = mDBOpenHelper.getAllColumns();
@@ -254,7 +252,7 @@ public class HomeFragment extends Fragment {
             while(childCursor.moveToNext())
             {
                 Log.d(TAG, "child adding part 진입함");
-                ChildChannel childChannel = new ChildChannel(
+                Channel childChannel = new Channel(
                         childCursor.getInt(childCursor.getColumnIndex("ccNum")),
                         childCursor.getString(childCursor.getColumnIndex("ccTitle")),
                         childCursor.getInt(childCursor.getColumnIndex("cParentID"))
@@ -265,7 +263,7 @@ public class HomeFragment extends Fragment {
             // 이제 childList 배열에 해당 장비에 속하는 채널들이 모두 들어가있다.
             // 장비 객체에 연결 시켜주면 된다.
 
-            Channel channel = new Channel(
+            Group channel = new Group(
                     cursor.getInt(cursor.getColumnIndex("cId")),
                     cursor.getString(cursor.getColumnIndex("cTitle")),
                     cursor.getString(cursor.getColumnIndex("cUrl")),
@@ -277,7 +275,7 @@ public class HomeFragment extends Fragment {
             Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()+"자식개수"+channel.getChildObjectList().size()); // for DEBUG
             Log.d(TAG, "DEBUG ***");
             for(Object childChannel:childList){
-                Log.d(TAG, ((ChildChannel)childChannel).getChild_c_title());
+                Log.d(TAG, ((Channel)childChannel).getChild_c_title());
             }
             childCursor.close();
         }
@@ -300,8 +298,8 @@ public class HomeFragment extends Fragment {
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
     }
 
-    public void modify_channel_by_user(Channel channel, final int idx){
-        final Channel ch = channel;
+    public void modify_channel_by_user(Group channel, final int idx){
+        final Group ch = channel;
 
         AlertDialog.Builder builder=new AlertDialog.Builder(this.getContext());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -352,7 +350,7 @@ public class HomeFragment extends Fragment {
         alert.show();
     }
     public void setAdapterToRecyclerView(View view){
-        adapter = new MyRecyclerAdapter(getContext(),channels,selected_channels,R.layout.parent_row_layout,view);
+        adapter = new MyRecyclerAdapter(getContext(),channels,selected_channels,R.layout.group_row_layout,view);
         adapter.setCustomParentAnimationViewId(R.id.parent_list_item_expand_arrow);
         adapter.setParentClickableViewAnimationDefaultDuration();
         adapter.setParentAndIconExpandOnClick(true);
@@ -435,21 +433,10 @@ public class HomeFragment extends Fragment {
 
     public void insertExampleInputsToDB(){
 
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
 
 
         //mDBOpenHelper.insertColumn(new Channel("장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));

@@ -1,66 +1,59 @@
 package com.tistory.chebaum.endasapp;
 
-import android.support.annotation.Nullable;
-
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
-
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
- * Created by cheba on 2018-01-11.
+ * Created by cheba on 2018-01-18.
  */
 
-public class Channel implements ParentObject{
-    private int c_id;
+public class Channel implements Parcelable{
+    private int c_num;
     private String c_title;
-    private String c_url;
-    private int c_web_port;
-    private int c_video_port;
-    private String c_login_id;
-    private String c_login_pw;
+    private int c_group_id; // id number of the parent DB
+    // also other attrs...
 
-    private List<Object> c_child_list;
-
-    // 이거는 테스트용! 첫번째 생성자는 후에 지운다.
-    public Channel(String c_title) {
+    public Channel(int c_num, String c_title, int c_group_id) {
+        this.c_num = c_num;
         this.c_title = c_title;
+        this.c_group_id = c_group_id;
     }
 
-    public Channel(int c_id, String c_title, String c_url, List<Object> c_child_list) {
-        this.c_id=c_id;
-        this.c_title = c_title;
-        this.c_url = c_url;
-        this.c_child_list=c_child_list;
-    }
-
-    public Channel(String c_title, String c_url) {
-        this.c_title = c_title;
-        this.c_url = c_url;
-    }
-
-    public Channel(String c_title, int c_web_port, int c_video_port, String c_login_id, String c_login_pw) {
-        this.c_title = c_title;
-        this.c_web_port = c_web_port;
-        this.c_video_port = c_video_port;
-        this.c_login_id = c_login_id;
-        this.c_login_pw = c_login_pw;
+    public Channel(Parcel in) {
+        c_num=in.readInt();
+        c_title=in.readString();
+        c_group_id=in.readInt();
     }
 
     @Override
-    public List<Object> getChildObjectList() {
-        return c_child_list;
-    }
-    @Override
-    public void setChildObjectList(List<Object> list) {
-        c_child_list=list;
+    public int describeContents() {
+        return 0;
     }
 
-    // getters and setters!
-    public int getC_id() {
-        return c_id;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(c_num);
+        dest.writeString(c_title);
+        dest.writeInt(c_group_id);
     }
-    public void setC_id(int c_id) {
-        this.c_id = c_id;
+
+    public static final Creator<Channel> CREATOR = new Creator<Channel>() {
+        @Override
+        public Channel createFromParcel(Parcel parcel) {
+            return new Channel(parcel);
+        }
+
+        @Override
+        public Channel[] newArray(int size) {
+            return new Channel[size];
+        }
+    };
+
+    public int getC_num() {
+        return c_num;
+    }
+    public void setC_num(int c_num) {
+        this.c_num = c_num;
     }
     public String getC_title() {
         return c_title;
@@ -68,34 +61,10 @@ public class Channel implements ParentObject{
     public void setC_title(String c_title) {
         this.c_title = c_title;
     }
-    public String getC_url() {
-        return c_url;
+    public int getC_group_id() {
+        return c_group_id;
     }
-    public void setC_url(String c_url) {
-        this.c_url = c_url;
-    }
-    public int getC_web_port() {
-        return c_web_port;
-    }
-    public void setC_web_port(int c_web_port) {
-        this.c_web_port = c_web_port;
-    }
-    public int getC_video_port() {
-        return c_video_port;
-    }
-    public void setC_video_port(int c_video_port) {
-        this.c_video_port = c_video_port;
-    }
-    public String getC_login_id() {
-        return c_login_id;
-    }
-    public void setC_login_id(String c_login_id) {
-        this.c_login_id = c_login_id;
-    }
-    public String getC_login_pw() {
-        return c_login_pw;
-    }
-    public void setC_login_pw(String c_login_pw) {
-        this.c_login_pw = c_login_pw;
+    public void setC_group_id(int c_group_id) {
+        this.c_group_id = c_group_id;
     }
 }

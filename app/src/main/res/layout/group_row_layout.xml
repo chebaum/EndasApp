@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/row_layout"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -19,7 +18,7 @@
         android:paddingLeft="20dp">
 
         <TextView
-            android:id="@+id/row_c_name"
+            android:id="@+id/row_g_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="50"
@@ -30,7 +29,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/row_c_ip"
+            android:id="@+id/row_g_ip"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="30"
@@ -39,7 +38,7 @@
             android:textSize="@dimen/text_margin" />
 
         <TextView
-            android:id="@+id/row_c_reg_date"
+            android:id="@+id/row_g_reg_date"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"

@@ -1,16 +1,11 @@
 package com.tistory.chebaum.endasapp;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
-import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
-import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
+import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.List;
 
@@ -18,66 +13,58 @@ import java.util.List;
  * Created by cheba on 2018-01-12.
  */
 
-public class MyRecyclerAdapter extends ExpandableRecyclerAdapter<MyRecyclerAdapter.ChannelParentViewHolder,MyRecyclerAdapter.ChannelChildViewHolder> {
+public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupViewHolder,myChannelViewHolder> {
 
-    private List<ParentObject> channels;
-    private List<ParentObject> selected_channels;
-    private int itemLayout;
+    private List<Group> selected_groups;
     View view;
 
-    public MyRecyclerAdapter(Context context, List<ParentObject> parentItemList) {
-        super(context, parentItemList);
+    public MyRecyclerAdapter(List<? extends ExpandableGroup> groups, List<Group> selected_groups) {
+        super(groups);
+        this.selected_groups = selected_groups;
     }
-
-    public MyRecyclerAdapter(Context context, List<ParentObject> channels, List<ParentObject> selected_channels, int itemLayout, View view) {
-        super(context, channels);
-        this.channels = channels;
-        this.selected_channels = selected_channels;
-        this.itemLayout = itemLayout;
-        this.view = view;
-    }
-
-
 
     @Override
-    public ChannelParentViewHolder onCreateParentViewHolder(ViewGroup viewGroup) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.parent_row_layout,viewGroup,false);
-        return new ChannelParentViewHolder(view);
+    public myGroupViewHolder onCreateGroupViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_row_layout,viewGroup,false);
+        return new myGroupViewHolder(view);
     }
 
-    public void onBindParentViewHolder(ChannelParentViewHolder parentViewHolder, int i, Object obj) {
-        Channel channel=(Channel)obj;
+    @Override
+    public myChannelViewHolder onCreateChildViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.channel_row_layout,viewGroup,false);
+        return new myChannelViewHolder(view);
+    }
 
-        parentViewHolder.c_name.setText(channel.getC_title());
-        parentViewHolder.c_ip.setText("172.31.7.11");
-        parentViewHolder.c_ip.setTextSize(parentViewHolder.c_name.getTextSize()/4);
-        parentViewHolder.c_reg_date.setText("등록일: 2018.01.18");
-        parentViewHolder.c_reg_date.setTextSize(parentViewHolder.c_name.getTextSize()/4);
-        if(selected_channels.contains(channel)){
-            ((TextView)parentViewHolder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorBackground));
-            parentViewHolder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
+    @Override
+    public void onBindGroupViewHolder(myGroupViewHolder holder, int flatPosition, ExpandableGroup expandableGroupgroup) {
+        Group gr=(Group)expandableGroupgroup;
+        holder.g_name.setText(gr.getC_title());
+        holder.g_ip.setText("172.31.7.11");
+        holder.g_ip.setTextSize(holder.g_name.getTextSize()/4);
+        holder.g_reg_date.setText("등록일: 2018.01.18");
+        holder.g_reg_date.setTextSize(holder.g_name.getTextSize()/4);
+
+        if(selected_groups.contains(gr)){
+            //TODO 선택된 항목임..색 다르게 설정해준다.
+           // ((TextView)parentViewHolder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorBackground));
+            //parentViewHolder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
         }
         else{
-            ((TextView)parentViewHolder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorPrimaryDark));
-            parentViewHolder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorBackground));
+            //TODO
+            //((TextView)parentViewHolder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorPrimaryDark));
+            //parentViewHolder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorBackground));
         }
     }
 
     @Override
-    public ChannelChildViewHolder onCreateChildViewHolder(ViewGroup viewGroup) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.child_row_layout,viewGroup,false);
-        return new ChannelChildViewHolder(view);
+    public void onBindChildViewHolder(myChannelViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
+        final Channel ch = ((Group)group).getItems().get(childIndex);
+        //holder.c_num.setText(ch.getC_num());
+        //holder.c_title.setText(ch.getC_title());
+        holder.c_num.setText("7");
+        holder.c_title.setText("Channel 7");
     }
 
-    @Override
-    public void onBindChildViewHolder(ChannelChildViewHolder childViewHolder, int i, Object obj) {
-        ChildChannel cChannel=(ChildChannel)obj;
-
-        //childViewHolder.child_c_num.setText(cChannel.getChild_c_num());
-        //childViewHolder.child_c_title.setText(cChannel.getChild_c_title());
-        childViewHolder.child_c_num.setText("7");
-        childViewHolder.child_c_title.setText("Channel 7");
-    }
 /*
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -104,10 +91,6 @@ public class MyRecyclerAdapter extends ExpandableRecyclerAdapter<MyRecyclerAdapt
     }
     */
 
-    @Override
-    public int getItemCount() {
-        return channels.size();
-    }
 /*
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -123,30 +106,5 @@ public class MyRecyclerAdapter extends ExpandableRecyclerAdapter<MyRecyclerAdapt
         }
     }
 */
-    public static class ChannelParentViewHolder extends ParentViewHolder{
-
-        public TextView c_name;
-        public TextView c_ip;
-        public TextView c_reg_date;
-
-        public ChannelParentViewHolder(View itemView){
-            super(itemView);
-            c_name = (TextView)itemView.findViewById(R.id.row_c_name);
-            c_ip=(TextView)itemView.findViewById(R.id.row_c_ip);
-            c_reg_date=((TextView)itemView.findViewById(R.id.row_c_reg_date));
-        }
-    }
-
-    public static class ChannelChildViewHolder extends ChildViewHolder{
-
-        public TextView child_c_num;
-        public TextView child_c_title;
-
-        public ChannelChildViewHolder(View itemView){
-            super(itemView);
-            child_c_num = (TextView)itemView.findViewById(R.id.child_row_c_num);
-            child_c_title=(TextView)itemView.findViewById(R.id.child_row_c_title);
-        }
-    }
 
 }

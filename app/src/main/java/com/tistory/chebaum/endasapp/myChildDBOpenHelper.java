@@ -1,6 +1,5 @@
 package com.tistory.chebaum.endasapp;
 
-import android.accessibilityservice.FingerprintGestureController;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -54,7 +53,7 @@ public class myChildDBOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn(ChildChannel cChannel){
+    public long insertColumn(Channel cChannel){
         Log.d(TAG,"insert column 출력됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         ContentValues values = new ContentValues();
         values.put("ccNum", cChannel.getChild_c_num());
@@ -64,7 +63,7 @@ public class myChildDBOpenHelper {
         return mDB.insert("childChannelDB", null, values);
     }
 
-    public boolean updateColumn(ChildChannel cChannel){
+    public boolean updateColumn(Channel cChannel){
         ContentValues values = new ContentValues();
         values.put("ccNum", cChannel.getChild_c_num());
         values.put("ccTitle", cChannel.getChild_c_title());
@@ -73,7 +72,7 @@ public class myChildDBOpenHelper {
         return mDB.update("childChannelDB",values,"ccNum="+Integer.toString(cChannel.getChild_c_num()),null)>0;
     }
 
-    public boolean deleteColumn(ChildChannel cChannel){
+    public boolean deleteColumn(Channel cChannel){
         return mDB.delete("childChannelDB","ccNum="+Integer.toString(cChannel.getChild_c_num()),null)>0;
     }
 
