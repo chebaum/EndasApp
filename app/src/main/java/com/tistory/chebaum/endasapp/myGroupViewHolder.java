@@ -34,9 +34,7 @@ public class myGroupViewHolder extends GroupViewHolder {
     }
 
     @Override
-    public void collapse() {
-        super.collapse();
-    }
+    public void collapse() { animationCollapse(); }
 
     private void animateExpand(){
         RotateAnimation rotate =

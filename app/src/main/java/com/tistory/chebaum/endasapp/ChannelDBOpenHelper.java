@@ -12,7 +12,7 @@ import android.util.Log;
  * Created by cheba on 2018-01-02.
  */
 
-public class myDBOpenHelper {
+public class ChannelDBOpenHelper {
 
     private static final String DATABASE_NAME = "channelDB.db";
     private static final int DATABASE_VERSION = 1;
@@ -20,7 +20,7 @@ public class myDBOpenHelper {
     private DataBaseHelper mDBHelper;
     private Context mContext;
 
-    private static final String TAG = "TestDataBase";
+    private static final String TAG = "ChannelDatabase";
 
     private class DataBaseHelper extends SQLiteOpenHelper {
         public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -30,7 +30,7 @@ public class myDBOpenHelper {
         // 최초 DB를 만들때 한번 호출됨
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE IF NOT EXISTS channelDB (cId INTEGER PRIMARY KEY AUTOINCREMENT, cTitle CHAR(100), cUrl CHAR(100), cWebPort INTEGER, cVideoPort INTEGER, cLoginId CHAR(100), cLoginPw CHAR(100));");
+            db.execSQL("CREATE TABLE IF NOT EXISTS channelDB (cNum INTEGER, cTitle CHAR(100), cGroupID INTEGER);");
         }
 
         @Override
@@ -39,11 +39,11 @@ public class myDBOpenHelper {
             onCreate(db);
         }
     }
-    public myDBOpenHelper(Context context){
+    public ChannelDBOpenHelper(Context context){
         this.mContext=context;
     }
 
-    public myDBOpenHelper open() throws SQLException{
+    public ChannelDBOpenHelper open() throws SQLException{
         mDBHelper = new DataBaseHelper(mContext, DATABASE_NAME, null, DATABASE_VERSION);
         mDB=mDBHelper.getWritableDatabase();
         return this;
@@ -53,35 +53,38 @@ public class myDBOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn(Group channel){
+    public long insertColumn(Channel channel){
+        Log.d(TAG,"insert column 출력됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         ContentValues values = new ContentValues();
+        values.put("cNum", channel.getC_num());
         values.put("cTitle", channel.getC_title());
-        values.put("cUrl", channel.getC_url());
-        values.put("cWebPort", channel.getC_web_port());
-        values.put("cVideoPort", channel.getC_video_port());
-        values.put("cLoginId", channel.getC_login_id());
-        values.put("cLoginPw", channel.getC_login_pw());
+        values.put("cGroupID", channel.getC_group_id());
+        Log.d(TAG, "cNum"+ Integer.toString(channel.getC_num())+"cTitle"+channel.getC_title()+"cGroupID"+Integer.toString(channel.getC_group_id()));
         return mDB.insert("channelDB", null, values);
     }
 
-    public boolean updateColumn(Group channel){
+    public boolean updateColumn(Channel channel){
         ContentValues values = new ContentValues();
+        values.put("cNum", channel.getC_num());
         values.put("cTitle", channel.getC_title());
-        values.put("cUrl", channel.getC_url());
-        values.put("cWebPort", channel.getC_web_port());
-        values.put("cVideoPort", channel.getC_video_port());
-        values.put("cLoginId", channel.getC_login_id());
-        values.put("cLoginPw", channel.getC_login_pw());
-        Log.d(TAG,"cId="+Integer.toString(channel.getC_id()) +" change**************");
-        return mDB.update("channelDB",values,"cId="+Integer.toString(channel.getC_id()),null)>0;
+        values.put("cGroupID", channel.getC_group_id());
+        Log.d(TAG,"cNum="+Integer.toString(channel.getC_num()) +" change**************");
+        return mDB.update("channelDB",values,"cNum="+Integer.toString(channel.getC_num()),null)>0;
     }
 
-    public boolean deleteColumn(Group channel){
-        return mDB.delete("channelDB","cId="+Integer.toString(channel.getC_id()),null)>0;
+    public boolean deleteColumn(Channel channel){
+        return mDB.delete("channelDB","cNum="+Integer.toString(channel.getC_num()),null)>0;
     }
 
     public Cursor getAllColumns(){
         return mDB.query("channelDB",null,null,null,null,null,null);
     }
+
+    public Cursor getColumnByGroupID(int id){
+        Log.d(TAG, "getColumnByParent method entered");
+        String []args={Integer.toString(id)};
+        return mDB.query("channelDB",null,"cGroupID=?",args,null,null,null);
+    }
+
 
 }

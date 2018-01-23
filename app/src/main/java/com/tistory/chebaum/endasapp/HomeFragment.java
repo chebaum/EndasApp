@@ -1,15 +1,14 @@
 package com.tistory.chebaum.endasapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,13 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +46,16 @@ public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private MyRecyclerAdapter adapter;
-    private List<ParentObject> channels;
-    private List<ParentObject> selected_channels;
+    private List<Group> groups;
+    private List<Group> selected_groups;
 
     private boolean selection_mode;
 
     private static final String TAG = "TestDataBase";
-    private myDBOpenHelper mDBOpenHelper;
-    private myChildDBOpenHelper mChildDBOpenHelper;
+    private GroupDBOpenHelper mGroupDBOpenHelper;
+    private ChannelDBOpenHelper mChannelDBOpenHelper;
+
+    private View mHomeFragView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -94,31 +91,17 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        if(mHomeFragView==null)
+            mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
+
         selection_mode=false;
 
-        recyclerView = view.findViewById(R.id.recycler_view);
-
         get_channels_from_database();
-        setAdapterToRecyclerView(view);
-        setRecyclerViewAttrs(view);
+        setRecyclerViewAttrs(mHomeFragView);
+        setFabBtn(mHomeFragView);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                // 여기에 채널 추가할 수 있도록 다이얼로그 팝업띄워야해!!!!!
-                //**********************************************************************************************************************************************************************************
-                //**********************************************************************************************************************************************************************************
-                }
-        });
-        //TODO 여기서 https://stackoverflow.com/questions/4452538/location-of-sqlite-database-on-the-device
-        Log.d(TAG, (view.getContext().getDatabasePath("channelDB.db")).getPath()+"*****************************************************************************");
+        return mHomeFragView;
         //data/user/0/com.tistory.chebaum.endasapp/databases/channelDB.db
-
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -140,10 +123,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDetach() {
         mListener = null;
-        channels.clear();
-        selected_channels.clear();
-        mDBOpenHelper.close();
-        mChildDBOpenHelper.close();
+        groups.clear();
+        selected_groups.clear();
+        mGroupDBOpenHelper.close();
+        mChannelDBOpenHelper.close();
         super.onDetach();
     }
 
@@ -164,7 +147,7 @@ public class HomeFragment extends Fragment {
         else
             menu.findItem(R.id.channel_edit).setVisible(true);
     }
-
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // 수정,완료,삭제 버튼 기능 구현
@@ -191,11 +174,10 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else {
                     // 선택된 채널을 삭제하고
-                    for(ParentObject pObj : selected_channels){
-                        Group channel = (Group)pObj;
-                        channels.remove(channel);
+                    for(Group pObj : selected_channels){
+                        channels.remove(pObj);
                         // TODO : 실제로 DB에서도 지워야 한다!!!*************************************************
-                        mDBOpenHelper.deleteColumn(channel);
+                        mDBOpenHelper.deleteColumn(pObj);
                         // TODO : channel 객체의 id값을 가진 childchannel 들도 모두 지워줘야한다.
                     }
                     selected_channels.clear();
@@ -212,71 +194,70 @@ public class HomeFragment extends Fragment {
         }
         return true;
     }
+    */
     private void get_channels_from_database(){
         Cursor cursor = null;
         Cursor childCursor = null;
 
-        channels=new ArrayList<>();
-        selected_channels=new ArrayList<>();
+        groups=new ArrayList<>();
+        selected_groups=new ArrayList<>();
 
         //getContext().deleteDatabase("channelDB.db");
-        //getContext().deleteDatabase("childChannelDB.db");
+        //getContext().deleteDatabase("groupDB.db");
 
-        mDBOpenHelper = new myDBOpenHelper(getContext());
-        mChildDBOpenHelper = new myChildDBOpenHelper(getContext());
+        mGroupDBOpenHelper = new GroupDBOpenHelper(getContext());
+        mChannelDBOpenHelper = new ChannelDBOpenHelper(getContext());
         try{
-            mDBOpenHelper.open();
-            mChildDBOpenHelper.open();
+            mGroupDBOpenHelper.open();
+            mChannelDBOpenHelper.open();
         } catch (SQLException e){
             e.printStackTrace();
         }
         // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
-       //insertExampleInputsToDB();
+        //insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
-        cursor = mDBOpenHelper.getAllColumns();
+        cursor = mGroupDBOpenHelper.getAllColumns();
         // 로그에 개수 찍음ㅇ
-        Log.i(TAG,"row count = "+cursor.getCount());
+        Log.i(TAG,"group row count = "+cursor.getCount());
 
         // 장비를 한개씩 가져옵니다.
         while(cursor.moveToNext())
         {
-            int id = cursor.getInt(cursor.getColumnIndex("cId"));
+            int id = cursor.getInt(cursor.getColumnIndex("gId"));
             Log.d(TAG, Integer.toString(id)+"번째 장비 볼 차례입니다.");
-            childCursor = mChildDBOpenHelper.getColumnByParentID(id);
-            //childCursor=mChildDBOpenHelper.getAllColumns();
+            childCursor = mChannelDBOpenHelper.getColumnByGroupID(id);
+            //childCursor=mChannelDBOpenHelper.getAllColumns();
             // 해당 장비에 속하는 채널들을 담게 될 ArrayList입니다.
-            ArrayList<Object> childList = new ArrayList<>();
-            Log.i(TAG,"row count = "+childCursor.getCount());
+            ArrayList<Channel> list = new ArrayList<>();
+            Log.i(TAG,"channel row count = "+childCursor.getCount());
             // 배열에 현재 장비에 속하는 채널들(childChannels)을 모두 담은 뒤에, 배열을 장비 객체(channels)에 넣어줍니다.
             while(childCursor.moveToNext())
             {
                 Log.d(TAG, "child adding part 진입함");
-                Channel childChannel = new Channel(
-                        childCursor.getInt(childCursor.getColumnIndex("ccNum")),
-                        childCursor.getString(childCursor.getColumnIndex("ccTitle")),
-                        childCursor.getInt(childCursor.getColumnIndex("cParentID"))
+                Channel channel = new Channel(
+                        childCursor.getInt(childCursor.getColumnIndex("cNum")),
+                        childCursor.getString(childCursor.getColumnIndex("cTitle")),
+                        childCursor.getInt(childCursor.getColumnIndex("cGroupID"))
                 );
-                childList.add(childChannel);
-                Log.d(TAG, Integer.toString(childChannel.getChild_parent_id())+" 번째 parent의 channel  "+ childChannel.getChild_c_title());
+                list.add(channel);
+                Log.d(TAG, Integer.toString(channel.getC_group_id())+" 번째 parent의 channel  "+ channel.getC_title());
             }
             // 이제 childList 배열에 해당 장비에 속하는 채널들이 모두 들어가있다.
             // 장비 객체에 연결 시켜주면 된다.
 
-            Group channel = new Group(
-                    cursor.getInt(cursor.getColumnIndex("cId")),
-                    cursor.getString(cursor.getColumnIndex("cTitle")),
-                    cursor.getString(cursor.getColumnIndex("cUrl")),
-                    childList
+            Group group = new Group(
+                    list,
+                    cursor.getInt(cursor.getColumnIndex("gId")),
+                    cursor.getString(cursor.getColumnIndex("gTitle")),
+                    cursor.getString(cursor.getColumnIndex("gUrl"))
             );
             //channel.setChildObjectList(childList);
-            channels.add(channel);
+            groups.add(group);
 
-            Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()+"자식개수"+channel.getChildObjectList().size()); // for DEBUG
+            Log.d(TAG,"DEBUG *** gid="+group.getG_id()+"gTitle="+group.getG_title()+"gUrl="+group.getG_url()); // for DEBUG
             Log.d(TAG, "DEBUG ***");
-            for(Object childChannel:childList){
-                Log.d(TAG, ((Channel)childChannel).getChild_c_title());
-            }
+
             childCursor.close();
         }
 
@@ -287,7 +268,7 @@ public class HomeFragment extends Fragment {
 
     // 첫화면의 채널 리스트에서 2개 이상이 선택된 경우 true리턴
     public boolean isSelectedMultiple(){
-        if(selected_channels.size() > 1)
+        if(selected_groups.size() > 1)
             return true;
         else
             return false;
@@ -297,7 +278,7 @@ public class HomeFragment extends Fragment {
         ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
     }
-
+/*
     public void modify_channel_by_user(Group channel, final int idx){
         final Group ch = channel;
 
@@ -322,7 +303,7 @@ public class HomeFragment extends Fragment {
         editText.setText(channel.getC_login_id());
 
         editText = (EditText)DialogView.findViewById(R.id.dialog_channel_pw);
-        editText.setText(channel.getC_login_pw());*/
+        editText.setText(channel.getC_login_pw());
 
         builder.setMessage("값을 입력하십시오 - 채널이름과 URL만!");
         builder.setTitle("채널 속성값 수정")
@@ -349,15 +330,11 @@ public class HomeFragment extends Fragment {
         AlertDialog alert=builder.create();
         alert.show();
     }
-    public void setAdapterToRecyclerView(View view){
-        adapter = new MyRecyclerAdapter(getContext(),channels,selected_channels,R.layout.group_row_layout,view);
-        adapter.setCustomParentAnimationViewId(R.id.parent_list_item_expand_arrow);
-        adapter.setParentClickableViewAnimationDefaultDuration();
-        adapter.setParentAndIconExpandOnClick(true);
-        recyclerView.setAdapter(adapter);
-    }
-
+*/
     public void setRecyclerViewAttrs(final View view){
+        recyclerView = view.findViewById(R.id.recycler_view);
+        adapter = new MyRecyclerAdapter(groups,selected_groups);
+        recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new MyLinearLayoutManager(view.getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -433,17 +410,48 @@ public class HomeFragment extends Fragment {
 
     public void insertExampleInputsToDB(){
 
-        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
-        mChildDBOpenHelper.insertColumn(new Channel(2,"ch2",4));
+        List<Channel> list = new ArrayList<>();
+        list.add(new Channel(1,"ch1",1));
+        list.add(new Channel(2,"ch1",1));
+        list.add(new Channel(3,"ch1",1));
+        list.add(new Channel(4,"ch1",1));
+        for(Channel ch:list)
+            mChannelDBOpenHelper.insertColumn(ch);
+        mGroupDBOpenHelper.insertColumn(new Group(list, 1, "장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
 
+        list = new ArrayList<>();
+        list.add(new Channel(1,"ch1",2));
+        list.add(new Channel(2,"ch1",2));
+        list.add(new Channel(3,"ch1",2));
+        list.add(new Channel(4,"ch1",2));
+        for(Channel ch:list)
+            mChannelDBOpenHelper.insertColumn(ch);
+        mGroupDBOpenHelper.insertColumn(new Group(list, 2, "자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
 
-        //mDBOpenHelper.insertColumn(new Channel("장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-        //mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-        //mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        //mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        //mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+        list = new ArrayList<>();
+        list.add(new Channel(1,"ch1",3));
+        list.add(new Channel(2,"ch1",3));
+        list.add(new Channel(3,"ch1",3));
+        list.add(new Channel(4,"ch1",3));
+        for(Channel ch:list)
+            mChannelDBOpenHelper.insertColumn(ch);
+        mGroupDBOpenHelper.insertColumn(new Group(list, 3,"자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
+        //mGroupDBOpenHelper.insertColumn(new Group("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
+        //mGroupDBOpenHelper.insertColumn(new Group("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+    }
+
+    public void setFabBtn(View view){
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                // 여기에 채널 추가할 수 있도록 다이얼로그 팝업띄워야해!!!!!
+                //**********************************************************************************************************************************************************************************
+                //**********************************************************************************************************************************************************************************
+            }
+        });
     }
 
     private static class MyLinearLayoutManager extends LinearLayoutManager{
@@ -463,5 +471,17 @@ public class HomeFragment extends Fragment {
         public MyLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        adapter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        adapter.onRestoreInstanceState(savedInstanceState);
     }
 }

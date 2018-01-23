@@ -37,14 +37,14 @@ public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupView
 
     @Override
     public void onBindGroupViewHolder(myGroupViewHolder holder, int flatPosition, ExpandableGroup expandableGroupgroup) {
-        Group gr=(Group)expandableGroupgroup;
-        holder.g_name.setText(gr.getC_title());
+        Group group=(Group)expandableGroupgroup;
+        holder.g_name.setText(group.getG_title());
         holder.g_ip.setText("172.31.7.11");
         holder.g_ip.setTextSize(holder.g_name.getTextSize()/4);
         holder.g_reg_date.setText("등록일: 2018.01.18");
         holder.g_reg_date.setTextSize(holder.g_name.getTextSize()/4);
 
-        if(selected_groups.contains(gr)){
+        if(selected_groups.contains(group)){
             //TODO 선택된 항목임..색 다르게 설정해준다.
            // ((TextView)parentViewHolder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorBackground));
             //parentViewHolder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
@@ -59,10 +59,10 @@ public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupView
     @Override
     public void onBindChildViewHolder(myChannelViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
         final Channel ch = ((Group)group).getItems().get(childIndex);
-        //holder.c_num.setText(ch.getC_num());
-        //holder.c_title.setText(ch.getC_title());
-        holder.c_num.setText("7");
-        holder.c_title.setText("Channel 7");
+        holder.c_num.setText(Integer.toString(ch.getC_num()));
+        holder.c_title.setText(ch.getC_title());
+        //holder.c_num.setText("7");
+        //holder.c_title.setText("Channel 7");
     }
 
 /*

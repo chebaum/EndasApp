@@ -7,4 +7,5 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorLightPurple">#6A74AF</color>
     <color name="colorBackground">#fafafa</color>
+    <color name="colorChannel">#F0EEEE</color>
 </resources>
