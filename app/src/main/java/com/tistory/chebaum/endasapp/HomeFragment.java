@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -232,7 +233,7 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
         // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
-        insertExampleInputsToDB();
+       insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
         cursor = mDBOpenHelper.getAllColumns();
@@ -270,7 +271,7 @@ public class HomeFragment extends Fragment {
                     cursor.getString(cursor.getColumnIndex("cUrl")),
                     childList
             );
-            channel.setChildObjectList(childList);
+            //channel.setChildObjectList(childList);
             channels.add(channel);
 
             Log.d(TAG,"DEBUG *** cid="+channel.getC_id()+"cTitle="+channel.getC_title()+"cUrl="+channel.getC_url()+"자식개수"+channel.getChildObjectList().size()); // for DEBUG
@@ -278,7 +279,7 @@ public class HomeFragment extends Fragment {
             for(Object childChannel:childList){
                 Log.d(TAG, ((ChildChannel)childChannel).getChild_c_title());
             }
-
+            childCursor.close();
         }
 
         cursor.close();
@@ -360,7 +361,7 @@ public class HomeFragment extends Fragment {
 
     public void setRecyclerViewAttrs(final View view){
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setLayoutManager(new MyLinearLayoutManager(view.getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
         /*recyclerView.addOnItemTouchListener(
@@ -434,12 +435,46 @@ public class HomeFragment extends Fragment {
 
     public void insertExampleInputsToDB(){
 
-        //mChildDBOpenHelper.insertColumn(new ChildChannel(1,"1",1));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+        mChildDBOpenHelper.insertColumn(new ChildChannel(2,"ch2",4));
+
 
         //mDBOpenHelper.insertColumn(new Channel("장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
         //mDBOpenHelper.insertColumn(new Channel("자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
         //mDBOpenHelper.insertColumn(new Channel("자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
         //mDBOpenHelper.insertColumn(new Channel("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
         //mDBOpenHelper.insertColumn(new Channel("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
+    }
+
+    private static class MyLinearLayoutManager extends LinearLayoutManager{
+        @Override
+        public boolean supportsPredictiveItemAnimations() {
+            return false;
+        }
+
+        public MyLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+            super(context, attrs, defStyleAttr, defStyleRes);
+        }
+
+        public MyLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        public MyLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
     }
 }

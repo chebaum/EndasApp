@@ -75,8 +75,8 @@ public class MyRecyclerAdapter extends ExpandableRecyclerAdapter<MyRecyclerAdapt
 
         //childViewHolder.child_c_num.setText(cChannel.getChild_c_num());
         //childViewHolder.child_c_title.setText(cChannel.getChild_c_title());
-        //childViewHolder.child_c_num.setText("7");
-        //childViewHolder.child_c_title.setText("Channel 7");
+        childViewHolder.child_c_num.setText("7");
+        childViewHolder.child_c_title.setText("Channel 7");
     }
 /*
     @Override
