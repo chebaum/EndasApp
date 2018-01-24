@@ -1,10 +1,12 @@
 package com.tistory.chebaum.endasapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,8 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -56,6 +60,8 @@ public class HomeFragment extends Fragment {
     private ChannelDBOpenHelper mChannelDBOpenHelper;
 
     private View mHomeFragView;
+
+    private long lastClickTime=0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -339,23 +345,25 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new MyLinearLayoutManager(view.getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
-        /*recyclerView.addOnItemTouchListener(
+        recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
+                        if(SystemClock.elapsedRealtime()-lastClickTime < 1000)
+                            return;
                         if(selection_mode) {
                             // 선택모드인데, 이미 선택된 항목이라면, 선택취소
-                            if (selected_channels.contains(channels.get(position))) {
-                                selected_channels.remove(channels.get(position));
+                            if (selected_groups.contains(groups.get(position))) {
+                                selected_groups.remove(groups.get(position));
                                 //selected_items.delete(position);
-                                ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                                 (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
                             }
                             // 선택한 항목 추가
                             else {
-                                selected_channels.add(channels.get(position));
+                                selected_groups.add(groups.get(position));
                                 //selected_items.put(position, true);
-                                ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
+                                ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorBackground));
                                 (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                             }
 
@@ -365,13 +373,14 @@ public class HomeFragment extends Fragment {
                         }
                         // 선택한 채널 실시간 영상 재생
                         else{
-                            Toast.makeText(view.getContext(), "click " + ((Channel)channels.get(position)).getC_title(), Toast.LENGTH_SHORT).show();
-                            // 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
+                            Toast.makeText(view.getContext(), "click " + (groups.get(position)).getG_title(), Toast.LENGTH_SHORT).show();}
+                            /*// 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
                             Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
-                            intent.putExtra("urlPath", ((Channel)channels.get(position)).getC_url());
+                            intent.putExtra("urlPath", (groups.get(position)).getG_url());
                             //TODO 지워
                             //startActivity(intent);
-                        }
+                        }*/
+                        lastClickTime = SystemClock.elapsedRealtime();
 
                         if(isSelectedMultiple())
                             Toast.makeText(view.getContext(),"2개이상!",Toast.LENGTH_SHORT).show();
@@ -387,25 +396,38 @@ public class HomeFragment extends Fragment {
                         selection_mode=true;
 
                         // 이미 선택된 항목이라면, 선택취소
-                        if (selected_channels.contains(channels.get(position))) {
-                            selected_channels.remove(channels.get(position));
+                        if (selected_groups.contains(groups.get(position))) {
+                            selected_groups.remove(groups.get(position));
                             //selected_items.delete(position);
-                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                            ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                             (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
                         }
                         // 선택한 항목 추가
                         else {
-                            selected_channels.add(channels.get(position));
+                            selected_groups.add(groups.get(position));
                             //selected_items.put(position, true);
-                            ((TextView) v.findViewById(R.id.row_c_name)).setTextColor(getResources().getColor(R.color.colorBackground));
+                            ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorBackground));
                             (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         }
 
                         // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
                         getActivity().invalidateOptionsMenu();
                     }
-                })
-        );*/
+                }){
+                    /*@Override
+                    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+
+                        if(!(!selection_mode && e.getX()<(float)view.findViewById(R.id.group_list_dropdown_touch_area).getX()))
+                            return false;
+                        // 리스트에서 항목에 대한 터치를 하면 채널리스트가 보여져야하지만, 이와 같은 이벤트들이
+                        // 바로 위에서 recyclerView 에 등록된 RecyclerItemTouchListenter 의 리스너에 의해 가려져있다.(우선순위가 높기때문)
+                        // 따라서 장비 항목을 클릭했을때 화살표 부분 왼쪽에서 일어난 터치에 대해서는
+                        // onInterceptTouchEvent에서 false를 리턴해줌으로써 recyclerView객체에서는 handle하지 않고, 하위 view에게 이벤트를 넘겨줍니다.
+                        return super.onInterceptTouchEvent(view, e);
+                    }*/
+                }
+
+        );
     }
 
     public void insertExampleInputsToDB(){

@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="90"
+        android:layout_weight="80"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="100"
@@ -48,12 +48,19 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/parent_list_item_expand_arrow"
+    <LinearLayout
+        android:id="@+id/group_list_dropdown_touch_area"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:layout_gravity="center"
-        android:background="@drawable/ic_keyboard_arrow_down_black_24dp" />
+        android:layout_height="match_parent"
+        android:layout_weight="20"
+        android:gravity="center_vertical|right"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/group_list_item_expand_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_arrow_down" />
+    </LinearLayout>
 
 </LinearLayout>

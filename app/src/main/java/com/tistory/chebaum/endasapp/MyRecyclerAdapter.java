@@ -44,6 +44,7 @@ public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupView
         holder.g_reg_date.setText("등록일: 2018.01.18");
         holder.g_reg_date.setTextSize(holder.g_name.getTextSize()/4);
 
+
         if(selected_groups.contains(group)){
             //TODO 선택된 항목임..색 다르게 설정해준다.
            // ((TextView)parentViewHolder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorBackground));
