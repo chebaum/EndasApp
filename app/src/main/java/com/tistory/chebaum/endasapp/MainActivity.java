@@ -11,7 +11,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    boolean selection_mode;
+    private List<Group> groups;
+    private List<Group> selected_groups;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -50,5 +57,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
         getSupportActionBar().setTitle("채널 관리");
+        selection_mode=false;
+        groups=new ArrayList<>();
+        selected_groups=new ArrayList<>();
     }
+
+    public List<Group> get_group(){
+        return groups;
+    }
+    public List<Group> get_selected_groups(){
+        return selected_groups;
+    }
+
 }

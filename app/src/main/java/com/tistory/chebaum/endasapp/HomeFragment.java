@@ -53,11 +53,11 @@ public class HomeFragment extends Fragment {
     private List<Group> groups;
     private List<Group> selected_groups;
 
-    private boolean selection_mode;
-
     private static final String TAG = "TestDataBase";
     private GroupDBOpenHelper mGroupDBOpenHelper;
     private ChannelDBOpenHelper mChannelDBOpenHelper;
+
+
 
     private View mHomeFragView;
 
@@ -100,7 +100,9 @@ public class HomeFragment extends Fragment {
         if(mHomeFragView==null)
             mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        selection_mode=false;
+        ((MainActivity)mHomeFragView.getContext()).selection_mode=false;
+        groups=((MainActivity)mHomeFragView.getContext()).get_group();
+        selected_groups=((MainActivity)mHomeFragView.getContext()).get_selected_groups();
 
         get_channels_from_database();
         setRecyclerViewAttrs(mHomeFragView);
@@ -205,8 +207,7 @@ public class HomeFragment extends Fragment {
         Cursor cursor = null;
         Cursor childCursor = null;
 
-        groups=new ArrayList<>();
-        selected_groups=new ArrayList<>();
+
 
         //getContext().deleteDatabase("channelDB.db");
         //getContext().deleteDatabase("groupDB.db");
@@ -339,122 +340,39 @@ public class HomeFragment extends Fragment {
 */
     public void setRecyclerViewAttrs(final View view){
         recyclerView = view.findViewById(R.id.recycler_view);
-        adapter = new MyRecyclerAdapter(groups,selected_groups);
+        adapter = new MyRecyclerAdapter(groups,selected_groups, view);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new MyLinearLayoutManager(view.getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View v, int position) {
-                        if(SystemClock.elapsedRealtime()-lastClickTime < 1000)
-                            return;
-                        if(selection_mode) {
-                            // 선택모드인데, 이미 선택된 항목이라면, 선택취소
-                            if (selected_groups.contains(groups.get(position))) {
-                                selected_groups.remove(groups.get(position));
-                                //selected_items.delete(position);
-                                ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                                (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
-                            }
-                            // 선택한 항목 추가
-                            else {
-                                selected_groups.add(groups.get(position));
-                                //selected_items.put(position, true);
-                                ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorBackground));
-                                (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            }
-
-                            // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
-                            getActivity().invalidateOptionsMenu();
-
-                        }
-                        // 선택한 채널 실시간 영상 재생
-                        else{
-                            Toast.makeText(view.getContext(), "click " + (groups.get(position)).getG_title(), Toast.LENGTH_SHORT).show();}
-                            /*// 클릭된 항목의 주소를 가져와서 전체화면으로 재생시켜준다.
-                            Intent intent = new Intent(getActivity(), FullScreenPlayActivity.class);
-                            intent.putExtra("urlPath", (groups.get(position)).getG_url());
-                            //TODO 지워
-                            //startActivity(intent);
-                        }*/
-                        lastClickTime = SystemClock.elapsedRealtime();
-
-                        if(isSelectedMultiple())
-                            Toast.makeText(view.getContext(),"2개이상!",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onLongItemClick(View v, int position) {
-                        Toast.makeText(view.getContext(), "long click at view", Toast.LENGTH_SHORT).show();
-                        if(!selection_mode) {
-                            setHasOptionsMenu(true); // this triggers onCreateOptionsMenu() 메소드
-                            ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
-                        }
-                        selection_mode=true;
-
-                        // 이미 선택된 항목이라면, 선택취소
-                        if (selected_groups.contains(groups.get(position))) {
-                            selected_groups.remove(groups.get(position));
-                            //selected_items.delete(position);
-                            ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                            (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorBackground));
-                        }
-                        // 선택한 항목 추가
-                        else {
-                            selected_groups.add(groups.get(position));
-                            //selected_items.put(position, true);
-                            ((TextView) v.findViewById(R.id.row_g_name)).setTextColor(getResources().getColor(R.color.colorBackground));
-                            (v.findViewById(R.id.row_layout)).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                        }
-
-                        // 여러개의 채널이 선택된 경우 수정버튼은 사라진다. 반대의 경우 다시 생긴다.
-                        getActivity().invalidateOptionsMenu();
-                    }
-                }){
-                    /*@Override
-                    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-
-                        if(!(!selection_mode && e.getX()<(float)view.findViewById(R.id.group_list_dropdown_touch_area).getX()))
-                            return false;
-                        // 리스트에서 항목에 대한 터치를 하면 채널리스트가 보여져야하지만, 이와 같은 이벤트들이
-                        // 바로 위에서 recyclerView 에 등록된 RecyclerItemTouchListenter 의 리스너에 의해 가려져있다.(우선순위가 높기때문)
-                        // 따라서 장비 항목을 클릭했을때 화살표 부분 왼쪽에서 일어난 터치에 대해서는
-                        // onInterceptTouchEvent에서 false를 리턴해줌으로써 recyclerView객체에서는 handle하지 않고, 하위 view에게 이벤트를 넘겨줍니다.
-                        return super.onInterceptTouchEvent(view, e);
-                    }*/
-                }
-
-        );
     }
 
     public void insertExampleInputsToDB(){
 
         List<Channel> list = new ArrayList<>();
-        list.add(new Channel(1,"ch1",1));
-        list.add(new Channel(2,"ch1",1));
-        list.add(new Channel(3,"ch1",1));
-        list.add(new Channel(4,"ch1",1));
+        list.add(new Channel(1,"channel 1",1));
+        list.add(new Channel(2,"channel 2",1));
+        list.add(new Channel(3,"channel 3",1));
+        list.add(new Channel(4,"channel 4",1));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
         mGroupDBOpenHelper.insertColumn(new Group(list, 1, "장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
 
         list = new ArrayList<>();
-        list.add(new Channel(1,"ch1",2));
-        list.add(new Channel(2,"ch1",2));
-        list.add(new Channel(3,"ch1",2));
-        list.add(new Channel(4,"ch1",2));
+        list.add(new Channel(1,"channel 1",2));
+        list.add(new Channel(2,"channel 2",2));
+        list.add(new Channel(3,"channel 3",2));
+        list.add(new Channel(4,"channel 4",2));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
         mGroupDBOpenHelper.insertColumn(new Group(list, 2, "자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
 
         list = new ArrayList<>();
-        list.add(new Channel(1,"ch1",3));
-        list.add(new Channel(2,"ch1",3));
-        list.add(new Channel(3,"ch1",3));
-        list.add(new Channel(4,"ch1",3));
+        list.add(new Channel(1,"channel 1",3));
+        list.add(new Channel(2,"channel 2",3));
+        list.add(new Channel(3,"channel 3",3));
+        list.add(new Channel(4,"channel 4",3));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
         mGroupDBOpenHelper.insertColumn(new Group(list, 3,"자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));

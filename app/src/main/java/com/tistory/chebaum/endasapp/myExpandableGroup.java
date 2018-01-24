@@ -9,13 +9,23 @@ import java.util.List;
  */
 
 public class myExpandableGroup extends ExpandableGroup {
+    private String id;
     private String ip;
     private String reg_date;
 
-    public myExpandableGroup(String title, List items, String ip, String reg_date) {
+    public myExpandableGroup(String title, List items, String id, String ip, String reg_date) {
         super(title, items);
+        this.id=id;
         this.ip = ip;
         this.reg_date = reg_date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIp() {

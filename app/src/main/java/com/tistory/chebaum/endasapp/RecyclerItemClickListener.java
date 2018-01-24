@@ -6,6 +6,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 /**
  * Created by cheba on 2018-01-12.
@@ -37,9 +38,15 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
             @Override
             public void onLongPress(MotionEvent e) {
-             //   View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-             //   if(child!=null && mListener!=null)
-              //      mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+
+                View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                if(child!=null && mListener!=null)
+                    mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                return true;
             }
 
         });
@@ -47,6 +54,9 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+        if(e.getX()>(float)view.findViewById(R.id.group_list_dropdown_touch_area).getX()){
+            return true;
+        }
         View childView = view.findChildViewUnder(e.getX(), e.getY());
         if(childView!=null&&mListener!=null&&mGestureDetector.onTouchEvent(e)){
             mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
@@ -57,7 +67,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
     }
 
     @Override
