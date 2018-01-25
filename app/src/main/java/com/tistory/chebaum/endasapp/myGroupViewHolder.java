@@ -2,6 +2,8 @@ package com.tistory.chebaum.endasapp;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
@@ -49,7 +51,8 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
         Group group;
         int id=Integer.parseInt(g_id.getText().toString());
         if(!getSelectionMode(view)) {
-            //타이틀바 수정
+            Intent intent = new Intent("group.longclick.action");
+            view.getContext().sendBroadcast(intent);
         }
         setSelectionMode(view, true);
 
@@ -68,6 +71,7 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
             g_row_layout.setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
             Toast.makeText(view.getContext(), g_ip.getText(), Toast.LENGTH_SHORT).show();
         }
+        ((MainActivity)view.getContext()).invalidateOptionsMenu();
         return true;
     }
 
@@ -79,6 +83,7 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
     @Override
     public void collapse() { animationCollapse(); }
 
+    // TODO 화살표가 갑자기 회전이 안된다... onClickListener의 우선순위 문제로 묻혀버린듯... 실제 사용에는 영향없으니 나중에 해결
     private void animateExpand(){
         RotateAnimation rotate =
                 new RotateAnimation(360, 180, RELATIVE_TO_SELF, 0.5f, RELATIVE_TO_SELF, 0.5f);

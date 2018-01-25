@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
     public List<Group> get_group(){
         return groups;
     }
-    public List<Group> get_selected_groups(){
-        return selected_groups;
-    }
+    public List<Group> get_selected_groups(){ return selected_groups; }
 
 }

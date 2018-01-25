@@ -6,33 +6,33 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/dialog_channel_title"
+        android:id="@+id/dialog_group_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="채널 이름"/>
     <EditText
-        android:id="@+id/dialog_channel_url"
+        android:id="@+id/dialog_group_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="URL"/>
     <EditText
-        android:id="@+id/dialog_channel_webport"
+        android:id="@+id/dialog_group_webport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="웹 포트"/>
     <EditText
-        android:id="@+id/dialog_channel_videoport"
+        android:id="@+id/dialog_group_videoport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="비디오 포트"/>
     <EditText
-        android:id="@+id/dialog_channel_id"
+        android:id="@+id/dialog_group_id"
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="아이디"/>
     <EditText
-        android:id="@+id/dialog_channel_pw"
+        android:id="@+id/dialog_group_pw"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

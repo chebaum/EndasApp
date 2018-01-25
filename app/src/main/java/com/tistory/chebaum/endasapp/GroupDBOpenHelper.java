@@ -32,7 +32,7 @@ public class GroupDBOpenHelper {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE IF NOT EXISTS groupDB (gId INTEGER , gTitle CHAR(100), gUrl CHAR(100), gWebPort INTEGER, gVideoPort INTEGER, gLoginId CHAR(100), gLoginPw CHAR(100));");
             //db.execSQL("CREATE TABLE IF NOT EXISTS channelDB (cId INTEGER PRIMARY KEY AUTOINCREMENT, cTitle CHAR(100), cUrl CHAR(100), cWebPort INTEGER, cVideoPort INTEGER, cLoginId CHAR(100), cLoginPw CHAR(100));");
-
+            // TODO 실제로는 gid를 primary key, auto increment 로 해야한다!
         }
 
         @Override

@@ -1,12 +1,15 @@
 package com.tistory.chebaum.endasapp;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,15 +23,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MotionEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -37,13 +39,11 @@ import java.util.List;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+// 데이터베이스 저장된 위치 : 폰의 data/user/0/com.tistory.chebaum.endasapp/databases/channelDB.db
+
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -52,30 +52,15 @@ public class HomeFragment extends Fragment {
     private MyRecyclerAdapter adapter;
     private List<Group> groups;
     private List<Group> selected_groups;
-
     private static final String TAG = "TestDataBase";
     private GroupDBOpenHelper mGroupDBOpenHelper;
     private ChannelDBOpenHelper mChannelDBOpenHelper;
-
-
-
+    private BroadcastReceiver receiver =null;
     private View mHomeFragView;
-
-    private long lastClickTime=0;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -84,7 +69,6 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,22 +81,20 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(mHomeFragView==null)
-            mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
+        if(mHomeFragView==null) mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
 
         ((MainActivity)mHomeFragView.getContext()).selection_mode=false;
         groups=((MainActivity)mHomeFragView.getContext()).get_group();
         selected_groups=((MainActivity)mHomeFragView.getContext()).get_selected_groups();
 
+        setBroadcastReceiver();
         get_channels_from_database();
         setRecyclerViewAttrs(mHomeFragView);
         setFabBtn(mHomeFragView);
 
         return mHomeFragView;
-        //data/user/0/com.tistory.chebaum.endasapp/databases/channelDB.db
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -135,6 +117,7 @@ public class HomeFragment extends Fragment {
         selected_groups.clear();
         mGroupDBOpenHelper.close();
         mChannelDBOpenHelper.close();
+        getActivity().unregisterReceiver(receiver);
         super.onDetach();
     }
 
@@ -155,42 +138,46 @@ public class HomeFragment extends Fragment {
         else
             menu.findItem(R.id.channel_edit).setVisible(true);
     }
-/*
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // 수정,완료,삭제 버튼 기능 구현
+    public boolean onOptionsItemSelected(MenuItem item) { // 아이템 선택모드에서 생성된 수정/삭제/종료 버튼 클릭에대한 이벤트 처리
         int id = item.getItemId();
         switch (id) {
             case R.id.channel_edit:
                 Toast.makeText(getView().getContext(), "edit", Toast.LENGTH_SHORT).show();
                 // 얘는 채널이 단 한 개 선택되었을때만 클릭 가능한 버튼(혹은 암것도 클릭안한경우)
                 // 아무것도 선택되지 않은 경우 toast 메세지 짧게 띄워주자 그냥.
-                if(selected_channels.isEmpty())
+                if(selected_groups.isEmpty())
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
-                    Group channel = (Group)selected_channels.get(0);
-                    int idx = channels.indexOf(channel);
-                    // show user the contents of channel
-                    modify_channel_by_user(channel, idx);
-                    mDBOpenHelper.updateColumn(channel);
+                    Group group = (Group)selected_groups.get(0);
+                    int idx = groups.indexOf(group);
+                    // 다이얼로그를 통하여 그룹의 정보를 수정한다.
+                    // TODO 수정할 수 있는 항목 - 아무런 영향을 주지 않는 '이름'같은 속성만 바꿀 수 있게할 건지,
+                    // TODO ip주소나 포트번호 까지도 바꿀 수 있게하려면, 유효한 값인지 체크 / 등록할 채널 선택하는 과정 추가해야한다.
+                    modify_channel_by_user(group, idx);
                 }
                 break;
-            // TODO : 리스트 항목이 많을 때 한번 다 삭제해보자! 이상하게 몇 개 남을때가 있는것 같은데 확실치않다.
             case R.id.channel_delete:
-                if(selected_channels.isEmpty())
+                if(selected_groups.isEmpty())
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else {
-                    // 선택된 채널을 삭제하고
-                    for(Group pObj : selected_channels){
-                        channels.remove(pObj);
-                        // TODO : 실제로 DB에서도 지워야 한다!!!*************************************************
-                        mDBOpenHelper.deleteColumn(pObj);
-                        // TODO : channel 객체의 id값을 가진 childchannel 들도 모두 지워줘야한다.
-                    }
-                    selected_channels.clear();
+                    Cursor delete_cursor=null;
+                    // 사용자에 의해 선택된 채널을 삭제한다.
+                    for(Group group : selected_groups){
+                        groups.remove(group);
+                        mGroupDBOpenHelper.deleteColumn(group);
+                        // group.db 에서는 삭제완료. 해당 그룹에 딸린 채널들도 channel.db 에서 모두 지워준다.
+                        delete_cursor = mChannelDBOpenHelper.getColumnByGroupID(group.getG_id());
+                        while(delete_cursor.moveToNext()){
+                            mChannelDBOpenHelper.deleteColumn(delete_cursor.getInt(delete_cursor.getColumnIndex("cNum")));
+                        }
+                    }// db 삭제 완료.
+                    selected_groups.clear();
                     adapter.notifyDataSetChanged();
                     Snackbar.make(getView(), "정상적으로 삭제되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    delete_cursor.close();
                 }
                 break;
             case R.id.channel_exit_mode:
@@ -202,12 +189,11 @@ public class HomeFragment extends Fragment {
         }
         return true;
     }
-    */
-    private void get_channels_from_database(){
+
+    private void get_channels_from_database(){  // 데이터베이스에 저장된 그룹과 채널들을 읽어들입니다.
+
         Cursor cursor = null;
         Cursor childCursor = null;
-
-
 
         //getContext().deleteDatabase("channelDB.db");
         //getContext().deleteDatabase("groupDB.db");
@@ -267,14 +253,12 @@ public class HomeFragment extends Fragment {
 
             childCursor.close();
         }
-
         cursor.close();
-
-
     }
 
-    // 첫화면의 채널 리스트에서 2개 이상이 선택된 경우 true리턴
     public boolean isSelectedMultiple(){
+        // 첫화면의 그룹 리스트에서 사용자가 2개 이상이 선택된 경우 true리턴
+        // 그룹이 두개 이상 선택된 경우, 수정버튼을 비활성화 해야하는데, 그때 사용하기 위함임
         if(selected_groups.size() > 1)
             return true;
         else
@@ -285,47 +269,47 @@ public class HomeFragment extends Fragment {
         ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
     }
-/*
-    public void modify_channel_by_user(Group channel, final int idx){
-        final Group ch = channel;
+
+    public void modify_channel_by_user(Group group, final int idx){
+        final Group modifying_group=groups.get(idx);
 
         AlertDialog.Builder builder=new AlertDialog.Builder(this.getContext());
         LayoutInflater inflater = this.getLayoutInflater();
-        final View DialogView = inflater.inflate(R.layout.dialog_modify_channel_layout, null);
+        final View DialogView = inflater.inflate(R.layout.dialog_modify_group_layout, null);
         builder.setView(DialogView);
 
-        EditText editText = (EditText)DialogView.findViewById(R.id.dialog_channel_title);
-        editText.setText(channel.getC_title());
+        EditText editText = (EditText)DialogView.findViewById(R.id.dialog_group_title);
+        editText.setText(modifying_group.getG_title());
 
-        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_url);
-        editText.setText(channel.getC_url());
+        editText = (EditText)DialogView.findViewById(R.id.dialog_group_url);
+        editText.setText(modifying_group.getG_url());
 /*
-        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_webport);
-        editText.setText(channel.getC_web_port());
+        editText = (EditText)DialogView.findViewById(R.id.dialog_group_webport);
+        editText.setText(modifying_group.getC_web_port());
 
-        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_videoport);
-        editText.setText(channel.getC_video_port());
+        editText = (EditText)DialogView.findViewById(R.id.dialog_group_videoport);
+        editText.setText(modifying_group.getC_video_port());
 
-        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_id);
-        editText.setText(channel.getC_login_id());
+        editText = (EditText)DialogView.findViewById(R.id.dialog_group_id);
+        editText.setText(modifying_group.getC_login_id());
 
-        editText = (EditText)DialogView.findViewById(R.id.dialog_channel_pw);
-        editText.setText(channel.getC_login_pw());
-
-        builder.setMessage("값을 입력하십시오 - 채널이름과 URL만!");
+        editText = (EditText)DialogView.findViewById(R.id.dialog_group_pw);
+        editText.setText(modifying_group.getC_login_pw());
+*/
+        builder.setMessage("값을 입력하십시오 - 일단 채널이름과 URL만!");
         builder.setTitle("채널 속성값 수정")
                 .setCancelable(false)
                 .setPositiveButton("수정", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // 입력받은값 channel객체에 업데이트
-                        ch.setC_title(((EditText) DialogView.findViewById(R.id.dialog_channel_title)).getText().toString());
-                        ch.setC_url(((EditText) DialogView.findViewById(R.id.dialog_channel_url)).getText().toString());
-                        channels.set(idx, ch);
-                        selected_channels.clear();
+                        // 입력받은값 group 객체에 업데이트
+                        modifying_group.setG_title(((EditText) DialogView.findViewById(R.id.dialog_group_title)).getText().toString());
+                        modifying_group.setG_url(((EditText) DialogView.findViewById(R.id.dialog_group_url)).getText().toString());
+                        groups.set(idx, modifying_group);
+                        mGroupDBOpenHelper.updateColumn(modifying_group);
+                        selected_groups.clear();
                         adapter.notifyDataSetChanged();
                         Snackbar.make(getView(), "정상적으로 수정되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
                     }
                 })
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -337,7 +321,7 @@ public class HomeFragment extends Fragment {
         AlertDialog alert=builder.create();
         alert.show();
     }
-*/
+
     public void setRecyclerViewAttrs(final View view){
         recyclerView = view.findViewById(R.id.recycler_view);
         adapter = new MyRecyclerAdapter(groups,selected_groups, view);
@@ -354,7 +338,6 @@ public class HomeFragment extends Fragment {
         list.add(new Channel(1,"channel 1",1));
         list.add(new Channel(2,"channel 2",1));
         list.add(new Channel(3,"channel 3",1));
-        list.add(new Channel(4,"channel 4",1));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
         mGroupDBOpenHelper.insertColumn(new Group(list, 1, "장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
@@ -363,7 +346,6 @@ public class HomeFragment extends Fragment {
         list.add(new Channel(1,"channel 1",2));
         list.add(new Channel(2,"channel 2",2));
         list.add(new Channel(3,"channel 3",2));
-        list.add(new Channel(4,"channel 4",2));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
         mGroupDBOpenHelper.insertColumn(new Group(list, 2, "자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
@@ -372,7 +354,6 @@ public class HomeFragment extends Fragment {
         list.add(new Channel(1,"channel 1",3));
         list.add(new Channel(2,"channel 2",3));
         list.add(new Channel(3,"channel 3",3));
-        list.add(new Channel(4,"channel 4",3));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
         mGroupDBOpenHelper.insertColumn(new Group(list, 3,"자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
@@ -423,5 +404,19 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         adapter.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void setBroadcastReceiver(){
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("group.longclick.action");
+
+        receiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                setHasOptionsMenu(true);
+                ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
+            }
+        };
+        getActivity().registerReceiver(receiver,intentFilter);
     }
 }
