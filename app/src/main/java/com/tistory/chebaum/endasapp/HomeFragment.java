@@ -368,9 +368,8 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                // 여기에 채널 추가할 수 있도록 다이얼로그 팝업띄워야해!!!!!
-                //**********************************************************************************************************************************************************************************
-                //**********************************************************************************************************************************************************************************
+                Intent intent = new Intent(view.getContext(),RegisterGroupActivity.class);
+                startActivity(intent);
             }
         });
     }
