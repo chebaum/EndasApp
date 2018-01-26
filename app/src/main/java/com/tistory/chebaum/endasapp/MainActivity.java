@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
-                    getSupportActionBar().setTitle("채널 관리");
+                    getSupportActionBar().setTitle("장비 관리");
                     return true;
                 case R.id.navigation_live:
                     transaction.replace(R.id.frame_layout, new LiveViewFragment()).commit();
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
-        getSupportActionBar().setTitle("채널 관리");
+        getSupportActionBar().setTitle("장비 관리");
         selection_mode=false;
         groups=new ArrayList<>();
         selected_groups=new ArrayList<>();

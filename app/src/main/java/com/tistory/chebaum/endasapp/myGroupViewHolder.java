@@ -42,6 +42,10 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if(getSelectionMode(v)){
+            onLongClick(v);
+            return;
+        }
         Toast.makeText(v.getContext(),g_name.getText(),Toast.LENGTH_SHORT).show();
         super.onClick(v);
     }

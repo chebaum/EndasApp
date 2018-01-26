@@ -37,6 +37,7 @@
 
         <activity
             android:name=".RegisterGroupActivity"
+            android:label="장비 등록"
             android:parentActivityName=".MainActivity">
                 <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
