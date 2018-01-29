@@ -12,6 +12,7 @@ public class Channel implements Parcelable{
     private String c_title;
     private long c_group_id; // id number of the parent DB
     // also other attrs...
+    // TODO need more attributes!
 
     public Channel(int c_num, String c_title, long c_group_id) {
         this.c_num = c_num;

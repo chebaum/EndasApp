@@ -52,8 +52,9 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
 
     @Override
     public boolean onLongClick(View view) {
+        //TODO 만약 두개 이상 선택되었다면 수정버튼 비활성화 해야한다.
         Group group;
-        long id=Long.parseLong(g_id.getText().toString());
+        long id=Long.parseLong(((TextView)view.findViewById(R.id.row_g_id)).getText().toString());
         if(!getSelectionMode(view)) {
             Intent intent = new Intent("group.longclick.action");
             view.getContext().sendBroadcast(intent);
@@ -73,7 +74,7 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
             g_ip.setTextColor(view.getResources().getColor(R.color.colorBackground));
             g_reg_date.setTextColor(view.getResources().getColor(R.color.colorBackground));
             g_row_layout.setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
-            Toast.makeText(view.getContext(), g_ip.getText(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), Long.toString(id), Toast.LENGTH_SHORT).show();
         }
         ((MainActivity)view.getContext()).invalidateOptionsMenu();
         return true;

@@ -17,6 +17,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     boolean selection_mode;
+    boolean hasDirtyData;
     private List<Group> groups;
     private List<Group> selected_groups;
 
@@ -57,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
         getSupportActionBar().setTitle("장비 관리");
-        selection_mode=false;
-        groups=new ArrayList<>();
-        selected_groups=new ArrayList<>();
+        hasDirtyData=selection_mode=false;
     }
 
     public List<Group> get_group(){
@@ -67,4 +66,18 @@ public class MainActivity extends AppCompatActivity {
     }
     public List<Group> get_selected_groups(){ return selected_groups; }
 
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+    public void setSelected_groups(List<Group> selected_groups) {
+        this.selected_groups = selected_groups;
+    }
+
+    public boolean getHasDirtyData() {
+        return hasDirtyData;
+    }
+
+    public void setHasDirtyData(boolean hasDirtyData) {
+        this.hasDirtyData = hasDirtyData;
+    }
 }

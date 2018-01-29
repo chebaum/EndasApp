@@ -1,6 +1,7 @@
 package com.tistory.chebaum.endasapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.SQLException;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,7 +58,7 @@ public class RegisterGroupActivity extends AppCompatActivity {
         String password = ((EditText)findViewById(R.id.group_reg_edittext_password)).getText().toString();
 
         //TODO g_id 관련 데이터베이스 속성 값 바꿔야함함
-       userInput=new Group(null, 1, title, url, webPort, videoPort, id, password);
+       userInput=new Group(null, title, url, webPort, videoPort, id, password);
     }
 
     public void createURL(){
@@ -145,6 +146,7 @@ public class RegisterGroupActivity extends AppCompatActivity {
                 return;
             }
             else {
+                int j=0;
                 Toast.makeText(getApplicationContext(), "연결 성공", Toast.LENGTH_LONG).show();
                 // serverStatus에 저장된 정보를 활용한다.(현재 사용가능한 채널목록이 ServerChannel객체들의 리스트 형태로 저장되어있음)
                 // for(ServerChannel ch : serverStatus)
@@ -152,14 +154,16 @@ public class RegisterGroupActivity extends AppCompatActivity {
                 //            use ch.name/ch.num
                 String[] listItems=new String[count];
                 final boolean[] checkedItems=new boolean[count];
-                for(int i=0, j=0;i<serverStatus.size();i++){
-                    if(serverStatus.get(i).isActive()) {
-                        listItems[j++] = serverStatus.get(i).getName();
+                for(int i=0;i<serverStatus.size();i++) {
+                    if (serverStatus.get(i).isActive()) {
+                        listItems[j] = serverStatus.get(i).getName();
                         checkedItems[j++] = false;
                     }
-                    // TODO 지워야한다~
-                    if(j!=count)
-                        Toast.makeText(getApplicationContext(), "개수 맞지않음 확인해야..", Toast.LENGTH_LONG).show();
+                }
+                // TODO 지워야한다~
+                if (j != count) {
+                    Toast.makeText(getApplicationContext(), "개수 맞지않음 확인해야..", Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "j="+Integer.toString(j)+" count="+Integer.toString(count));
                 }
 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(RegisterGroupActivity.this);
@@ -176,18 +180,20 @@ public class RegisterGroupActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 int j=0;
-                                for(ServerChannel channel:serverStatus){
-                                    if(channel.isActive()){
+                                for(ServerChannel channel:serverStatus) {
+                                    if (channel.isActive()) {
                                         channel.setIsSelected(checkedItems[j++]);
                                     }
-                                    if(j!=count){
-                                        Toast.makeText(getApplicationContext(), "개수 맞지않음 확인해야..222", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                    insertSelectedToDatabase();
-                                    // TODO 체크! 메인화면으로 돌아오는지...
-                                    finish();
                                 }
+                                if(j!=count){
+                                    Toast.makeText(getApplicationContext(), "개수 맞지않음 확인해야..222", Toast.LENGTH_LONG).show();
+                                    Log.e(TAG, "j="+Integer.toString(j)+" count="+Integer.toString(count));
+                                    return;
+                                }
+                                insertSelectedToDatabase();
+                                Intent intent = new Intent("notify.adapter.dirtydata.action");
+                                getApplicationContext().sendBroadcast(intent);
+                                finish();
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -196,6 +202,8 @@ public class RegisterGroupActivity extends AppCompatActivity {
                                 dialogInterface.dismiss();
                             }
                         });
+                AlertDialog mDialog=mBuilder.create();
+                mDialog.show();
             }
         }
     }

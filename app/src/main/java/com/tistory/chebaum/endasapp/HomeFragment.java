@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -84,8 +85,6 @@ public class HomeFragment extends Fragment {
         if(mHomeFragView==null) mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
 
         ((MainActivity)mHomeFragView.getContext()).selection_mode=false;
-        groups=((MainActivity)mHomeFragView.getContext()).get_group();
-        selected_groups=((MainActivity)mHomeFragView.getContext()).get_selected_groups();
 
         setBroadcastReceiver();
         get_channels_from_database();
@@ -119,6 +118,16 @@ public class HomeFragment extends Fragment {
         mChannelDBOpenHelper.close();
         getActivity().unregisterReceiver(receiver);
         super.onDetach();
+    }
+
+    @Override
+    public void onResume() {
+        if(((MainActivity)mHomeFragView.getContext()).getHasDirtyData()) {
+            ((MainActivity)mHomeFragView.getContext()).setHasDirtyData(false);
+            restartFragment();
+            Log.e(TAG, "onResume called!");
+        }
+        super.onResume();
     }
 
     public interface OnFragmentInteractionListener {
@@ -195,6 +204,11 @@ public class HomeFragment extends Fragment {
         Cursor cursor = null;
         Cursor childCursor = null;
 
+        groups= new ArrayList<Group>();
+        selected_groups=new ArrayList<Group>();
+        ((MainActivity)mHomeFragView.getContext()).setGroups(groups);
+        ((MainActivity)mHomeFragView.getContext()).setSelected_groups(selected_groups);
+
         //getContext().deleteDatabase("channelDB.db");
         //getContext().deleteDatabase("groupDB.db");
 
@@ -241,14 +255,17 @@ public class HomeFragment extends Fragment {
 
             Group group = new Group(
                     list,
-                    cursor.getLong(cursor.getColumnIndex("gId")),
                     cursor.getString(cursor.getColumnIndex("gTitle")),
-                    cursor.getString(cursor.getColumnIndex("gUrl"))
+                    cursor.getString(cursor.getColumnIndex("gUrl")),
+                    cursor.getInt(cursor.getColumnIndex("gWebPort")),
+                    cursor.getInt(cursor.getColumnIndex("gVideoPort")),
+                    cursor.getString(cursor.getColumnIndex("gLoginId")),
+                    cursor.getString(cursor.getColumnIndex("gLoginPw"))
             );
             //channel.setChildObjectList(childList);
             groups.add(group);
 
-            Log.d(TAG,"DEBUG *** gid="+group.getG_id()+"gTitle="+group.getG_title()+"gUrl="+group.getG_url()); // for DEBUG
+            Log.d(TAG,"DEBUG *** gid="+id+"gTitle="+group.getG_title()+"gUrl="+group.getG_url()); // for DEBUG
             Log.d(TAG, "DEBUG ***");
 
             childCursor.close();
@@ -267,11 +284,11 @@ public class HomeFragment extends Fragment {
 
     public void restartFragment(){
         ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 관리");
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("장비 관리");
     }
 
-    public void modify_channel_by_user(Group group, final int idx){
-        final Group modifying_group=groups.get(idx);
+    public void modify_channel_by_user(final Group group, final int idx){
+        //group: 현재 선택된 그룹객체 / idx: groups 배열 내에서 group의 현재 index값
 
         AlertDialog.Builder builder=new AlertDialog.Builder(this.getContext());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -279,25 +296,11 @@ public class HomeFragment extends Fragment {
         builder.setView(DialogView);
 
         EditText editText = (EditText)DialogView.findViewById(R.id.dialog_group_title);
-        editText.setText(modifying_group.getG_title());
+        editText.setText(group.getG_title());
 
         editText = (EditText)DialogView.findViewById(R.id.dialog_group_url);
-        editText.setText(modifying_group.getG_url());
-/*
-        editText = (EditText)DialogView.findViewById(R.id.dialog_group_webport);
-        editText.setText(modifying_group.getC_web_port());
+        editText.setText(group.getG_url());
 
-        editText = (EditText)DialogView.findViewById(R.id.dialog_group_videoport);
-        editText.setText(modifying_group.getC_video_port());
-
-        editText = (EditText)DialogView.findViewById(R.id.dialog_group_id);
-        editText.setText(modifying_group.getC_login_id());
-
-        editText = (EditText)DialogView.findViewById(R.id.dialog_group_pw);
-        editText.setText(modifying_group.getC_login_pw());
-
-        //TODO 이름만 바꾸게하자
-*/
         builder.setMessage("값을 입력하십시오 - 일단 채널이름과 URL만!");
         builder.setTitle("채널 속성값 수정")
                 .setCancelable(false)
@@ -305,10 +308,10 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // 입력받은값 group 객체에 업데이트
-                        modifying_group.setG_title(((EditText) DialogView.findViewById(R.id.dialog_group_title)).getText().toString());
-                        modifying_group.setG_url(((EditText) DialogView.findViewById(R.id.dialog_group_url)).getText().toString());
-                        groups.set(idx, modifying_group);
-                        mGroupDBOpenHelper.updateColumn(modifying_group);
+                        group.setG_title(((EditText) DialogView.findViewById(R.id.dialog_group_title)).getText().toString());
+                        group.setG_url(((EditText) DialogView.findViewById(R.id.dialog_group_url)).getText().toString());
+                        groups.set(idx, group);
+                        mGroupDBOpenHelper.updateColumn(group);
                         selected_groups.clear();
                         adapter.notifyDataSetChanged();
                         Snackbar.make(getView(), "정상적으로 수정되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -335,7 +338,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void insertExampleInputsToDB(){
-
+/*
         List<Channel> list = new ArrayList<>();
         list.add(new Channel(1,"channel 1",1));
         list.add(new Channel(2,"channel 2",1));
@@ -361,7 +364,7 @@ public class HomeFragment extends Fragment {
         mGroupDBOpenHelper.insertColumn(new Group(list, 3,"자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
         //mGroupDBOpenHelper.insertColumn(new Group("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
         //mGroupDBOpenHelper.insertColumn(new Group("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
-    }
+   */ }
 
     public void setFabBtn(View view){
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -410,12 +413,22 @@ public class HomeFragment extends Fragment {
     public void setBroadcastReceiver(){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("group.longclick.action");
+        intentFilter.addAction("notify.adapter.dirtydata.action");
 
         receiver=new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                setHasOptionsMenu(true);
-                ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
+                String action = intent.getAction();
+                switch (action)
+                {
+                    case "group.longclick.action":
+                        setHasOptionsMenu(true);
+                        ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
+                        break;
+                    case "notify.adapter.dirtydata.action":
+                        ((MainActivity)mHomeFragView.getContext()).setHasDirtyData(true);
+                        break;
+                }
             }
         };
         getActivity().registerReceiver(receiver,intentFilter);

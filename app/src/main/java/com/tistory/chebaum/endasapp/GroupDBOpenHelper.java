@@ -57,7 +57,6 @@ public class GroupDBOpenHelper {
 
     public long insertColumn(Group group){
         ContentValues values = new ContentValues();
-        values.put("gId",group.getG_id());
         values.put("gTitle", group.getG_title());
         values.put("gUrl", group.getG_url());
         values.put("gWebPort", group.getG_web_port());
