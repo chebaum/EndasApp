@@ -6,78 +6,187 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RegisterGroupActivity">
+    tools:context=".RegisterGroupActivity"
+    android:layout_margin="15dp"
+    android:weightSum="100">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="30"
-            android:text="URL"/>
+            android:gravity="center_vertical"
+            android:text="채널 이름"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
-            android:id="@+id/edittext_url"
+            android:id="@+id/group_reg_edittext_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="70"/>
+            android:layout_weight="70"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">>
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="30"
-            android:text="Webport"/>
+            android:gravity="center_vertical"
+            android:text="URL"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
-            android:id="@+id/edittext_webport"
+            android:id="@+id/group_reg_edittext_url"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="70"/>
+            android:layout_weight="70"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">>
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="30"
-            android:text="User"/>
+            android:gravity="center_vertical"
+            android:text="웹 포트"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
-            android:id="@+id/edittext_id"
+            android:id="@+id/group_reg_edittext_webport"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="70"/>
+            android:layout_weight="70"
+            android:text="80"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="30"
-            android:text="Password"/>
+            android:gravity="center_vertical"
+            android:text="비디오 포트"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
-            android:id="@+id/edittext_pw"
+            android:id="@+id/group_reg_edittext_videoport"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="70"/>
+            android:layout_weight="70"
+            android:text="9001"
+            android:textSize="16sp"
+            android:paddingLeft="10dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:gravity="center_vertical"
+            android:text="아이디"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
+        <EditText
+            android:id="@+id/group_reg_edittext_id"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="70"
+            android:text="admin"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:gravity="center_vertical"
+            android:text="비밀번호"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/group_reg_edittext_password"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="70"
+            android:text="9999"
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/getRequestBtn"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="http send request"/>
+        android:layout_height="0dp"
+        android:layout_weight="10"/>
 
-    <TextView
-        android:id="@+id/textview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Response will be shown here" />
+        android:layout_height="0dp"
+        android:layout_weight="12"
+        android:orientation="horizontal"
+        android:gravity="center|bottom">
+        <Button
+            android:id="@+id/group_reg_request_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:text="등록"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite" />
+        <Button
+            android:id="@+id/group_reg_quit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:text="취소"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
 
 </LinearLayout>

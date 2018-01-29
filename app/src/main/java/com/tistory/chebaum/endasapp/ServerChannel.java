@@ -8,14 +8,17 @@ public class ServerChannel {
     private int number;
     private boolean isActive;
     private String name;
+    private boolean isSelected;
 
     public ServerChannel() {
+        isSelected=false;
     }
 
     public ServerChannel(int number, boolean isActive, String name) {
         this.number = number;
         this.isActive = isActive;
         this.name = name;
+        this.isSelected = false;
     }
 
     public int getNumber() {
@@ -40,5 +43,13 @@ public class ServerChannel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getIsSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean selected) {
+        isSelected = selected;
     }
 }

@@ -30,7 +30,7 @@ public class GroupDBOpenHelper {
         // 최초 DB를 만들때 한번 호출됨
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE IF NOT EXISTS groupDB (gId INTEGER , gTitle CHAR(100), gUrl CHAR(100), gWebPort INTEGER, gVideoPort INTEGER, gLoginId CHAR(100), gLoginPw CHAR(100));");
+            db.execSQL("CREATE TABLE IF NOT EXISTS groupDB (gId INTEGER PRIMARY KEY AUTOINCREMENT, gTitle CHAR(100), gUrl CHAR(100), gWebPort INTEGER, gVideoPort INTEGER, gLoginId CHAR(100), gLoginPw CHAR(100));");
             //db.execSQL("CREATE TABLE IF NOT EXISTS channelDB (cId INTEGER PRIMARY KEY AUTOINCREMENT, cTitle CHAR(100), cUrl CHAR(100), cWebPort INTEGER, cVideoPort INTEGER, cLoginId CHAR(100), cLoginPw CHAR(100));");
             // TODO 실제로는 gid를 primary key, auto increment 로 해야한다!
         }
@@ -75,12 +75,12 @@ public class GroupDBOpenHelper {
         values.put("gVideoPort", group.getG_video_port());
         values.put("gLoginId", group.getG_login_id());
         values.put("gLoginPw", group.getG_login_pw());
-        Log.d(TAG,"gId="+Integer.toString(group.getG_id()) +" change**************");
-        return mDB.update("groupDB",values,"gId="+Integer.toString(group.getG_id()),null)>0;
+        Log.d(TAG,"gId="+Long.toString(group.getG_id()) +" change**************");
+        return mDB.update("groupDB",values,"gId="+Long.toString(group.getG_id()),null)>0;
     }
 
     public boolean deleteColumn(Group group){
-        return mDB.delete("groupDB","gId="+Integer.toString(group.getG_id()),null)>0;
+        return mDB.delete("groupDB","gId="+Long.toString(group.getG_id()),null)>0;
     }
 
     public Cursor getAllColumns(){

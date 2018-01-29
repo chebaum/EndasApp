@@ -53,7 +53,7 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
     @Override
     public boolean onLongClick(View view) {
         Group group;
-        int id=Integer.parseInt(g_id.getText().toString());
+        long id=Long.parseLong(g_id.getText().toString());
         if(!getSelectionMode(view)) {
             Intent intent = new Intent("group.longclick.action");
             view.getContext().sendBroadcast(intent);
@@ -111,14 +111,14 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
         ((MainActivity)view.getContext()).selection_mode=bool;
     }
 
-    public Group getGroupIfExistsInSelectedGroup(View view, int id){
+    public Group getGroupIfExistsInSelectedGroup(View view, long id){
         for(Group group : ((MainActivity)view.getContext()).get_selected_groups()){
             if(group.getG_id()==id)
                 return group;
         }
         return null;
     }
-    public Group getGroupIfExistsInGroup(View view, int id){
+    public Group getGroupIfExistsInGroup(View view, long id){
         for(Group group : ((MainActivity)view.getContext()).get_group()){
             if(group.getG_id()==id)
                 return group;

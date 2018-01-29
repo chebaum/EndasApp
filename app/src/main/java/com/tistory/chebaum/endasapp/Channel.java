@@ -10,10 +10,10 @@ import android.os.Parcelable;
 public class Channel implements Parcelable{
     private int c_num;
     private String c_title;
-    private int c_group_id; // id number of the parent DB
+    private long c_group_id; // id number of the parent DB
     // also other attrs...
 
-    public Channel(int c_num, String c_title, int c_group_id) {
+    public Channel(int c_num, String c_title, long c_group_id) {
         this.c_num = c_num;
         this.c_title = c_title;
         this.c_group_id = c_group_id;
@@ -22,7 +22,7 @@ public class Channel implements Parcelable{
     public Channel(Parcel in) {
         c_num=in.readInt();
         c_title=in.readString();
-        c_group_id=in.readInt();
+        c_group_id=in.readLong();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Channel implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(c_num);
         dest.writeString(c_title);
-        dest.writeInt(c_group_id);
+        dest.writeLong(c_group_id);
     }
 
     public static final Creator<Channel> CREATOR = new Creator<Channel>() {
@@ -61,10 +61,10 @@ public class Channel implements Parcelable{
     public void setC_title(String c_title) {
         this.c_title = c_title;
     }
-    public int getC_group_id() {
+    public long getC_group_id() {
         return c_group_id;
     }
-    public void setC_group_id(int c_group_id) {
+    public void setC_group_id(long c_group_id) {
         this.c_group_id = c_group_id;
     }
 }

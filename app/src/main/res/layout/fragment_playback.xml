@@ -49,13 +49,14 @@
             android:layout_height="match_parent"
             android:layout_weight="75"
             android:gravity="center_vertical"
-            android:paddingLeft="20dp" />
+            android:paddingLeft="20dp"/>
         <Button
             android:id="@+id/select_date"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="25"
             android:text="날짜변경"
+            android:textSize="12sp"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/colorWhite" />
 

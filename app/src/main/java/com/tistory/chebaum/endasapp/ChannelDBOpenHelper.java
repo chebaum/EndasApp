@@ -59,7 +59,7 @@ public class ChannelDBOpenHelper {
         values.put("cNum", channel.getC_num());
         values.put("cTitle", channel.getC_title());
         values.put("cGroupID", channel.getC_group_id());
-        Log.d(TAG, "cNum"+ Integer.toString(channel.getC_num())+"cTitle"+channel.getC_title()+"cGroupID"+Integer.toString(channel.getC_group_id()));
+        Log.d(TAG, "cNum"+ Integer.toString(channel.getC_num())+"cTitle"+channel.getC_title()+"cGroupID"+Long.toString(channel.getC_group_id()));
         return mDB.insert("channelDB", null, values);
     }
 
@@ -84,9 +84,9 @@ public class ChannelDBOpenHelper {
         return mDB.query("channelDB",null,null,null,null,null,null);
     }
 
-    public Cursor getColumnByGroupID(int id){
+    public Cursor getColumnByGroupID(long id){
         Log.d(TAG, "getColumnByParent method entered");
-        String []args={Integer.toString(id)};
+        String []args={Long.toString(id)};
         return mDB.query("channelDB",null,"cGroupID=?",args,null,null,null);
     }
 

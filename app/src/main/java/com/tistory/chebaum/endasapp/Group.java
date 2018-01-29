@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Group extends ExpandableGroup<Channel>{
-    private int g_id;
+    private long g_id;
     private String g_title;
     private String g_url;
     private int g_web_port;
@@ -18,34 +18,36 @@ public class Group extends ExpandableGroup<Channel>{
     private String g_login_pw;
 
     //private List<Object> c_child_list;
-    List<Channel> g_channel_list;
+    //TODO 필요없는듯 확인하자
+    //private List<Channel> g_channel_list;
 
-    public Group(List<Channel> items, int g_id, String g_title, String g_url, int g_web_port,
+    public Group(List<Channel> items, long g_id, String g_title, String g_url, int g_web_port,
                  int g_video_port, String g_login_id, String g_login_pw) {
         super(g_title, items);
-        g_channel_list=items;
+        //g_channel_list=items;
         this.g_id = g_id;
         this.g_title = g_title;
         this.g_url = g_url;
         this.g_web_port = g_web_port;
+
         this.g_video_port = g_video_port;
         this.g_login_id = g_login_id;
         this.g_login_pw = g_login_pw;
         //this.c_child_list = c_child_list;
     }
 
-    public Group(List<Channel> items, int g_id, String g_title, String g_url) {
+    public Group(List<Channel> items, long g_id, String g_title, String g_url) {
         super(g_title, items);
         this.g_id = g_id;
         this.g_title = g_title;
         this.g_url = g_url;
     }
 
-    public int getG_id() {
+    public long getG_id() {
         return g_id;
     }
 
-    public void setG_id(int g_id) {
+    public void setG_id(long g_id) {
         this.g_id = g_id;
     }
 

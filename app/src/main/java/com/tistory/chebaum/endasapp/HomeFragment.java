@@ -217,8 +217,8 @@ public class HomeFragment extends Fragment {
         // 장비를 한개씩 가져옵니다.
         while(cursor.moveToNext())
         {
-            int id = cursor.getInt(cursor.getColumnIndex("gId"));
-            Log.d(TAG, Integer.toString(id)+"번째 장비 볼 차례입니다.");
+            long id = cursor.getInt(cursor.getColumnIndex("gId"));
+            Log.d(TAG, Long.toString(id)+"번째 장비 볼 차례입니다.");
             childCursor = mChannelDBOpenHelper.getColumnByGroupID(id);
             //childCursor=mChannelDBOpenHelper.getAllColumns();
             // 해당 장비에 속하는 채널들을 담게 될 ArrayList입니다.
@@ -231,17 +231,17 @@ public class HomeFragment extends Fragment {
                 Channel channel = new Channel(
                         childCursor.getInt(childCursor.getColumnIndex("cNum")),
                         childCursor.getString(childCursor.getColumnIndex("cTitle")),
-                        childCursor.getInt(childCursor.getColumnIndex("cGroupID"))
+                        childCursor.getLong(childCursor.getColumnIndex("cGroupID"))
                 );
                 list.add(channel);
-                Log.d(TAG, Integer.toString(channel.getC_group_id())+" 번째 parent의 channel  "+ channel.getC_title());
+                Log.d(TAG, Long.toString(channel.getC_group_id())+" 번째 parent의 channel  "+ channel.getC_title());
             }
             // 이제 childList 배열에 해당 장비에 속하는 채널들이 모두 들어가있다.
             // 장비 객체에 연결 시켜주면 된다.
 
             Group group = new Group(
                     list,
-                    cursor.getInt(cursor.getColumnIndex("gId")),
+                    cursor.getLong(cursor.getColumnIndex("gId")),
                     cursor.getString(cursor.getColumnIndex("gTitle")),
                     cursor.getString(cursor.getColumnIndex("gUrl"))
             );
@@ -295,6 +295,8 @@ public class HomeFragment extends Fragment {
 
         editText = (EditText)DialogView.findViewById(R.id.dialog_group_pw);
         editText.setText(modifying_group.getC_login_pw());
+
+        //TODO 이름만 바꾸게하자
 */
         builder.setMessage("값을 입력하십시오 - 일단 채널이름과 URL만!");
         builder.setTitle("채널 속성값 수정")
@@ -340,7 +342,7 @@ public class HomeFragment extends Fragment {
         list.add(new Channel(3,"channel 3",1));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
-        mGroupDBOpenHelper.insertColumn(new Group(list, 1, "장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
+        mGroupDBOpenHelper.insertColumn(new Group(null, 1, "장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
 
         list = new ArrayList<>();
         list.add(new Channel(1,"channel 1",2));
@@ -348,7 +350,7 @@ public class HomeFragment extends Fragment {
         list.add(new Channel(3,"channel 3",2));
         for(Channel ch:list)
             mChannelDBOpenHelper.insertColumn(ch);
-        mGroupDBOpenHelper.insertColumn(new Group(list, 2, "자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
+        mGroupDBOpenHelper.insertColumn(new Group(null, 2, "자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
 
         list = new ArrayList<>();
         list.add(new Channel(1,"channel 1",3));
@@ -366,8 +368,8 @@ public class HomeFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
                 Intent intent = new Intent(view.getContext(),RegisterGroupActivity.class);
                 startActivity(intent);
             }
