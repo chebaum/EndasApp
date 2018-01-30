@@ -182,21 +182,16 @@ public class HomeFragment extends Fragment {
                 if(selected_groups.isEmpty())
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else {
-                    Cursor delete_cursor=null;
                     // 사용자에 의해 선택된 채널을 삭제한다.
                     for(Group group : selected_groups){
                         groups.remove(group);
                         mGroupDBOpenHelper.deleteColumn(group);
                         // group.db 에서는 삭제완료. 해당 그룹에 딸린 채널들도 channel.db 에서 모두 지워준다.
-                        delete_cursor = mChannelDBOpenHelper.getColumnByGroupID(group.getG_id());
-                        while(delete_cursor.moveToNext()){
-                            mChannelDBOpenHelper.deleteColumn(delete_cursor.getInt(delete_cursor.getColumnIndex("cNum")));
-                        }
+                        mChannelDBOpenHelper.deleteColumn(group.getG_id());
                     }// db 삭제 완료.
                     selected_groups.clear();
                     adapter.notifyDataSetChanged();
                     Snackbar.make(getView(), "정상적으로 삭제되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    delete_cursor.close();
                 }
                 break;
             case R.id.channel_exit_mode:

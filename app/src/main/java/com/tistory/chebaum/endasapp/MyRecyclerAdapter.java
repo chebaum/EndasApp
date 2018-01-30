@@ -40,8 +40,8 @@ public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupView
 
     @Override
     public void onBindGroupViewHolder(myGroupViewHolder holder, int flatPosition, ExpandableGroup expandableGroupgroup) {
-        //Group group=(Group)expandableGroupgroup;
-        Group group = groups.get(flatPosition);
+        Group group=(Group)expandableGroupgroup;
+        //Group group = groups.get(flatPosition);
         holder.g_id.setText(Long.toString(group.getG_id()));
         holder.g_name.setText(group.getG_title());
         holder.g_ip.setText(group.getG_url());

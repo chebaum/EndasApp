@@ -72,13 +72,10 @@ public class ChannelDBOpenHelper {
         return mDB.update("channelDB",values,"cNum="+Integer.toString(channel.getC_num()),null)>0;
     }
 
-    public boolean deleteColumn(Channel channel){
-        return mDB.delete("channelDB","cNum="+Integer.toString(channel.getC_num()),null)>0;
+    public boolean deleteColumn(long id){
+        return mDB.delete("channelDB","cGroupID="+Long.toString(id),null)>0;
     }
 
-    public boolean deleteColumn(int num){
-        return mDB.delete("channelDB","cNum="+Integer.toString(num),null)>0;
-    }
 
     public Cursor getAllColumns(){
         return mDB.query("channelDB",null,null,null,null,null,null);
