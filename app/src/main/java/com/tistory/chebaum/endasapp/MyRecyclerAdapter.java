@@ -15,11 +15,13 @@ import java.util.List;
 
 public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupViewHolder,myChannelViewHolder> {
 
+    private List<Group> groups;
     private List<Group> selected_groups;
     View view;
 
-    public MyRecyclerAdapter(List<? extends ExpandableGroup> groups, List<Group> selected_groups, View view) {
-        super(groups);
+    public MyRecyclerAdapter(List<? extends ExpandableGroup> g, List<Group> groups, List<Group> selected_groups, View view) {
+        super(g);
+        this.groups=groups;
         this.selected_groups = selected_groups;
         this.view=view;
     }
@@ -38,10 +40,11 @@ public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupView
 
     @Override
     public void onBindGroupViewHolder(myGroupViewHolder holder, int flatPosition, ExpandableGroup expandableGroupgroup) {
-        Group group=(Group)expandableGroupgroup;
+        //Group group=(Group)expandableGroupgroup;
+        Group group = groups.get(flatPosition);
         holder.g_id.setText(Long.toString(group.getG_id()));
         holder.g_name.setText(group.getG_title());
-        holder.g_ip.setText("172.31.7.11");
+        holder.g_ip.setText(group.getG_url());
         holder.g_ip.setTextSize(holder.g_name.getTextSize()/4);
         holder.g_reg_date.setText("등록일: 2018.01.18");
         holder.g_reg_date.setTextSize(holder.g_name.getTextSize()/4);

@@ -35,6 +35,20 @@ public class Group extends ExpandableGroup<Channel>{
         this.g_login_pw = g_login_pw;
         //this.c_child_list = c_child_list;
     }
+    public Group(List<Channel> items, Long g_id, String g_title, String g_url, int g_web_port,
+                 int g_video_port, String g_login_id, String g_login_pw) {
+        super(g_title, items);
+        //g_channel_list=items;
+        this.g_id = g_id;
+        this.g_title = g_title;
+        this.g_url = g_url;
+        this.g_web_port = g_web_port;
+
+        this.g_video_port = g_video_port;
+        this.g_login_id = g_login_id;
+        this.g_login_pw = g_login_pw;
+        //this.c_child_list = c_child_list;
+    }
 
     public long getG_id() {
         return g_id;

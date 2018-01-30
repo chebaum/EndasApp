@@ -52,7 +52,6 @@ public class myGroupViewHolder extends GroupViewHolder implements View.OnClickLi
 
     @Override
     public boolean onLongClick(View view) {
-        //TODO 만약 두개 이상 선택되었다면 수정버튼 비활성화 해야한다.
         Group group;
         long id=Long.parseLong(((TextView)view.findViewById(R.id.row_g_id)).getText().toString());
         if(!getSelectionMode(view)) {

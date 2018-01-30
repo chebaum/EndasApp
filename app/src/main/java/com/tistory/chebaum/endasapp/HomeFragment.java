@@ -160,8 +160,18 @@ public class HomeFragment extends Fragment {
                     Snackbar.make(getView(), "선택된 채널이 없습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 else{
                     // 선택된 얘의 정보를 가져와서 보여준다음, 원하는 내용을 수정할 수 있도록 해준다.
-                    Group group = (Group)selected_groups.get(0);
+                    Group group=null;
+                    for(Group selected:selected_groups) {
+                        Log.e(TAG, selected.getG_title());
+                        group=selected;
+                    }
+                    if(group==null)
+                        Log.e(TAG, "널~"+Long.toString(group.getG_id()));
+
+                    Log.e(TAG, "선택된 그룹객체 id: "+Long.toString(group.getG_id()));
+                    Log.e(TAG, "selected groups 내의 객체 개수: "+Integer.toString(selected_groups.size()));
                     int idx = groups.indexOf(group);
+                    Log.e(TAG, "modify_channel_by_user 로 전달하기 전 group객체의 id값: "+Integer.toString(idx));
                     // 다이얼로그를 통하여 그룹의 정보를 수정한다.
                     // TODO 수정할 수 있는 항목 - 아무런 영향을 주지 않는 '이름'같은 속성만 바꿀 수 있게할 건지,
                     // TODO ip주소나 포트번호 까지도 바꿀 수 있게하려면, 유효한 값인지 체크 / 등록할 채널 선택하는 과정 추가해야한다.
@@ -255,6 +265,7 @@ public class HomeFragment extends Fragment {
 
             Group group = new Group(
                     list,
+                    cursor.getLong(cursor.getColumnIndex("gId")),
                     cursor.getString(cursor.getColumnIndex("gTitle")),
                     cursor.getString(cursor.getColumnIndex("gUrl")),
                     cursor.getInt(cursor.getColumnIndex("gWebPort")),
@@ -329,7 +340,7 @@ public class HomeFragment extends Fragment {
 
     public void setRecyclerViewAttrs(final View view){
         recyclerView = view.findViewById(R.id.recycler_view);
-        adapter = new MyRecyclerAdapter(groups,selected_groups, view);
+        adapter = new MyRecyclerAdapter(groups,groups,selected_groups, view);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new MyLinearLayoutManager(view.getContext()));
