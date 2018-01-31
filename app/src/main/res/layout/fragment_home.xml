@@ -14,11 +14,16 @@
         android:weightSum="100">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="10"
             android:orientation="horizontal"
-            android:layout_marginTop="15dp"
             android:layout_gravity="center">
 
             <ImageView
@@ -39,24 +44,61 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:weightSum="100">
+
+            <Button
+                android:id="@+id/btn_add_group"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="33"
+                android:text="새 장비 등록"
+                android:padding="5dp"
+                android:backgroundTint="@color/colorAccent"/>
+            <Button
+                android:id="@+id/btn_play_selected"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="33"
+                android:padding="5dp"
+                android:text="선택 채널 재생"
+                android:backgroundTint="@color/colorAccent"/>
+            <Button
+                android:id="@+id/btn_clear_selected"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="33"
+                android:padding="5dp"
+                android:text="전체 선택 해제"
+                android:backgroundTint="@color/colorAccent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="90"
+            android:layout_weight="75"
             android:background="?android:colorBackground"/>
-
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="20dp"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
 
 </android.support.constraint.ConstraintLayout>
 

@@ -9,14 +9,10 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -90,7 +87,7 @@ public class HomeFragment extends Fragment {
         setBroadcastReceiver();
         get_channels_from_database();
         setRecyclerViewAttrs(mHomeFragView);
-        setFabBtn(mHomeFragView);
+        setBtnListeners(mHomeFragView);
 
         return mHomeFragView;
     }
@@ -375,15 +372,30 @@ public class HomeFragment extends Fragment {
         //mGroupDBOpenHelper.insertColumn(new Group("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
    */ }
 
-    public void setFabBtn(View view){
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    public void setBtnListeners(View view){
+        Button addGroup = (Button) view.findViewById(R.id.btn_add_group);
+        Button playSelected=(Button)view.findViewById(R.id.btn_play_selected);
+        Button clearSelected=(Button)view.findViewById(R.id.btn_clear_selected);
+
+        addGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
                 Intent intent = new Intent(view.getContext(),RegisterGroupActivity.class);
                 startActivity(intent);
+            }
+        });
+        playSelected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO 2/1 목요일에는 adapter.getChoices()? 이런식으로 선택된 항목 알아내서 LiveView Fragment한테 Bundle을 사용하여 전달해주는 것 진행한다.
+            }
+        });
+        clearSelected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.clearChoices();
             }
         });
     }
