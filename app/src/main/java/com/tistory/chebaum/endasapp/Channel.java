@@ -21,9 +21,14 @@ public class Channel implements Parcelable{
     }
 
     public Channel(Parcel in) {
-        c_num=in.readInt();
-        c_title=in.readString();
-        c_group_id=in.readLong();
+        try {
+            c_num = in.readInt();
+            c_title = in.readString();
+            c_group_id = in.readLong();
+        }catch (Exception e){
+            // TODO 보안문제...지우자
+            e.printStackTrace();
+        }
     }
 
     @Override

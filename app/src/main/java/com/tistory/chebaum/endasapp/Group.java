@@ -8,7 +8,7 @@ import java.util.List;
  * Created by cheba on 2018-01-11.
  */
 
-public class Group extends ExpandableGroup<Channel>{
+public class Group extends MultiCheckExpandableGroup{
     private long g_id;
     private String g_title;
     private String g_url;

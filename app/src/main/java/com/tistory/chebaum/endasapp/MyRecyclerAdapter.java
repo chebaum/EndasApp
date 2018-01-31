@@ -13,34 +13,29 @@ import java.util.List;
  * Created by cheba on 2018-01-12.
  */
 
-public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupViewHolder,myChannelViewHolder> {
+public class MyRecyclerAdapter extends CheckableChannelRecyclerViewAdapter<myGroupViewHolder,myChannelViewHolder> {
 
     private List<Group> groups;
     private List<Group> selected_groups;
     View view;
 
-    public MyRecyclerAdapter(List<? extends ExpandableGroup> g, List<Group> groups, List<Group> selected_groups, View view) {
+    public MyRecyclerAdapter(List<Group> g, List<Group> groups, List<Group> selected_groups, View view) {
         super(g);
         this.groups=groups;
         this.selected_groups = selected_groups;
         this.view=view;
     }
 
-    @Override
-    public myGroupViewHolder onCreateGroupViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_row_layout,viewGroup,false);
-        return new myGroupViewHolder(view);
-    }
 
     @Override
-    public myChannelViewHolder onCreateChildViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.channel_row_layout,viewGroup,false);
+    public myChannelViewHolder onCreateCheckChildViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.channel_row_layout,parent,false);
         return new myChannelViewHolder(view);
     }
 
     @Override
-    public void onBindGroupViewHolder(myGroupViewHolder holder, int flatPosition, ExpandableGroup expandableGroupgroup) {
-        Group group=(Group)expandableGroupgroup;
+    public void onBindGroupViewHolder(myGroupViewHolder holder, int flatPosition, ExpandableGroup expandableGroup) {
+        Group group=(Group)expandableGroup;
         //Group group = groups.get(flatPosition);
         holder.g_id.setText(Long.toString(group.getG_id()));
         holder.g_name.setText(group.getG_title());
@@ -66,52 +61,17 @@ public class MyRecyclerAdapter extends ExpandableRecyclerViewAdapter<myGroupView
     }
 
     @Override
-    public void onBindChildViewHolder(myChannelViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
-        final Channel ch = ((Group)group).getItems().get(childIndex);
-        holder.c_num.setText(Integer.toString(ch.getC_num()));
-        holder.c_title.setText(ch.getC_title());
+    public void onBindCheckChildViewHolder(myChannelViewHolder holder, int flatPosition, myCheckedExpandableGroup group, int childIndex) {
+        final Channel ch = (Channel) group.getItems().get(childIndex);
+        //holder.c_num.setText(Integer.toString(ch.getC_num()));
+        holder.c_title_checkable.setText(ch.getC_title());
     }
 
-/*
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(itemLayout,parent,false);
-        return new ViewHolder(view);
+    public myGroupViewHolder onCreateGroupViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_row_layout,viewGroup,false);
+        return new myGroupViewHolder(view);
     }
-*/
-/*
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Channel channel=channels.get(position);
-        holder.c_name.setText(channel.getC_title());
-        holder.c_ip.setText("172.31.7.11");
-        holder.c_ip.setTextSize(holder.c_name.getTextSize()/4);
-        holder.c_reg_date.setText("등록일: 2018.01.18");
-        holder.c_reg_date.setTextSize(holder.c_name.getTextSize()/4);
-        if(selected_channels.contains(channel)){
-            ((TextView)holder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorBackground));
-            holder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorPrimaryDark));
-        }
-        else{
-            ((TextView)holder.itemView.findViewById(R.id.row_c_name)).setTextColor(view.getResources().getColor(R.color.colorPrimaryDark));
-            holder.itemView.findViewById(R.id.row_layout).setBackgroundColor(view.getResources().getColor(R.color.colorBackground));
-        }
-    }
-    */
 
-/*
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-
-        public TextView c_name;
-        public TextView c_ip;
-        public TextView c_reg_date;
-
-        public ViewHolder(View itemView){
-            super(itemView);
-            c_name = (TextView)itemView.findViewById(R.id.row_c_name);
-            c_ip=(TextView)itemView.findViewById(R.id.row_c_ip);
-            c_reg_date=((TextView)itemView.findViewById(R.id.row_c_reg_date));
-        }
-    }
-*/
 
 }

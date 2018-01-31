@@ -31,6 +31,9 @@ public class RegisterGroupActivity extends AppCompatActivity {
     private Group userInput;
     private int count=0;
 
+    String title,url,id,password;
+    int webPort,videoPort;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,23 +53,20 @@ public class RegisterGroupActivity extends AppCompatActivity {
     }
 
     public void getUserInputs(){
-        String title = ((EditText)findViewById(R.id.group_reg_edittext_title)).getText().toString();
-        String url = ((EditText)findViewById(R.id.group_reg_edittext_url)).getText().toString();
-        int webPort = Integer.parseInt(((EditText)findViewById(R.id.group_reg_edittext_webport)).getText().toString());
-        int videoPort = Integer.parseInt(((EditText)findViewById(R.id.group_reg_edittext_videoport)).getText().toString());
-        String id = ((EditText)findViewById(R.id.group_reg_edittext_id)).getText().toString();
-        String password = ((EditText)findViewById(R.id.group_reg_edittext_password)).getText().toString();
-
-        //TODO g_id 관련 데이터베이스 속성 값 바꿔야함함
-       userInput=new Group(null, title, url, webPort, videoPort, id, password);
+        title = ((EditText)findViewById(R.id.group_reg_edittext_title)).getText().toString();
+        url = ((EditText)findViewById(R.id.group_reg_edittext_url)).getText().toString();
+        webPort = Integer.parseInt(((EditText)findViewById(R.id.group_reg_edittext_webport)).getText().toString());
+        videoPort = Integer.parseInt(((EditText)findViewById(R.id.group_reg_edittext_videoport)).getText().toString());
+        id = ((EditText)findViewById(R.id.group_reg_edittext_id)).getText().toString();
+        password = ((EditText)findViewById(R.id.group_reg_edittext_password)).getText().toString();
     }
 
     public void createURL(){
         String head = "http://";
         String footer="/vb.htm?getrelayenable=all&getchannels";
 
-        basicAuth = "Basic "+ new String(Base64.encode((userInput.getG_login_id()+":"+userInput.getG_login_pw()).getBytes(),Base64.DEFAULT));
-        requestStr = head+ userInput.getG_url()+":"+userInput.getG_web_port()+footer;
+        basicAuth = "Basic "+ new String(Base64.encode((id+":"+password).getBytes(),Base64.DEFAULT));
+        requestStr = head+ url+":"+webPort+footer;
     }
 
     public class RequestAsyncTask extends AsyncTask<String, Integer, List<ServerChannel>> {
@@ -220,11 +220,18 @@ public class RegisterGroupActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // TODO items 에 channelList아무래도 넣어야할듯....ㅜㅜ 최우선처리한다.
+
+        List<Channel> list = new ArrayList<>();
+        for(int i=0;i<count;i++) list.add(new Channel(null));
+        userInput=new Group(list, title, url, webPort, videoPort, id, password);
         long groupID = mGroupDBOpenHelper.insertColumn(userInput);
         //TODO 모든 serverStatus의 객체를 처음부터 훑는 코드가 너무 중복된다..일단은 유지, 후에 한번에 정리
         for(ServerChannel serverChannel:serverStatus){
             if(serverChannel.isActive()&&serverChannel.getIsSelected()){
-                mChannelDBOpenHelper.insertColumn(new Channel(serverChannel.getNumber(),serverChannel.getName(),groupID));
+                Channel channel = new Channel(serverChannel.getNumber(),serverChannel.getName(),groupID);
+                list.add(channel);
+                mChannelDBOpenHelper.insertColumn(channel);
             }
         }
 
