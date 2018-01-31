@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     boolean hasDirtyData;
     private List<Group> groups;
     private List<Group> selected_groups;
+    private BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -80,4 +81,6 @@ public class MainActivity extends AppCompatActivity {
     public void setHasDirtyData(boolean hasDirtyData) {
         this.hasDirtyData = hasDirtyData;
     }
+
+    public BottomNavigationView getNavigationView(){ return navigation; }
 }

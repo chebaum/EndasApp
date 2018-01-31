@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +20,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,11 +68,20 @@ public class LiveViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_live_view, container, false);
-        final VideoView video = (VideoView)view.findViewById(R.id.videoView);
+        //final VideoView video = (VideoView)view.findViewById(R.id.videoView);
 
+        ((MainActivity)getActivity()).getNavigationView().getMenu().findItem(R.id.navigation_live).setChecked(true);
+
+        Bundle arguments=getArguments();
+        if(arguments!=null){
+            String channel_name = arguments.getString("data");
+            view.findViewById(R.id.imagebtn_first_of_fourview).setVisibility(View.GONE);
+            ((TextView)view.findViewById(R.id.tempTextView)).setText(channel_name);
+            //view.findViewById(R.id.videoview_first_of_fourview)
+        }
 
         setScreenComponentBtnClickListener(view);
-        videoplayRelatedCode(video, view);
+        //videoplayRelatedCode(video, view);
 
         return view;
     }
@@ -188,5 +200,10 @@ public class LiveViewFragment extends Fragment {
                 video.start();
             }
         });
+    }
+
+    // TODO!
+    public void onVideoViewPressed(View view){
+
     }
 }

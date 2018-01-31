@@ -78,7 +78,15 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
                         android:background="@color/colorTransparent"
-                        android:tint="@color/colorWhite" />
+                        android:tint="@color/colorWhite"
+                        android:onClick="onVideoViewPressed"/>
+                    <TextView
+                        android:id="@+id/tempTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorWhite" />
                 </FrameLayout>
                 <FrameLayout
                     android:layout_width="0dp"
