@@ -27,12 +27,24 @@
             android:layout_height="0dp"
             android:layout_weight="50"
             android:layout_marginBottom="15dp"
-            android:visibility="visible">
-            <VideoView
-                android:id="@+id/videoView"
+            android:visibility="gone">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"/>
+                android:layout_height="match_parent">
+                <VideoView
+                    android:id="@+id/videoview_first_of_oneview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
+                <ImageButton
+                    android:id="@+id/imagebtn_first_of_oneview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+                    android:background="@color/colorTransparent"
+                    android:tint="@color/colorWhite" />
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -43,24 +55,50 @@
             android:weightSum="100"
             android:orientation="vertical"
             android:layout_marginBottom="15dp"
-            android:visibility="gone">
+            android:visibility="visible">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="50"
                 android:orientation="horizontal">
-                <VideoView
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-                    android:layout_margin="1dp"
-                    android:layout_gravity="center"/>
-                <VideoView
+                    android:layout_margin="1dp">
+                    <VideoView
+                        android:id="@+id/videoview_first_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"/>
+                    <ImageButton
+                        android:id="@+id/imagebtn_first_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+                        android:background="@color/colorTransparent"
+                        android:tint="@color/colorWhite" />
+                </FrameLayout>
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-                    android:layout_margin="1dp"
-                    android:layout_gravity="center"/>
+                    android:layout_margin="1dp">
+                    <VideoView
+                        android:id="@+id/videovie_second_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"/>
+                    <ImageButton
+                        android:id="@+id/imagebtn_second_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+                        android:background="@color/colorTransparent"
+                        android:tint="@color/colorWhite" />
+                </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -68,18 +106,44 @@
                 android:layout_height="0dp"
                 android:layout_weight="50"
                 android:orientation="horizontal">
-                <VideoView
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-                    android:layout_margin="1dp"
-                    android:layout_gravity="center"/>
-                <VideoView
+                    android:layout_margin="1dp">
+                    <VideoView
+                        android:id="@+id/videoview_third_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"/>
+                    <ImageButton
+                        android:id="@+id/imagebtn_third_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+                        android:background="@color/colorTransparent"
+                        android:tint="@color/colorWhite" />
+                </FrameLayout>
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-                    android:layout_margin="1dp"
-                    android:layout_gravity="center"/>
+                    android:layout_margin="1dp">
+                    <VideoView
+                        android:id="@+id/videoview_fourth_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"/>
+                    <ImageButton
+                        android:id="@+id/imagebtn_fourth_of_fourview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+                        android:background="@color/colorTransparent"
+                        android:tint="@color/colorWhite" />
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 

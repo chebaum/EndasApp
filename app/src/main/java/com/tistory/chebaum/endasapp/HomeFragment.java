@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,8 +82,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(mHomeFragView==null) mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
 
         ((MainActivity)mHomeFragView.getContext()).selection_mode=false;
@@ -214,6 +215,7 @@ public class HomeFragment extends Fragment {
         ((MainActivity)mHomeFragView.getContext()).setGroups(groups);
         ((MainActivity)mHomeFragView.getContext()).setSelected_groups(selected_groups);
 
+        // TODO 지우기
         //getContext().deleteDatabase("channelDB.db");
         //getContext().deleteDatabase("groupDB.db");
 
@@ -225,7 +227,8 @@ public class HomeFragment extends Fragment {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        // 데이터베이스에 예시 데이터를 삽입한다. ***********************************************************지워야해*************************************************************
+
+        // TODO 지우기
         //insertExampleInputsToDB();
 
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
@@ -434,7 +437,7 @@ public class HomeFragment extends Fragment {
                     case "notify.adapter.dirtydata.action":
                         ((MainActivity)mHomeFragView.getContext()).setHasDirtyData(true);
                         break;
-                }
+                    }
             }
         };
         getActivity().registerReceiver(receiver,intentFilter);

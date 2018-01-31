@@ -40,22 +40,11 @@ public class LiveViewFragment extends Fragment {
     private String mParam2;
 
     ProgressDialog pDialog;
-
     private OnFragmentInteractionListener mListener;
 
     public LiveViewFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LiveViewFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static LiveViewFragment newInstance(String param1, String param2) {
         LiveViewFragment fragment = new LiveViewFragment();
         Bundle args = new Bundle();
@@ -64,9 +53,7 @@ public class LiveViewFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -79,40 +66,52 @@ public class LiveViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_live_view, container, false);
         final VideoView video = (VideoView)view.findViewById(R.id.videoView);
-/*
-        // 버퍼링임을 알려주는 다이얼로그
-        pDialog = new ProgressDialog(view.getContext());
-        pDialog.setTitle("실시간 영상 재생준비중");
-        pDialog.setMessage("Connecting...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
-        pDialog.show();
 
-        // 주소 설정. 일단은 임의 주소사용한다.
-        //String urlPath = "rtsp://192.168.56.1:8554/stream"
-        String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
 
-        try{
-            //MediaController mediaController = new MediaController(view.getContext());
-            //mediaController.setAnchorView(video);
-            Uri uri = Uri.parse(urlPath);
-            //video.setMediaController(mediaController);
-            video.setVideoURI(uri);
-        }catch (Exception e){
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
+        setScreenComponentBtnClickListener(view);
+        videoplayRelatedCode(video, view);
+
+        return view;
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
         }
+    }
 
-        video.requestFocus();
-        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                pDialog.dismiss();
-                video.start();
-            }
-        });
-*/
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            Toast.makeText(context, "LiveViewFragment", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+    private void setScreenComponentBtnClickListener(final View view){
         ImageButton convert_screen_btn = (ImageButton)view.findViewById(R.id.btn_convert_screen);
         convert_screen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,45 +154,39 @@ public class LiveViewFragment extends Fragment {
                 view.findViewById(R.id.videoLayout_nine_view).setVisibility(View.VISIBLE);
             }
         });
-
-        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void videoplayRelatedCode(final VideoView video, final View view){
+        // 버퍼링임을 알려주는 다이얼로그
+        pDialog = new ProgressDialog(view.getContext());
+        pDialog.setTitle("실시간 영상 재생준비중");
+        pDialog.setMessage("Connecting...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        // 주소 설정. 일단은 임의 주소사용한다.
+        //String urlPath = "rtsp://192.168.56.1:8554/stream"
+        String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+
+        try{
+            //MediaController mediaController = new MediaController(view.getContext());
+            //mediaController.setAnchorView(video);
+            Uri uri = Uri.parse(urlPath);
+            //video.setMediaController(mediaController);
+            video.setVideoURI(uri);
+        }catch (Exception e){
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
         }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            Toast.makeText(context, "LiveViewFragment", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        video.requestFocus();
+        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                pDialog.dismiss();
+                video.start();
+            }
+        });
     }
 }
