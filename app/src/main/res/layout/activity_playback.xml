@@ -22,7 +22,7 @@
             android:backgroundTint="?android:attr/windowBackground"/>
 
         <VideoView
-            android:id="@+id/videoView"
+            android:id="@+id/videoview_oneview1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="40"

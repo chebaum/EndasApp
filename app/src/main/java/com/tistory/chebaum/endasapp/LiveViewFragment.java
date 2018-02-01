@@ -6,25 +6,17 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -45,6 +37,7 @@ public class LiveViewFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private static final String TAG = "LiveViewFragmentDEBUG";
     ProgressDialog pDialog;
     private OnFragmentInteractionListener mListener;
 
@@ -114,11 +107,28 @@ public class LiveViewFragment extends Fragment {
         convert_screen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // play video full screen
-                Intent intent = new Intent(view.getContext(), FullScreenPlayActivity.class);
-                String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
-                intent.putExtra("urlPath", urlPath);
-                startActivity(intent);
+                Intent intent;
+                if(view.findViewById(R.id.videoLayout_one_view).getVisibility()==View.VISIBLE){
+                    Log.e(TAG,"oneview");
+                    intent = new Intent(view.getContext(), FullOneScreenPlayActivity.class);
+                    String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                    intent.putExtra("urlPath", urlPath);
+                    startActivity(intent);
+                }
+                else if(view.findViewById(R.id.videoLayout_four_view).getVisibility()==View.VISIBLE){
+                    Log.e(TAG,"fourview");
+                    intent = new Intent(view.getContext(), FullFourScreenPlayActivity.class);
+                    String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                    intent.putExtra("urlPath", urlPath);
+                    startActivity(intent);
+                }
+                else{
+                    intent = new Intent(view.getContext(), FullNineScreenPlayActivity.class);
+                    Log.e(TAG,"nineview");
+                    String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                    intent.putExtra("urlPath", urlPath);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -183,6 +193,8 @@ public class LiveViewFragment extends Fragment {
     public void onVideoViewPressed(View view){
         // 모든 더하기버튼 객체에 onClick메소드로 등록되어있다.
         // 어떤 id의 버튼이 클릭된건지 switch문 사용하여 다르게 작동하도록한다.
+        // TODO 현재 재생중인 영상의 정보를 담을수있는 listArray객체를 LiveviewFragment에 전역으로 선언해놓는다.
+        // 플러스 버튼 클릭시 배열에 add() 하고 또 사용
     }
 
     public void getBundleData(View view) {

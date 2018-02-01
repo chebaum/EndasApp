@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -54,7 +53,7 @@ public class PlaybackActivity extends AppCompatActivity {
         // 뒤로가기 버튼을 보이게 하기 위한 코드(뒤로가기 -> 다시 채널/시간 설정 화면으로...)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final VideoView video = (VideoView)findViewById(R.id.videoView);
+        final VideoView video = (VideoView)findViewById(R.id.videoview_oneview1);
 
         // 버퍼링임을 알려주는 다이얼로그
         pDialog = new ProgressDialog(this);

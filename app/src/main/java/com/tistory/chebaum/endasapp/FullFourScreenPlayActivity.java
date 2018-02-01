@@ -7,14 +7,13 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.VideoView;
 
 /**
  * Created by cheba on 2018-01-10.
  */
 
-public class FullScreenPlayActivity extends Activity implements MediaPlayer.OnCompletionListener{
+public class FullFourScreenPlayActivity extends Activity implements MediaPlayer.OnCompletionListener{
 
     private VideoView video;
     private ProgressDialog pDialog;
@@ -22,7 +21,7 @@ public class FullScreenPlayActivity extends Activity implements MediaPlayer.OnCo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_live_view_fullscreen);
+        setContentView(R.layout.activity_live_view_fullscreen_four);
 
         Intent intent = getIntent();
         String urlPath = intent.getStringExtra("urlPath");
@@ -31,10 +30,10 @@ public class FullScreenPlayActivity extends Activity implements MediaPlayer.OnCo
         pDialog.setTitle("실시간 영상 재생준비중");
         pDialog.setMessage("Connecting...");
         pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
+        //pDialog.setCancelable(false);
         pDialog.show();
 
-        video=(VideoView)findViewById(R.id.videoView);
+        video=(VideoView)findViewById(R.id.videoview_fourview1);
         Uri uri = Uri.parse(urlPath);
         video.setVideoURI(uri);
         video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
