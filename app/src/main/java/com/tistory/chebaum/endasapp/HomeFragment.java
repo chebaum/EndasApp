@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
+
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -389,7 +391,15 @@ public class HomeFragment extends Fragment {
         playSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO 2/1 목요일에는 adapter.getChoices()? 이런식으로 선택된 항목 알아내서 LiveView Fragment한테 Bundle을 사용하여 전달해주는 것 진행한다.
+                List<Position> checked=adapter.getCheckedItems();
+                for(int idx=0;idx<checked.size();idx++){
+                    int i=checked.get(idx).getI();
+                    int j=checked.get(idx).getJ();
+                    // 이런식으로 어떤 채널이 선택되었는지 파악할 수 있다.
+                    // groups.get(i) 번째 장비의 groups.get(i).getG_channel_list().get(j) 채널이 선택되었다.
+                    // TODO 지금은 채널 이름만 LiveFragment로 넘기지만, 나중에는 실제로 영상재생에 필요한 인자값을 전달해준다.(전달법: Bundle사용) *****
+                    Log.e(TAG, Long.toString(groups.get(i).getG_id())+"부모의 "+groups.get(i).getG_channel_list().get(j).getC_title());
+                }
             }
         });
         clearSelected.setOnClickListener(new View.OnClickListener() {

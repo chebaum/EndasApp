@@ -1,5 +1,6 @@
 package com.tistory.chebaum.endasapp;
 
+import android.util.Log;
 import android.widget.ExpandableListView;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableList;
@@ -63,6 +64,21 @@ public class ChannelCheckController {
                    }
                }
            }
+        }
+        return selected;
+    }
+    public List<Position> getCheckedListPositions(){
+        List<Position> selected=new ArrayList<>();
+        for(int i=0;i<expandableList.groups.size();i++){
+            if(expandableList.groups.get(i) instanceof myCheckedExpandableGroup){
+                myCheckedExpandableGroup group=(myCheckedExpandableGroup)expandableList.groups.get(i);
+                for(int j=0;j<group.getItemCount();j++){
+                    if(group.isChannelChecked(j)){
+                        Position pos=new Position(i, j);
+                        selected.add(pos);
+                    }
+                }
+            }
         }
         return selected;
     }

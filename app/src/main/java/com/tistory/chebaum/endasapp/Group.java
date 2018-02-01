@@ -19,12 +19,12 @@ public class Group extends MultiCheckExpandableGroup{
 
     //private List<Object> c_child_list;
     //TODO 필요없는듯 확인하자
-    //private List<Channel> g_channel_list;
+    private List<Channel> g_channel_list;
 
     public Group(List<Channel> items, String g_title, String g_url, int g_web_port,
                  int g_video_port, String g_login_id, String g_login_pw) {
         super(g_title, items);
-        //g_channel_list=items;
+        g_channel_list=items;
         //this.g_id = g_id;
         this.g_title = g_title;
         this.g_url = g_url;
@@ -38,7 +38,7 @@ public class Group extends MultiCheckExpandableGroup{
     public Group(List<Channel> items, Long g_id, String g_title, String g_url, int g_web_port,
                  int g_video_port, String g_login_id, String g_login_pw) {
         super(g_title, items);
-        //g_channel_list=items;
+        g_channel_list=items;
         this.g_id = g_id;
         this.g_title = g_title;
         this.g_url = g_url;
@@ -104,5 +104,13 @@ public class Group extends MultiCheckExpandableGroup{
 
     public void setG_login_pw(String g_login_pw) {
         this.g_login_pw = g_login_pw;
+    }
+
+    public List<Channel> getG_channel_list() {
+        return g_channel_list;
+    }
+
+    public void setG_channel_list(List<Channel> g_channel_list) {
+        this.g_channel_list = g_channel_list;
     }
 }

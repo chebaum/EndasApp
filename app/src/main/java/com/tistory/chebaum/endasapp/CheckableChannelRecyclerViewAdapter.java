@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
@@ -79,6 +80,10 @@ public abstract class CheckableChannelRecyclerViewAdapter<GVH extends myGroupVie
                 notifyItemRangeChanged(expandableList.getFlattenedFirstChildIndex(i), group.getItemCount());
             }
         }
+    }
+    public List<Position> getCheckedItems(){
+        List<Position> selected=channelCheckController.getCheckedListPositions();
+        return selected;
     }
 
     public abstract CVH onCreateCheckChildViewHolder(ViewGroup parent, int viewType);
