@@ -1,6 +1,7 @@
 package com.tistory.chebaum.endasapp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -392,14 +396,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 List<Position> checked=adapter.getCheckedItems();
+                ArrayList<String> bundleData=new ArrayList<>();
+                checkSelectedCount(checked.size());
+
                 for(int idx=0;idx<checked.size();idx++){
                     int i=checked.get(idx).getI();
                     int j=checked.get(idx).getJ();
-                    // 이런식으로 어떤 채널이 선택되었는지 파악할 수 있다.
-                    // groups.get(i) 번째 장비의 groups.get(i).getG_channel_list().get(j) 채널이 선택되었다.
-                    // TODO 지금은 채널 이름만 LiveFragment로 넘기지만, 나중에는 실제로 영상재생에 필요한 인자값을 전달해준다.(전달법: Bundle사용) *****
+                    // 이제 groups.get(i) 번째 장비의 groups.get(i).getG_channel_list().get(j) 채널이 선택되었음을 알 수 있다. 채널의 속성값을 사용하여 영상재생
                     Log.e(TAG, Long.toString(groups.get(i).getG_id())+"부모의 "+groups.get(i).getG_channel_list().get(j).getC_title());
+                    String temp=Long.toString(groups.get(i).getG_id())+"장비의 "+groups.get(i).getG_channel_list().get(j).getC_title()+"번째 채널";
+                    bundleData.add(temp);
                 }
+                sendDataToLiveViewFragment(checked.size(),bundleData, view);
             }
         });
         clearSelected.setOnClickListener(new View.OnClickListener() {
@@ -463,5 +471,57 @@ public class HomeFragment extends Fragment {
             }
         };
         getActivity().registerReceiver(receiver,intentFilter);
+    }
+
+    public void sendDataToLiveViewFragment(int size, ArrayList<String> bundleData, View view){
+        // bundle객체 안에 동영상 재생과 관련된 정보를 담아서 LiveViewFragment에게 전송한다.
+        // LiveViewFragment에서는 전달된 정보를 받은뒤 해당 영상을 재생한다.
+        LiveViewFragment fragment = new LiveViewFragment();
+        Bundle data = new Bundle();
+        data.putInt("count",size);
+        data.putStringArrayList("data", bundleData);
+        fragment.setArguments(data);
+        FragmentManager fragmentManager = ((MainActivity) view.getContext()).getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frame_layout, fragment).commit();
+        ((MainActivity) view.getContext()).getSupportActionBar().setTitle("라이브 영상");
+    }
+
+    public void checkSelectedCount(int count) {
+        if (count > 9) {
+            notifyOverFlow();
+            return;
+        } else if (count < 1) {
+            notifyUnderFlow();
+            return;
+        }
+    }
+    public void notifyOverFlow() {
+        android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+        mBuilder.setTitle("알림")
+                .setMessage("동시에 시청가능한 채널은 9개 입니다.")
+                .setCancelable(false)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        android.support.v7.app.AlertDialog mDialog=mBuilder.create();
+        mDialog.show();
+    }
+    public void notifyUnderFlow() {
+        android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+        mBuilder.setTitle("알림")
+                .setMessage("채널을 선택해 주십시오.")
+                .setCancelable(false)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        android.support.v7.app.AlertDialog mDialog=mBuilder.create();
+        mDialog.show();
     }
 }
