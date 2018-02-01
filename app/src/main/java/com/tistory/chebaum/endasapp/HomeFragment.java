@@ -397,7 +397,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 List<Position> checked=adapter.getCheckedItems();
                 ArrayList<String> bundleData=new ArrayList<>();
-                checkSelectedCount(checked.size());
+                if(! isSelectedCountProper(checked.size())) return;
 
                 for(int idx=0;idx<checked.size();idx++){
                     int i=checked.get(idx).getI();
@@ -487,14 +487,15 @@ public class HomeFragment extends Fragment {
         ((MainActivity) view.getContext()).getSupportActionBar().setTitle("라이브 영상");
     }
 
-    public void checkSelectedCount(int count) {
+    public boolean isSelectedCountProper(int count) {
         if (count > 9) {
             notifyOverFlow();
-            return;
+            return false;
         } else if (count < 1) {
             notifyUnderFlow();
-            return;
+            return false;
         }
+        return true;
     }
     public void notifyOverFlow() {
         android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
