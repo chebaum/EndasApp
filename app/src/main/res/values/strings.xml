@@ -3,7 +3,44 @@
     <string name="title_home">Home</string>
     <string name="title_live">Live</string>
     <string name="title_playback">Playback</string>
-
+    <string name="scan_code">QR code</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="channel_name">Channel Name</string>
+    <string name="url">URL</string>
+    <string name="web_port">Web Port</string>
+    <string name="video_port">Video Port</string>
+    <string name="id">ID</string>
+    <string name="password">Password</string>
+    <string name="registerbtn">Register</string>
+    <string name="play_button">Play</string>
+    <string name="screen_layout">Screen Layout</string>
+    <string name="Home_View_Fragment">HomeViewFragment</string>
+    <string name="Live_View_Fragment">LiveViewFragment</string>
+    <string name="Play_Back_Fragment">PlayBackFragment</string>
+    <string name="prepare_to_play_live">Preparing to play live video</string>
+    <string name="connecting">Connecting...</string>
+    <string name="modify">Modify</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit">Edit</string>
+    <string name="Registration_date">Registration date: 01.18.2018</string>
+    <string name="modify_delete_channel">Modify/Delete Channel</string>
+    <string name="modify_channel_value">Modify Channel Attribute Value</string>
+    <string name="mng_channels">Channels Management</string>
+    <string name="add_channels">Add Channels</string>
+    <string name="register">Direct Registration</string>
+    <string name="mng_device">Device Management</string>
+    <string name="external">External Connect</string>
+    <string name="Live_Video">Live Video</string>
+    <string name="Record_Video">Recorded Video</string>
+    <string name="channel">channel</string>
+    <string name="CHANNELS">CHANNELS</string>
+    <string name="Available_channel">Available Channel</string>
+    <string name="selected">Selected</string>
+    <string name="new_device">New Device</string>
+    <string name="play_selected_channel">Play channels</string>
+    <string name="select_channel">Select Channel</string>
+    <string name="select_date_time">Select Date/Time</string>
+    <string name="change_date">Date</string>
+    <string name="clear">Clear</string>
 </resources>

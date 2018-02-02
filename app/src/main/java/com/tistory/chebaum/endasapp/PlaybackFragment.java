@@ -51,7 +51,7 @@ public class PlaybackFragment extends Fragment {
     //private DatePicker mDatePicker;
     private Calendar mDatetime = Calendar.getInstance();
     private SimpleDateFormat mToastDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 a hh:mm");
-    private SimpleDateFormat mTextViewFormat = new SimpleDateFormat("yy년 M월 d일 (E)");
+    private SimpleDateFormat mTextViewFormat = new SimpleDateFormat("yyyy/MM/dd (E)");
     private TextView mTextView;
     private Spinner mSpinner;
     private String selected_channel;
@@ -197,7 +197,7 @@ public class PlaybackFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            Toast.makeText(context, "PlaybackFragment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.Play_Back_Fragment, Toast.LENGTH_SHORT).show();
         }
     }
 

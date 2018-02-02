@@ -466,7 +466,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
-            android:text="화면구성"
+            android:text="@string/screen_layout"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"

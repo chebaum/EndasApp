@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            Toast.makeText(context, "HomeViewFragment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.Home_View_Fragment, Toast.LENGTH_SHORT).show();
         }
     }
     @Override
@@ -157,7 +157,7 @@ public class HomeFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.channel_edit:
-                Toast.makeText(getView().getContext(), "edit", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getView().getContext(), R.string.edit, Toast.LENGTH_SHORT).show();
                 // 얘는 채널이 단 한 개 선택되었을때만 클릭 가능한 버튼(혹은 암것도 클릭안한경우)
                 // 아무것도 선택되지 않은 경우 toast 메세지 짧게 띄워주자 그냥.
                 if(selected_groups.isEmpty())
@@ -296,7 +296,7 @@ public class HomeFragment extends Fragment {
 
     public void restartFragment(){
         ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle("장비 관리");
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle(R.string.mng_device);
     }
 
     public void modify_channel_by_user(final Group group, final int idx){
@@ -314,9 +314,9 @@ public class HomeFragment extends Fragment {
         editText.setText(group.getG_url());
 
         builder.setMessage("값을 입력하십시오 - 일단 채널이름과 URL만!");
-        builder.setTitle("채널 속성값 수정")
+        builder.setTitle(R.string.modify_channel_value)
                 .setCancelable(false)
-                .setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // 입력받은값 group 객체에 업데이트
@@ -329,7 +329,7 @@ public class HomeFragment extends Fragment {
                         Snackbar.make(getView(), "정상적으로 수정되었습니다", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
                 })
-                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
@@ -379,17 +379,40 @@ public class HomeFragment extends Fragment {
    */ }
 
     public void setBtnListeners(View view){
-        Button addGroup = (Button) view.findViewById(R.id.btn_add_group);
+        final Button addGroup = (Button) view.findViewById(R.id.btn_add_group);
         Button playSelected=(Button)view.findViewById(R.id.btn_play_selected);
         Button clearSelected=(Button)view.findViewById(R.id.btn_clear_selected);
 
         addGroup.setOnClickListener(new View.OnClickListener() {
+            final Context context = addGroup.getContext();
+            final CharSequence register = getText(R.string.register);
+            final CharSequence external = getText(R.string.external);
+            final CharSequence[] items={register, external};
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "make channel adding dialog", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
-                Intent intent = new Intent(view.getContext(),RegisterGroupActivity.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(view.getContext(),RegisterGroupActivity.class);
+                startActivity(intent);*/
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                alertDialogBuilder.setTitle(R.string.add_channels);
+                alertDialogBuilder.setItems(items,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which == 0){
+                                    Intent intent = new Intent(alertDialogBuilder.getContext(),RegisterGroupActivity.class);
+                                    startActivityForResult(intent, 0);
+                                }
+                                else if(which == 1){
+                                    Intent intent = new Intent(alertDialogBuilder.getContext(),ExternalConnect.class);
+                                    startActivityForResult(intent, 1);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
         playSelected.setOnClickListener(new View.OnClickListener() {
@@ -462,7 +485,7 @@ public class HomeFragment extends Fragment {
                 {
                     case "group.longclick.action":
                         setHasOptionsMenu(true);
-                        ((MainActivity)getActivity()).getSupportActionBar().setTitle("채널 수정/삭제");
+                        ((MainActivity)getActivity()).getSupportActionBar().setTitle(R.string.modify_delete_channel);
                         break;
                     case "notify.adapter.dirtydata.action":
                         ((MainActivity)mHomeFragView.getContext()).setHasDirtyData(true);

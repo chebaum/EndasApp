@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EndasApp.iml" filepath="$PROJECT_DIR$/EndasApp.iml" />
+      <module fileurl="file://C:\Users\CE-\AndroidStudioProjects\EndasApp\EndasApp.iml" filepath="C:\Users\CE-\AndroidStudioProjects\EndasApp\EndasApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

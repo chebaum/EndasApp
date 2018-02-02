@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">频道名称</string>
+    <string name="url">网址</string>
+    <string name="web_port">网络端口</string>
+    <string name="video_port">视频端口</string>
+    <string name="id">用户名</string>
+    <string name="password">密码</string>
+    <string name="registerbtn">注册</string>
+    <string name="play_button">播放视频</string>
+    <string name="screen_layout">屏幕布局</string>
+    <string name="Home_View_Fragment">主屏幕</string>
+    <string name="Live_View_Fragment">现场屏幕</string>
+    <string name="Play_Back_Fragment">播放画面</string>
+    <string name="prepare_to_play_live">准备播放实况视频</string>
+    <string name="connecting">连...</string>
+    <string name="edit">编辑</string>
+    <string name="modify">修改</string>
+    <string name="cancel">取消</string>
+    <string name="channel">渠道</string>
+    <string name="select_channel">选择频道</string>
+    <string name="mng_channels">渠道管理</string>
+    <string name="add_channels">添加频道</string>
+    <string name="modify_delete_channel">编辑/删除频道</string>
+    <string name="modify_channel_value">修改通道属性值</string>
+    <string name="register">直接注册</string>
+    <string name="external">外部连接</string>
+    <string name="mng_device">设备管理</string>
+    <string name="Live_Video">实时视频</string>
+    <string name="Record_Video">录制的视频</string>
+    <string name="Registration_date">注册日期: 2018.01.18</string>
+    <string name="Available_channel">可用频道</string>
+    <string name="selected">选</string>
+    <string name="CHANNELS">渠道</string>
+    <string name="new_device">新设备</string>
+    <string name="play_selected_channel">播放选定的频道</string>
+    <string name="clear">全部取消选择</string>
+    <string name="select_date_time">选择日期/时间</string>
+    <string name="change_date">更改日期</string>
+    <string name="scan_code">扫描二维码</string>
+</resources>

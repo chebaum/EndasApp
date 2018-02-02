@@ -167,7 +167,7 @@ public class RegisterGroupActivity extends AppCompatActivity {
                 }
 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(RegisterGroupActivity.this);
-                mBuilder.setTitle("사용 가능한 채널")
+                mBuilder.setTitle(R.string.Available_channel)
                         .setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int pos, boolean isChecked) {
@@ -176,7 +176,7 @@ public class RegisterGroupActivity extends AppCompatActivity {
                             }
                         })
                         .setCancelable(false)
-                        .setPositiveButton("선택완료", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.completed_select, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 int j=0;
@@ -196,7 +196,7 @@ public class RegisterGroupActivity extends AppCompatActivity {
                                 finish();
                             }
                         })
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();

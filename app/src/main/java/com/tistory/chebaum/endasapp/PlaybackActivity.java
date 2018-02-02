@@ -40,8 +40,9 @@ public class PlaybackActivity extends AppCompatActivity {
 
         // 일단은 채널의 이름만을 string객체로 받는다.
         // 후에는 채널의 모든 속성값을 가지고 있는 직접 작성한 클래스의 객체를 받으면 될듯싶다.
+        String channel = getText(R.string.channel).toString();
         mDatetime = (Calendar)intent.getSerializableExtra("startingPoint");
-        selected_channel = intent.getStringExtra("channel");
+        selected_channel = intent.getStringExtra(channel);
 
         // 전달받은 값 테스트용...후에 지운다.
         String str = selected_channel;
@@ -56,9 +57,10 @@ public class PlaybackActivity extends AppCompatActivity {
         final VideoView video = (VideoView)findViewById(R.id.videoview_oneview1);
 
         // 버퍼링임을 알려주는 다이얼로그
+        CharSequence connecting = getText(R.string.connecting);
         pDialog = new ProgressDialog(this);
-        pDialog.setTitle("실시간 영상 재생준비중");
-        pDialog.setMessage("Connecting...");
+        pDialog.setTitle(R.string.prepare_to_play_live);
+        pDialog.setMessage(connecting);
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();

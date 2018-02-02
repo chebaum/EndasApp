@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CHANNELS"
+                android:text="@string/CHANNELS"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
@@ -63,28 +63,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33"
-                android:text="새 장비 등록"
+                android:text="@string/new_device"
                 android:padding="5dp"
-                android:backgroundTint="@color/colorPrimarySofter"
-                android:textColor="@color/colorWhite"/>
+                android:backgroundTint="@color/colorAccent"/>
             <Button
                 android:id="@+id/btn_play_selected"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33"
                 android:padding="5dp"
-                android:text="선택 채널 재생"
-                android:backgroundTint="@color/colorPrimarySofter"
-                android:textColor="@color/colorWhite"/>
+                android:text="@string/play_selected_channel"
+                android:backgroundTint="@color/colorAccent"/>
             <Button
                 android:id="@+id/btn_clear_selected"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33"
                 android:padding="5dp"
-                android:text="전체 선택 해제"
-                android:backgroundTint="@color/colorPrimarySofter"
-                android:textColor="@color/colorWhite"/>
+                android:text="@string/clear"
+                android:backgroundTint="@color/colorAccent"/>
 
         </LinearLayout>
 

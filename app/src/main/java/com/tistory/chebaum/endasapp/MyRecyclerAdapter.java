@@ -41,7 +41,7 @@ public class MyRecyclerAdapter extends CheckableChannelRecyclerViewAdapter<myGro
         holder.g_name.setText(group.getG_title());
         holder.g_ip.setText(group.getG_url());
         holder.g_ip.setTextSize(holder.g_name.getTextSize()/4);
-        holder.g_reg_date.setText("등록일: 2018.01.18");
+        holder.g_reg_date.setText(R.string.Registration_date);
         holder.g_reg_date.setTextSize(holder.g_name.getTextSize()/4);
 
         if(selected_groups.contains(group)){

@@ -9,34 +9,34 @@
         android:id="@+id/dialog_group_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="채널 이름"/>
+        android:hint="@string/channel_name"/>
     <EditText
         android:id="@+id/dialog_group_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="URL"/>
+        android:hint="@string/url"/>
     <EditText
         android:id="@+id/dialog_group_webport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="웹 포트"/>
+        android:hint="@string/web_port"/>
     <EditText
         android:id="@+id/dialog_group_videoport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="비디오 포트"/>
+        android:hint="@string/video_port"/>
     <EditText
         android:id="@+id/dialog_group_id"
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="아이디"/>
+        android:hint="@string/id"/>
     <EditText
         android:id="@+id/dialog_group_pw"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:hint="비밀번호"/>
+        android:hint="@string/password"/>
 
 </LinearLayout>

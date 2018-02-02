@@ -26,9 +26,10 @@ public class FullFourScreenPlayActivity extends Activity implements MediaPlayer.
         Intent intent = getIntent();
         String urlPath = intent.getStringExtra("urlPath");
 
+        CharSequence connecting = getText(R.string.connecting);
         pDialog = new ProgressDialog(this);
-        pDialog.setTitle("실시간 영상 재생준비중");
-        pDialog.setMessage("Connecting...");
+        pDialog.setTitle(R.string.prepare_to_play_live);
+        pDialog.setMessage(connecting);
         pDialog.setIndeterminate(false);
         //pDialog.setCancelable(false);
         pDialog.show();

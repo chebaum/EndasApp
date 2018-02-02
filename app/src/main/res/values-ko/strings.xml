@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">채널 이름</string>
+    <string name="url">URL</string>
+    <string name="web_port">웹 포트</string>
+    <string name="video_port">비디오 포트</string>
+    <string name="id">아이디</string>
+    <string name="password">비밀번호</string>
+    <string name="registerbtn">등록</string>
+    <string name="play_button">재생</string>
+    <string name="screen_layout">화면구성</string>
+    <string name="Home_View_Fragment">홈화면</string>
+    <string name="Live_View_Fragment">실시간화면</string>
+    <string name="Play_Back_Fragment">재생화면</string>
+    <string name="prepare_to_play_live">실시간 영상 재생 준비 중</string>
+    <string name="connecting">연결중...</string>
+    <string name="edit">편집</string>
+    <string name="modify">수정</string>
+    <string name="cancel">취소</string>
+    <string name="channel">채널</string>
+    <string name="select_channel">채널 선택</string>
+    <string name="mng_channels">채널 관리</string>
+    <string name="add_channels">채널 추가</string>
+    <string name="modify_delete_channel">채널 수정/삭제</string>
+    <string name="modify_channel_value">채널 속성 값 수정</string>
+    <string name="register">직접등록</string>
+    <string name="external">외부연결</string>
+    <string name="mng_device">장비 관리</string>
+    <string name="Live_Video">라이브 영상</string>
+    <string name="Record_Video">녹화 영상</string>
+    <string name="Registration_date">등록일: 2018.01.18</string>
+    <string name="Available_channel">사용 가능한 채널</string>
+    <string name="completed_select">선택완료</string>
+    <string name="CHANNELS">CHANNELS</string>
+    <string name="new_device">새 장비 등록</string>
+    <string name="play_selected_channel">선택 채널 재생</string>
+    <string name="clear">전체 선택 해제</string>
+    <string name="select_date_time">날짜/시간 선택</string>
+    <string name="change_date">날짜 변경</string>
+    <string name="scan_code">QR 코드</string>
+</resources>

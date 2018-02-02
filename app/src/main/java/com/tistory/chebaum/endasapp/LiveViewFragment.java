@@ -90,7 +90,7 @@ public class LiveViewFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            Toast.makeText(context, "LiveViewFragment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.Live_View_Fragment, Toast.LENGTH_SHORT).show();
         }
     }
     @Override
@@ -163,9 +163,10 @@ public class LiveViewFragment extends Fragment {
 
     private void videoplayRelatedCode(final VideoView video, final View view){
         // 버퍼링임을 알려주는 다이얼로그
+        CharSequence connecting = getText(R.string.connecting);
         pDialog = new ProgressDialog(view.getContext());
-        pDialog.setTitle("실시간 영상 재생준비중");
-        pDialog.setMessage("Connecting...");
+        pDialog.setTitle(R.string.prepare_to_play_live);
+        pDialog.setMessage(connecting);
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();

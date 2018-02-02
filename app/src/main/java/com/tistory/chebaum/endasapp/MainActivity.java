@@ -33,15 +33,15 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
-                    getSupportActionBar().setTitle("장비 관리");
+                    getSupportActionBar().setTitle(R.string.mng_device);
                     return true;
                 case R.id.navigation_live:
                     transaction.replace(R.id.frame_layout, new LiveViewFragment()).commit();
-                    getSupportActionBar().setTitle("라이브 영상");
+                    getSupportActionBar().setTitle(R.string.Live_Video);
                     return true;
                 case R.id.navigation_playback:
                     transaction.replace(R.id.frame_layout, new PlaybackFragment()).commit();
-                    getSupportActionBar().setTitle("녹화 영상");
+                    getSupportActionBar().setTitle(R.string.Record_Video);
                     return true;
             }
             return false;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
-        getSupportActionBar().setTitle("장비 관리");
+        getSupportActionBar().setTitle(R.string.mng_device);
         hasDirtyData=selection_mode=false;
     }
 
