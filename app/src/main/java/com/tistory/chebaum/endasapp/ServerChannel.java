@@ -1,7 +1,13 @@
 package com.tistory.chebaum.endasapp;
 
 /**
- * Created by cheba on 2018-01-26.
+ * ***설명***
+ * 장비에 연결해서 장비에 연결된 모든 채널들을 가져올때
+ * 장비의 번호/이름/연결가능 여부를 간편히 저장하고 사용하기 위한 클래스 / RegisterGroupActivity에서 사용된다.
+ *
+ * ex) 0001:0001 Channel1  ->  number=2 / isActive=true / name=Channel1
+ *
+ * 사용자가 채널을 사용하기 위해 선택한 경우 isSelected=true
  */
 
 public class ServerChannel {

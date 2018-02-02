@@ -28,7 +28,6 @@
             android:layout_weight="50"
             android:layout_margin="1dp">
             <VideoView
-                android:id="@+id/videoview_fourview2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"/>
@@ -45,7 +44,6 @@
             android:layout_weight="50"
             android:layout_margin="1dp">
             <VideoView
-                android:id="@+id/videoview_fourview3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"/>
@@ -56,7 +54,6 @@
             android:layout_weight="50"
             android:layout_margin="1dp">
             <VideoView
-                android:id="@+id/videoview_fourview4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"/>

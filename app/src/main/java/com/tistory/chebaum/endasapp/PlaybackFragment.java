@@ -28,18 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PlaybackFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PlaybackFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PlaybackFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -118,6 +108,12 @@ public class PlaybackFragment extends Fragment {
         spinner_items.add("자택2");
         spinner_items.add("주차장");
         spinner_items.add("현관");
+
+
+        //List<Group> groups = ((MainActivity)view.getContext()).get_group();
+        //for(Group item:groups){
+        //    spinner_items.add(item.)
+       // }
 
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, spinner_items);
 

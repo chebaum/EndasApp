@@ -1,6 +1,7 @@
 package com.tistory.chebaum.endasapp;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
+import com.tistory.chebaum.endasapp.listeners.OnChannelCheckChangedListener;
 
 import android.view.View;
 import android.widget.Checkable;

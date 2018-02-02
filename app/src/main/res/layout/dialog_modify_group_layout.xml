@@ -16,23 +16,19 @@
         android:layout_height="wrap_content"
         android:hint="URL"/>
     <EditText
-        android:id="@+id/dialog_group_webport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="웹 포트"/>
     <EditText
-        android:id="@+id/dialog_group_videoport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="비디오 포트"/>
     <EditText
-        android:id="@+id/dialog_group_id"
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="아이디"/>
     <EditText
-        android:id="@+id/dialog_group_pw"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
