@@ -1,10 +1,10 @@
 package com.tistory.chebaum.endasapp;
 
-import android.util.Log;
 import android.widget.ExpandableListView;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableList;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
+import com.tistory.chebaum.endasapp.listeners.OnChannelCheckStateChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;

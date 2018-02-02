@@ -37,7 +37,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center" />
                 <ImageButton
-                    android:id="@+id/imagebtn_oneview1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -46,7 +45,6 @@
                     android:tint="@color/colorWhite"
                     android:onClick="onVideoViewPressed"/>
                 <TextView
-                    android:id="@+id/test1-1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -80,7 +78,6 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_fourview1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -89,7 +86,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test4-1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -102,12 +98,10 @@
                     android:layout_weight="50"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_fourview2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_fourview2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -116,7 +110,6 @@
                         app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test4-2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -137,12 +130,10 @@
                     android:layout_weight="50"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_fourview3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_fourview3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -151,7 +142,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test4-3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -164,12 +154,10 @@
                     android:layout_weight="50"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_fourview4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_fourview4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -178,7 +166,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test4-4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -213,7 +200,6 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -222,7 +208,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -235,12 +220,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -249,7 +232,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -262,12 +244,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -276,7 +256,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -295,12 +274,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -310,7 +287,6 @@
                         android:onClick="onVideoViewPressed"/>
 
                     <TextView
-                        android:id="@+id/test9-4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -323,12 +299,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview5"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview5"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -337,7 +311,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-5"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -350,12 +323,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -364,7 +335,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -383,12 +353,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview7"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview7"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -397,7 +365,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-7"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -410,12 +377,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview8"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview8"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -424,7 +389,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-8"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -437,12 +401,10 @@
                     android:layout_weight="33"
                     android:layout_margin="1dp">
                     <VideoView
-                        android:id="@+id/videoview_nineview9"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"/>
                     <ImageButton
-                        android:id="@+id/imagebtn_nineview9"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -451,7 +413,6 @@
                         android:tint="@color/colorWhite"
                         android:onClick="onVideoViewPressed"/>
                     <TextView
-                        android:id="@+id/test9-9"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -473,7 +434,6 @@
             android:gravity="bottom"/>
 
         <LinearLayout
-            android:id="@+id/layout_liveview_btns"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"

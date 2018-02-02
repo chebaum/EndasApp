@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
+import com.tistory.chebaum.endasapp.listeners.OnChannelCheckChangedListener;
+import com.tistory.chebaum.endasapp.listeners.OnChannelCheckStateChangedListener;
+import com.tistory.chebaum.endasapp.listeners.OnCheckChannelClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

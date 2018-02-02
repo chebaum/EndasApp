@@ -1,4 +1,4 @@
-package com.tistory.chebaum.endasapp;
+package com.tistory.chebaum.endasapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.tistory.chebaum.endasapp.Group;
 
 /**
  * Created by cheba on 2018-01-02.
