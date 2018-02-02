@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,4 +84,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public BottomNavigationView getNavigationView(){ return navigation; }
+
+    public void onVideoViewPressed(View view){
+        return;
+    }
 }

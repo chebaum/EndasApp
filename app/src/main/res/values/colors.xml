@@ -9,4 +9,5 @@
     <color name="colorBackground">#fafafa</color>
     <color name="colorChannel">#F0EEEE</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorPrimarySofter">#A28F8F</color>
 </resources>

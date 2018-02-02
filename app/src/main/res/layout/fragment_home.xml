@@ -65,7 +65,8 @@
                 android:layout_weight="33"
                 android:text="새 장비 등록"
                 android:padding="5dp"
-                android:backgroundTint="@color/colorAccent"/>
+                android:backgroundTint="@color/colorPrimarySofter"
+                android:textColor="@color/colorWhite"/>
             <Button
                 android:id="@+id/btn_play_selected"
                 android:layout_width="0dp"
@@ -73,7 +74,8 @@
                 android:layout_weight="33"
                 android:padding="5dp"
                 android:text="선택 채널 재생"
-                android:backgroundTint="@color/colorAccent"/>
+                android:backgroundTint="@color/colorPrimarySofter"
+                android:textColor="@color/colorWhite"/>
             <Button
                 android:id="@+id/btn_clear_selected"
                 android:layout_width="0dp"
@@ -81,7 +83,8 @@
                 android:layout_weight="33"
                 android:padding="5dp"
                 android:text="전체 선택 해제"
-                android:backgroundTint="@color/colorAccent"/>
+                android:backgroundTint="@color/colorPrimarySofter"
+                android:textColor="@color/colorWhite"/>
 
         </LinearLayout>
 

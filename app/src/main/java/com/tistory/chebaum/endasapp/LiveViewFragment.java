@@ -111,21 +111,27 @@ public class LiveViewFragment extends Fragment {
                 if(view.findViewById(R.id.videoLayout_one_view).getVisibility()==View.VISIBLE){
                     Log.e(TAG,"oneview");
                     intent = new Intent(view.getContext(), FullOneScreenPlayActivity.class);
-                    String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                    String urlPath = "android.resource://"
+                            + getContext().getPackageName() + "/"
+                            + R.raw.vid_bigbuckbunny;
                     intent.putExtra("urlPath", urlPath);
                     startActivity(intent);
                 }
                 else if(view.findViewById(R.id.videoLayout_four_view).getVisibility()==View.VISIBLE){
                     Log.e(TAG,"fourview");
                     intent = new Intent(view.getContext(), FullFourScreenPlayActivity.class);
-                    String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                    String urlPath = "android.resource://"
+                            + getContext().getPackageName() + "/"
+                            + R.raw.vid_bigbuckbunny;
                     intent.putExtra("urlPath", urlPath);
                     startActivity(intent);
                 }
                 else{
                     intent = new Intent(view.getContext(), FullNineScreenPlayActivity.class);
                     Log.e(TAG,"nineview");
-                    String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+                    String urlPath = "android.resource://"
+                            + getContext().getPackageName() + "/"
+                            + R.raw.vid_bigbuckbunny;
                     intent.putExtra("urlPath", urlPath);
                     startActivity(intent);
                 }
@@ -190,11 +196,12 @@ public class LiveViewFragment extends Fragment {
     }
 
     // TODO! 비어있는 화면의 더하기 버튼 클릭 시..
-    public void onVideoViewPressed(View view){
+    public void onPlusBtnClick(View view){
         // 모든 더하기버튼 객체에 onClick메소드로 등록되어있다.
         // 어떤 id의 버튼이 클릭된건지 switch문 사용하여 다르게 작동하도록한다.
         // TODO 현재 재생중인 영상의 정보를 담을수있는 listArray객체를 LiveviewFragment에 전역으로 선언해놓는다.
         // 플러스 버튼 클릭시 배열에 add() 하고 또 사용
+        return;
     }
 
     public void getBundleData(View view) {
