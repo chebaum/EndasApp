@@ -1,7 +1,9 @@
 package com.tistory.chebaum.endasapp;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,7 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LiveViewFragment extends Fragment {
 
@@ -28,6 +32,9 @@ public class LiveViewFragment extends Fragment {
     private static final String TAG = "LiveViewFragmentDEBUG";
     ProgressDialog pDialog;
     private OnFragmentInteractionListener mListener;
+
+    private List<Group> groups;
+    private List<Channel> channelsBeingPlayed;
 
     public LiveViewFragment() {
         // Required empty public constructor
@@ -52,7 +59,8 @@ public class LiveViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_live_view, container, false);
-        //final VideoView video = (VideoView)view.findViewById(R.id.videoView);
+        groups=((MainActivity)getContext()).get_group();
+        channelsBeingPlayed=new ArrayList<Channel>();
 
         ((MainActivity)getActivity()).getNavigationView().getMenu().findItem(R.id.navigation_live).setChecked(true);
 
@@ -63,7 +71,7 @@ public class LiveViewFragment extends Fragment {
         setBtnClickListener(view);
 
         // 화면(videoView객체)을 클릭한 경우, 어떤 화면을 클릭했는지 파악하고, 해당화면에서 플레이할 채널을 사용자가 직접 선택할 수 있도록 다이얼로그를 띄운다.
-        //setScreenTouchListener(video, view);
+        setScreenTouchListener(view);
 
         return view;
     }
@@ -150,17 +158,17 @@ public class LiveViewFragment extends Fragment {
         });
     }
 
-    private void setScreenTouchListener(final VideoView video, final View view){
-
-    }
-
-    // TODO! 비어있는 화면의 더하기 버튼 클릭 시..
-    public void onPlusBtnClick(View view){
-        // 모든 더하기버튼 객체에 onClick메소드로 등록되어있다.
-        // 어떤 id의 버튼이 클릭된건지 switch문 사용하여 다르게 작동하도록한다.
-        // TODO 현재 재생중인 영상의 정보를 담을수있는 listArray객체를 LiveviewFragment에 전역으로 선언해놓는다.
-        // 플러스 버튼 클릭시 배열에 add() 하고 또 사용
-        return;
+    private void setScreenTouchListener(View view){
+        onScreenTouchListener listener=new onScreenTouchListener();
+        for(int i=0;i<1;i++) {
+            view.findViewById(getContext().getResources().getIdentifier("imagebtn_oneview" + Integer.toString(i + 1), "id", getContext().getPackageName())).setOnClickListener(listener);
+        }
+        for(int i=0;i<4;i++) {
+            view.findViewById(getContext().getResources().getIdentifier("imagebtn_fourview" + Integer.toString(i + 1), "id", getContext().getPackageName())).setOnClickListener(listener);
+        }
+        for(int i=0;i<9;i++) {
+            view.findViewById(getContext().getResources().getIdentifier("imagebtn_nineview" + Integer.toString(i + 1), "id", getContext().getPackageName())).setOnClickListener(listener);
+        }
     }
 
     public void getBundleData(View view) {
@@ -171,27 +179,37 @@ public class LiveViewFragment extends Fragment {
             return;
         }
         int count = arguments.getInt("count");
-        ArrayList<String> channelNameList = arguments.getStringArrayList("data");
-        if(count<=1){ // 채널 1개 선택된 경우
+        // 지금은 채널이름만 가져와서 보여주고 있다.
+        // 실제 영상재생과 관련된 데이터를 가져오고싶다면
+        // HomeFragment.java의 sendDataToLiveViewFragment() 함수에서 관련된 정보를 Bundle객체에 부착해서 보내면 된다.
+        // 지금은 [장비id-채널num] 형식의 string 배열로 전달된다. ex) 1-4, 2-3, 2-4, 3-1 ....
+        ArrayList<String> channelNumList = arguments.getStringArrayList("data");
+
+        String imageBtnString;
+        String textViewString;
+        if (count <= 1) { // 채널 1개 선택된 경우
             oneScreenMode(view);
-            for(int i=0;i<count;i++){
-                view.findViewById(getContext().getResources().getIdentifier("imagebtn_oneview"+Integer.toString(i+1),"id",getContext().getPackageName())).setVisibility(View.GONE);
-                ((TextView)(view.findViewById(getContext().getResources().getIdentifier("test1-"+Integer.toString(i+1),"id",getContext().getPackageName())))).setText(channelNameList.get(i));
-            }
-        }
-        else if(count<=4){ // 채널 2~4개 선택된 경우
+            imageBtnString = "imagebtn_oneview";
+            textViewString = "test1-";
+        } else if (count <= 4) {
             fourScreenMode(view);
-            for(int i=0;i<count;i++){
-                view.findViewById(getContext().getResources().getIdentifier("imagebtn_fourview"+Integer.toString(i+1),"id",getContext().getPackageName())).setVisibility(View.GONE);
-                ((TextView)(view.findViewById(getContext().getResources().getIdentifier("test4-"+Integer.toString(i+1),"id",getContext().getPackageName())))).setText(channelNameList.get(i));
-            }
-        }
-        else{ // 채널 5~9개 선택된 경우
+            imageBtnString = "imagebtn_fourview";
+            textViewString = "test4-";
+        } else {
             nineScreenMode(view);
-            for(int i=0;i<count;i++){
-                view.findViewById(getContext().getResources().getIdentifier("imagebtn_nineview"+Integer.toString(i+1),"id",getContext().getPackageName())).setVisibility(View.GONE);
-                ((TextView)(view.findViewById(getContext().getResources().getIdentifier("test9-"+Integer.toString(i+1),"id",getContext().getPackageName())))).setText(channelNameList.get(i));
-            }
+            imageBtnString = "imagebtn_nineview";
+            textViewString = "test9-";
+        }
+        for (int i = 0; i < count; i++) {
+            String[] idx = channelNumList.get(i).split("-");
+            int groupIdx = Integer.parseInt(idx[0]);
+            int channelIdx = Integer.parseInt(idx[1]);
+            Channel temp=groups.get(groupIdx).getG_channel_list().get(channelIdx);
+
+            view.findViewById(getContext().getResources().getIdentifier(imageBtnString + Integer.toString(i + 1), "id", getContext().getPackageName())).setVisibility(View.GONE);
+            ((TextView) (view.findViewById(getContext().getResources().getIdentifier(textViewString + Integer.toString(i + 1), "id", getContext().getPackageName())))).setText(groups.get(groupIdx).getG_title() + " 장비의\n" +temp.getC_title()+"채널");
+
+            channelsBeingPlayed.add(temp);
         }
     }
 
@@ -211,10 +229,69 @@ public class LiveViewFragment extends Fragment {
         view.findViewById(R.id.videoLayout_nine_view).setVisibility(View.VISIBLE);
     }
 
-    private class onScreenTouch implements View.OnClickListener{
+    private class onScreenTouchListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            String videoViewIdentifier = getResources().getResourceEntryName(view.getId()).replaceFirst("imagebtn","videoview");
+            Toast.makeText(getContext(), videoViewIdentifier, Toast.LENGTH_SHORT).show();
 
+            showGroupSelectDialog(view, videoViewIdentifier);
         }
+    }
+    private void showGroupSelectDialog(final View view, final String identifier){
+        final String[] items=new String[groups.size()];
+        int i=0;
+        for(Group group:groups) {
+            items[i++] = group.getG_title();
+            Log.d(TAG, group.getG_title());
+        }
+        Log.d(TAG, "개수: "+Integer.toString(items.length));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int pos) {
+                dialogInterface.dismiss();
+                showChannelSelectDialog(view, identifier, pos);
+                Log.d(TAG, identifier+" clicked");
+            }
+        });
+        builder.setCancelable(true);
+        AlertDialog dialog=builder.create();
+        dialog.show();
+    }
+    private void showChannelSelectDialog(final View view, final String identifier, final int pos){
+        final List<Group> groups = ((MainActivity)getActivity()).get_group();
+        List<Channel> channels = groups.get(pos).getG_channel_list();
+        String[] items=new String[channels.size()];
+        int i=0;
+        for(Channel ch:channels)
+            items[i++]=ch.getC_title();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position) {
+                view.setVisibility(View.GONE); // 선택한 화면의 +버튼을 보이지 않게한다.
+
+                VideoView videoView = (VideoView)(getView().findViewById(getContext().getResources().getIdentifier(identifier,"id",getContext().getPackageName())));
+
+                //TODO 실제로 선택된 채널은 아래 얘임(channel객체). 이 채널의 영상을 위의 videoview에 재생시키면 됨. 일단은 예제 비디오를 재생함
+                Channel channel = groups.get(pos).getG_channel_list().get(position);
+                Log.d(TAG, channel.getC_title());
+
+                String urlPath = "android.resource://"
+                        + getContext().getPackageName() + "/"
+                        + R.raw.vid_bigbuckbunny;
+                Uri uri=Uri.parse(urlPath);
+                videoView.setVideoURI(uri);
+                videoView.start();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(true);
+        builder.setCancelable(true);
+        AlertDialog dialog=builder.create();
+        dialog.show();
     }
 }

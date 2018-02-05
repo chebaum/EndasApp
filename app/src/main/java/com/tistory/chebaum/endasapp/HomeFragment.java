@@ -115,8 +115,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDetach() {
         mListener = null;
-        groups.clear();
-        selected_groups.clear();
+        //groups.clear();
+        //selected_groups.clear();
         mGroupDBOpenHelper.close();
         mChannelDBOpenHelper.close();
         getActivity().unregisterReceiver(receiver);
@@ -426,7 +426,7 @@ public class HomeFragment extends Fragment {
                     int j=checked.get(idx).getJ();
                     // 이제 groups.get(i) 번째 장비의 groups.get(i).getG_channel_list().get(j) 채널이 선택되었음을 알 수 있다. 채널의 속성값을 사용하여 영상재생
                     Log.e(TAG, Long.toString(groups.get(i).getG_id())+"부모의 "+groups.get(i).getG_channel_list().get(j).getC_title());
-                    String temp=Long.toString(groups.get(i).getG_id())+"장비의 "+groups.get(i).getG_channel_list().get(j).getC_title()+"번째 채널";
+                    String temp=Integer.toString(i)+"-"+Integer.toString(j);
                     bundleData.add(temp);
                 }
                 sendDataToLiveViewFragment(checked.size(),bundleData, view);
