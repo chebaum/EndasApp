@@ -15,7 +15,7 @@ import android.widget.VideoView;
 
 public class FullNineScreenPlayActivity extends Activity implements MediaPlayer.OnCompletionListener{
 
-    private VideoView video;
+    //private VideoView video;
     private ProgressDialog pDialog;
 
     @Override
@@ -24,7 +24,6 @@ public class FullNineScreenPlayActivity extends Activity implements MediaPlayer.
         setContentView(R.layout.activity_live_view_fullscreen_nine);
 
         Intent intent = getIntent();
-        String urlPath = intent.getStringExtra("urlPath");
 
         pDialog = new ProgressDialog(this);
         pDialog.setTitle("실시간 영상 재생준비중");
@@ -33,16 +32,20 @@ public class FullNineScreenPlayActivity extends Activity implements MediaPlayer.
         //pDialog.setCancelable(false);
         pDialog.show();
 
-        video=(VideoView)findViewById(R.id.videoview_nineview1);
-        Uri uri = Uri.parse(urlPath);
-        video.setVideoURI(uri);
-        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                pDialog.dismiss();
-                video.start();
-            }
-        });
+        for(int i=1;i<=9;i++) {
+            String urlPath = intent.getStringExtra(Integer.toString(i));
+            if(urlPath==null) continue;
+            final VideoView video = (VideoView)findViewById(getApplicationContext().getResources().getIdentifier("videoview_nineview"+Integer.toString(i),"id",getApplicationContext().getPackageName()));
+            Uri uri = Uri.parse(urlPath);
+            video.setVideoURI(uri);
+            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    pDialog.dismiss();
+                    video.start();
+                }
+            });
+        }
     }
 
     @Override

@@ -34,7 +34,8 @@ public class LiveViewFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private List<Group> groups;
-    private List<Channel> channelsBeingPlayed;
+    // 현재 실시간으로 스트리밍중인 채널의 객체를 저장해두는 배열. 최대 9개까지 재생가능하다.
+    private Channel[] channelsBeingPlayed=new Channel[]{null,null,null,null,null,null,null,null,null};
 
     public LiveViewFragment() {
         // Required empty public constructor
@@ -60,7 +61,6 @@ public class LiveViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_live_view, container, false);
         groups=((MainActivity)getContext()).get_group();
-        channelsBeingPlayed=new ArrayList<Channel>();
 
         ((MainActivity)getActivity()).getNavigationView().getMenu().findItem(R.id.navigation_live).setChecked(true);
 
@@ -105,31 +105,41 @@ public class LiveViewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent;
+                // TODO 실제로는 현재 플레이중인 (channelsBeingPlayed[]) 채널의 정보를 intent에 담아서 넘겨준다.
                 if(view.findViewById(R.id.videoLayout_one_view).getVisibility()==View.VISIBLE){
                     Log.e(TAG,"oneview");
                     intent = new Intent(view.getContext(), FullOneScreenPlayActivity.class);
-                    String urlPath = "android.resource://"
-                            + getContext().getPackageName() + "/"
-                            + R.raw.vid_bigbuckbunny;
-                    intent.putExtra("urlPath", urlPath);
+                    for(int i=0;i<1;i++) {
+                        if(channelsBeingPlayed[i]==null) continue;
+                        String urlPath = "android.resource://"
+                                + getContext().getPackageName() + "/"
+                                + R.raw.vid_bigbuckbunny;
+                        intent.putExtra(Integer.toString(i+1), urlPath);
+                    }
                     startActivity(intent);
                 }
                 else if(view.findViewById(R.id.videoLayout_four_view).getVisibility()==View.VISIBLE){
                     Log.e(TAG,"fourview");
                     intent = new Intent(view.getContext(), FullFourScreenPlayActivity.class);
-                    String urlPath = "android.resource://"
-                            + getContext().getPackageName() + "/"
-                            + R.raw.vid_bigbuckbunny;
-                    intent.putExtra("urlPath", urlPath);
+                    for(int i=0;i<4;i++) {
+                        if(channelsBeingPlayed[i]==null) continue;
+                        String urlPath = "android.resource://"
+                                + getContext().getPackageName() + "/"
+                                + R.raw.vid_bigbuckbunny;
+                        intent.putExtra(Integer.toString(i+1), urlPath);
+                    }
                     startActivity(intent);
                 }
                 else{
                     intent = new Intent(view.getContext(), FullNineScreenPlayActivity.class);
                     Log.e(TAG,"nineview");
-                    String urlPath = "android.resource://"
-                            + getContext().getPackageName() + "/"
-                            + R.raw.vid_bigbuckbunny;
-                    intent.putExtra("urlPath", urlPath);
+                    for(int i=0;i<9;i++) {
+                        if(channelsBeingPlayed[i]==null) continue;
+                        String urlPath = "android.resource://"
+                                + getContext().getPackageName() + "/"
+                                + R.raw.vid_bigbuckbunny;
+                        intent.putExtra(Integer.toString(i+1), urlPath);
+                    }
                     startActivity(intent);
                 }
             }
@@ -209,7 +219,8 @@ public class LiveViewFragment extends Fragment {
             view.findViewById(getContext().getResources().getIdentifier(imageBtnString + Integer.toString(i + 1), "id", getContext().getPackageName())).setVisibility(View.GONE);
             ((TextView) (view.findViewById(getContext().getResources().getIdentifier(textViewString + Integer.toString(i + 1), "id", getContext().getPackageName())))).setText(groups.get(groupIdx).getG_title() + " 장비의\n" +temp.getC_title()+"채널");
 
-            channelsBeingPlayed.add(temp);
+            channelsBeingPlayed[i]= temp;
+            Log.d(TAG, Integer.toString(i)+"번째 화면 차지함");
         }
     }
 
@@ -278,6 +289,13 @@ public class LiveViewFragment extends Fragment {
 
                 //TODO 실제로 선택된 채널은 아래 얘임(channel객체). 이 채널의 영상을 위의 videoview에 재생시키면 됨. 일단은 예제 비디오를 재생함
                 Channel channel = groups.get(pos).getG_channel_list().get(position);
+
+                // 선택된 채널을 현재 재생중인 채널목록 배열에 삽입한다.
+                String str = getResources().getResourceEntryName(view.getId());
+                int idx = Integer.parseInt(str.substring(str.length()-1));
+                channelsBeingPlayed[idx-1]=channel;
+                Log.d(TAG, Integer.toString(idx-1)+"번째 화면 차지함");
+
                 Log.d(TAG, channel.getC_title());
 
                 String urlPath = "android.resource://"

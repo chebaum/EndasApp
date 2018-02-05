@@ -24,26 +24,28 @@ public class FullFourScreenPlayActivity extends Activity implements MediaPlayer.
         setContentView(R.layout.activity_live_view_fullscreen_four);
 
         Intent intent = getIntent();
-        String urlPath = intent.getStringExtra("urlPath");
 
-        CharSequence connecting = getText(R.string.connecting);
         pDialog = new ProgressDialog(this);
-        pDialog.setTitle(R.string.prepare_to_play_live);
-        pDialog.setMessage(connecting);
+        pDialog.setTitle("실시간 영상 재생준비중");
+        pDialog.setMessage("Connecting...");
         pDialog.setIndeterminate(false);
         //pDialog.setCancelable(false);
         pDialog.show();
 
-        video=(VideoView)findViewById(R.id.videoview_fourview1);
-        Uri uri = Uri.parse(urlPath);
-        video.setVideoURI(uri);
-        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                pDialog.dismiss();
-                video.start();
-            }
-        });
+        for(int i=1;i<=4;i++) {
+            String urlPath = intent.getStringExtra(Integer.toString(i));
+            if(urlPath==null) continue;
+            final VideoView video = (VideoView)findViewById(getApplicationContext().getResources().getIdentifier("videoview_fourview"+Integer.toString(i),"id",getApplicationContext().getPackageName()));
+            Uri uri = Uri.parse(urlPath);
+            video.setVideoURI(uri);
+            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    pDialog.dismiss();
+                    video.start();
+                }
+            });
+        }
     }
 
     @Override

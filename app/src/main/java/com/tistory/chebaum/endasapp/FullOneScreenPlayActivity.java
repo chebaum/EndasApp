@@ -24,7 +24,6 @@ public class FullOneScreenPlayActivity extends Activity implements MediaPlayer.O
         setContentView(R.layout.activity_live_view_fullscreen_one);
 
         Intent intent = getIntent();
-        String urlPath = intent.getStringExtra("urlPath");
 
         pDialog = new ProgressDialog(this);
         pDialog.setTitle("실시간 영상 재생준비중");
@@ -33,16 +32,20 @@ public class FullOneScreenPlayActivity extends Activity implements MediaPlayer.O
         //pDialog.setCancelable(false);
         pDialog.show();
 
-        video=(VideoView)findViewById(R.id.videoview_oneview1);
-        Uri uri = Uri.parse(urlPath);
-        video.setVideoURI(uri);
-        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                pDialog.dismiss();
-                video.start();
-            }
-        });
+        for(int i=1;i<=1;i++) {
+            String urlPath = intent.getStringExtra(Integer.toString(i));
+            if(urlPath==null) continue;
+            final VideoView video = (VideoView)findViewById(getApplicationContext().getResources().getIdentifier("videoview_oneview"+Integer.toString(i),"id",getApplicationContext().getPackageName()));
+            Uri uri = Uri.parse(urlPath);
+            video.setVideoURI(uri);
+            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    pDialog.dismiss();
+                    video.start();
+                }
+            });
+        }
     }
 
     @Override
