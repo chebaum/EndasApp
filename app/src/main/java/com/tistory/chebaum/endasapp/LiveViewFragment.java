@@ -19,24 +19,12 @@ import android.widget.VideoView;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LiveViewFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LiveViewFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LiveViewFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private static final String TAG = "LiveViewFragmentDEBUG";
     ProgressDialog pDialog;
     private OnFragmentInteractionListener mListener;
@@ -71,19 +59,20 @@ public class LiveViewFragment extends Fragment {
         // HomeFragment가 보낸 Bundle의 정보를 읽고, 화면에 표시합니다.(사용자가 선택한 채널 개수만큼...)
         getBundleData(view);
 
-        setScreenComponentBtnClickListener(view);
-        //videoplayRelatedCode(video, view);
+        // 화면 가로방향 전환버튼 / 화면 레이아웃 변경 버튼에 대한 리스너
+        setBtnClickListener(view);
+
+        // 화면(videoView객체)을 클릭한 경우, 어떤 화면을 클릭했는지 파악하고, 해당화면에서 플레이할 채널을 사용자가 직접 선택할 수 있도록 다이얼로그를 띄운다.
+        //setScreenTouchListener(video, view);
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -102,7 +91,7 @@ public class LiveViewFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    private void setScreenComponentBtnClickListener(final View view){
+    private void setBtnClickListener(final View view){
         ImageButton convert_screen_btn = (ImageButton)view.findViewById(R.id.btn_convert_screen);
         convert_screen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,39 +150,8 @@ public class LiveViewFragment extends Fragment {
         });
     }
 
-    private void videoplayRelatedCode(final VideoView video, final View view){
-        // 버퍼링임을 알려주는 다이얼로그
-        CharSequence connecting = getText(R.string.connecting);
-        pDialog = new ProgressDialog(view.getContext());
-        pDialog.setTitle(R.string.prepare_to_play_live);
-        pDialog.setMessage(connecting);
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
-        pDialog.show();
+    private void setScreenTouchListener(final VideoView video, final View view){
 
-        // 주소 설정. 일단은 임의 주소사용한다.
-        //String urlPath = "rtsp://192.168.56.1:8554/stream"
-        String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
-
-        try{
-            //MediaController mediaController = new MediaController(view.getContext());
-            //mediaController.setAnchorView(video);
-            Uri uri = Uri.parse(urlPath);
-            //video.setMediaController(mediaController);
-            video.setVideoURI(uri);
-        }catch (Exception e){
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
-
-        video.requestFocus();
-        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                pDialog.dismiss();
-                video.start();
-            }
-        });
     }
 
     // TODO! 비어있는 화면의 더하기 버튼 클릭 시..
@@ -206,29 +164,29 @@ public class LiveViewFragment extends Fragment {
     }
 
     public void getBundleData(View view) {
+        // 선택된 채널 개수에 따라 LiveView의 동영상재생 화면개수가 1/4/9개가 자동으로 세팅된다.
+        // 디폴트: 4개
         Bundle arguments = getArguments();
         if (arguments == null) {
             return;
         }
         int count = arguments.getInt("count");
         ArrayList<String> channelNameList = arguments.getStringArrayList("data");
-        if(count<=1){ // 채널 1개
+        if(count<=1){ // 채널 1개 선택된 경우
             oneScreenMode(view);
             for(int i=0;i<count;i++){
-                //view.findViewById(R.id.imagebtn_oneview1).setVisibility(View.GONE);
-                //((TextView)(view.findViewById(R.id.test1_1))).setText(channelNameList.get(i));
                 view.findViewById(getContext().getResources().getIdentifier("imagebtn_oneview"+Integer.toString(i+1),"id",getContext().getPackageName())).setVisibility(View.GONE);
                 ((TextView)(view.findViewById(getContext().getResources().getIdentifier("test1-"+Integer.toString(i+1),"id",getContext().getPackageName())))).setText(channelNameList.get(i));
             }
         }
-        else if(count<=4){ // 채널 2~4개
+        else if(count<=4){ // 채널 2~4개 선택된 경우
             fourScreenMode(view);
             for(int i=0;i<count;i++){
                 view.findViewById(getContext().getResources().getIdentifier("imagebtn_fourview"+Integer.toString(i+1),"id",getContext().getPackageName())).setVisibility(View.GONE);
                 ((TextView)(view.findViewById(getContext().getResources().getIdentifier("test4-"+Integer.toString(i+1),"id",getContext().getPackageName())))).setText(channelNameList.get(i));
             }
         }
-        else{ // 채널 5~9개
+        else{ // 채널 5~9개 선택된 경우
             nineScreenMode(view);
             for(int i=0;i<count;i++){
                 view.findViewById(getContext().getResources().getIdentifier("imagebtn_nineview"+Integer.toString(i+1),"id",getContext().getPackageName())).setVisibility(View.GONE);
@@ -251,5 +209,12 @@ public class LiveViewFragment extends Fragment {
         view.findViewById(R.id.videoLayout_one_view).setVisibility(View.GONE);
         view.findViewById(R.id.videoLayout_four_view).setVisibility(View.GONE);
         view.findViewById(R.id.videoLayout_nine_view).setVisibility(View.VISIBLE);
+    }
+
+    private class onScreenTouch implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+
+        }
     }
 }

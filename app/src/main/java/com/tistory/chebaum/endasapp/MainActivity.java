@@ -84,8 +84,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public BottomNavigationView getNavigationView(){ return navigation; }
-
-    public void onVideoViewPressed(View view){
-        return;
-    }
 }

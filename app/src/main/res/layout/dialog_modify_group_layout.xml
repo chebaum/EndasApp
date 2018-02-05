@@ -16,19 +16,23 @@
         android:layout_height="wrap_content"
         android:hint="@string/url"/>
     <EditText
+        android:id="@+id/dialog_group_webport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/web_port"/>
     <EditText
+        android:id="@+id/dialog_group_videoport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/video_port"/>
     <EditText
+        android:id="@+id/dialog_group_id"
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/id"/>
     <EditText
+        android:id="@+id/dialog_group_pw"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
