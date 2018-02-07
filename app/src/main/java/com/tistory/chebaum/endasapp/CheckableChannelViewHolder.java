@@ -20,7 +20,7 @@ public abstract class CheckableChannelViewHolder extends ChildViewHolder {
         //itemView.setOnClickListener(this);
     }
     public void onBindViewHolder(int flatPos, boolean checked){
-        checkable=getCheckable();
+        checkable = getCheckable();
         checkable.setChecked(checked);
     }
 /*
