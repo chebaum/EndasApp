@@ -14,7 +14,11 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ExternalConnect extends AppCompatActivity implements View.OnClickListener {
+/**
+ * 외부연결 을 위한 activity. qr코드 인식을 통하여 채널이름/아이디/비밀번호 값을 가져올 수 있다.
+ */
+
+public class ExternalConnectActivity extends AppCompatActivity implements View.OnClickListener {
     private Button buttonScan,okbtn;
     private EditText editName, editId, editPw;
 
@@ -62,8 +66,7 @@ public class ExternalConnect extends AppCompatActivity implements View.OnClickLi
                     e.printStackTrace();
                     //if control comes here
                     //that means the encoded format not matches
-                    //in this case you can display whatever data is available on the qrcode
-                    //to a toast
+                    //in this case you can display whatever data is available on the qrcode through the toast
                     Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
                 }
             }

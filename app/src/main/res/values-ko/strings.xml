@@ -22,7 +22,7 @@
     <string name="mng_channels">채널 관리</string>
     <string name="add_channels">채널 추가</string>
     <string name="modify_delete_channel">채널 수정/삭제</string>
-    <string name="modify_channel_value">채널 속성 값 수정</string>
+    <string name="modify_channel_value">채널 이름 수정</string>
     <string name="register">직접등록</string>
     <string name="external">외부연결</string>
     <string name="mng_device">장비 관리</string>
@@ -37,5 +37,5 @@
     <string name="clear">전체 선택 해제</string>
     <string name="select_date_time">날짜/시간 선택</string>
     <string name="change_date">날짜 변경</string>
-    <string name="scan_code">QR 코드</string>
+    <string name="scan_code">QR 코드\n스캔</string>
 </resources>

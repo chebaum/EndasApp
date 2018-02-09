@@ -59,7 +59,7 @@ public class PlaybackActivity extends AppCompatActivity {
         // 버퍼링임을 알려주는 다이얼로그
         CharSequence connecting = getText(R.string.connecting);
         pDialog = new ProgressDialog(this);
-        pDialog.setTitle(R.string.prepare_to_play_live);
+        pDialog.setTitle("재생 준비 중");
         pDialog.setMessage(connecting);
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
@@ -67,7 +67,10 @@ public class PlaybackActivity extends AppCompatActivity {
 
         // 주소 설정. 일단은 임의 주소사용한다.
         //String urlPath = "rtsp://192.168.56.1:8554/stream"
-        String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+        //String urlPath = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
+        String urlPath = "android.resource://"
+                + getApplicationContext().getPackageName() + "/"
+                + R.raw.vid_bigbuckbunny;
 
         try{
             MediaController mediaController = new MediaController(this);

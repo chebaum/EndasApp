@@ -59,7 +59,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".ExternalConnect"
+        <activity android:name=".ExternalConnectActivity"
             android:label="@string/external"
             android:parentActivityName=".MainActivity">
             <meta-data

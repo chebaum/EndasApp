@@ -11,6 +11,8 @@ import android.widget.VideoView;
 
 /**
  * Created by cheba on 2018-01-10.
+ * LiveViewFragment에서 1개화면모드가 선택된 상태에서 전체화면 전환 버튼을 누르면 이 액티비티로 intent가 전송되고 즉시 실행된다.
+ * intent를 통해 넘겨진 데이터를 분석하여 전체화면으로 해당 영상들을 이어서 보여준다.
  */
 
 public class FullOneScreenPlayActivity extends Activity implements MediaPlayer.OnCompletionListener{

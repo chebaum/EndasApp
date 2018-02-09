@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Created by cheba on 2018-01-31.
+ * 홈화면의 리스트(RecyclerView list)를 구성할때 사용되는 클래스.
+ * 거의 대부분의 리스트관련 클래스들은 최종적으로 CheckableChannelRecyclerViewAdapter 클래스에서 사용된다.
  */
 
 public class MultiCheckExpandableGroup extends myCheckedExpandableGroup {

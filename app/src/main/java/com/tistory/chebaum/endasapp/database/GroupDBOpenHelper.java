@@ -12,6 +12,10 @@ import com.tistory.chebaum.endasapp.Group;
 
 /**
  * Created by cheba on 2018-01-02.
+ * 장비정보를 담는 데이터베이스.
+ * id를 기본키로 가지고있으며, autoincrement설정이 되어있다
+ * 나머지는 장비 연결에 필요한 속성값들을 모두 칼럼으로 가지고있다.
+ * 장비이름/장비IP주소/웹포트/비디오포트/아이디/비번
  */
 
 public class GroupDBOpenHelper {
@@ -33,8 +37,6 @@ public class GroupDBOpenHelper {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE IF NOT EXISTS groupDB (gId INTEGER PRIMARY KEY AUTOINCREMENT, gTitle CHAR(100), gUrl CHAR(100), gWebPort INTEGER, gVideoPort INTEGER, gLoginId CHAR(100), gLoginPw CHAR(100));");
-            //db.execSQL("CREATE TABLE IF NOT EXISTS channelDB (cId INTEGER PRIMARY KEY AUTOINCREMENT, cTitle CHAR(100), cUrl CHAR(100), cWebPort INTEGER, cVideoPort INTEGER, cLoginId CHAR(100), cLoginPw CHAR(100));");
-            // TODO 실제로는 gid를 primary key, auto increment 로 해야한다!
         }
 
         @Override

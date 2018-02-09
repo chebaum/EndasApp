@@ -157,13 +157,10 @@ public class RegisterGroupActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // TODO items 에 channelList아무래도 넣어야할듯....ㅜㅜ 최우선처리한다.
-
         List<Channel> list = new ArrayList<>();
         for(int i=0;i<count;i++) list.add(new Channel(null));
         userInput=new Group(list, title, url, webPort, videoPort, id, password);
         long groupID = mGroupDBOpenHelper.insertColumn(userInput);
-        //TODO 모든 serverStatus의 객체를 처음부터 훑는 코드가 너무 중복된다..일단은 유지, 후에 한번에 정리
         for(ServerChannel serverChannel:serverStatus){
             if(serverChannel.isActive()&&serverChannel.getIsSelected()){
                 Channel channel = new Channel(serverChannel.getNumber(),serverChannel.getName(),groupID);
@@ -171,7 +168,6 @@ public class RegisterGroupActivity extends AppCompatActivity {
                 mChannelDBOpenHelper.insertColumn(channel);
             }
         }
-
     }
 
     private class myClickListener implements View.OnClickListener{
@@ -193,9 +189,6 @@ public class RegisterGroupActivity extends AppCompatActivity {
                 int j=0;
                 Toast.makeText(getApplicationContext(), "연결 성공", Toast.LENGTH_LONG).show();
                 // serverStatus에 저장된 정보를 활용한다.(현재 사용가능한 채널목록이 ServerChannel객체들의 리스트 형태로 저장되어있음)
-                // for(ServerChannel ch : serverStatus)
-                //      if(ch.isActive())
-                //            use ch.name/ch.num
                 String[] listItems=new String[count];
                 final boolean[] checkedItems=new boolean[count];
                 for(int i=0;i<serverStatus.size();i++) {
@@ -204,8 +197,8 @@ public class RegisterGroupActivity extends AppCompatActivity {
                         checkedItems[j++] = false;
                     }
                 }
-                // TODO 지워야한다~
-                if (j != count) {
+
+                if (j != count) { // 절대 보여질리 없음. 혹여나 개수가 맞지않은 경우가 있는지 체크하기 위한 코드임 무시..
                     Toast.makeText(getApplicationContext(), "개수 맞지않음 확인해야..", Toast.LENGTH_LONG).show();
                     Log.e(TAG, "j="+Integer.toString(j)+" count="+Integer.toString(count));
                 }
@@ -229,7 +222,7 @@ public class RegisterGroupActivity extends AppCompatActivity {
                                         channel.setIsSelected(checkedItems[j++]);
                                     }
                                 }
-                                if(j!=count){
+                                if(j!=count){ // 절대 보여질리 없음. 혹여나 개수가 맞지않은 경우가 있는지 체크하기 위한 코드임 무시..
                                     Toast.makeText(getApplicationContext(), "개수 맞지않음 확인해야..222", Toast.LENGTH_LONG).show();
                                     Log.e(TAG, "j="+Integer.toString(j)+" count="+Integer.toString(count));
                                     return;

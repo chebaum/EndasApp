@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by cheba on 2018-01-31.
+ * RecyclerView에서 장비 및 채널 항목들을 관리해주는 어댑터
  */
 
 public abstract class CheckableChannelRecyclerViewAdapter<GVH extends myGroupViewHolder,CVH extends myChannelViewHolder> extends ExpandableRecyclerViewAdapter<GVH, CVH>
@@ -73,7 +74,7 @@ public abstract class CheckableChannelRecyclerViewAdapter<GVH extends myGroupVie
         }
     }
 
-    public void clearChoices(){
+    public void clearChoices(){ // 홈화면의 '전체 선택 해제' 버튼을 클릭하는 경우 이 함수가 호출됩니다.
         channelCheckController.clearCheckStates();
         //only update the child views that are visible (i.e. their group is expanded)
         for (int i = 0; i < getGroups().size(); i++) {

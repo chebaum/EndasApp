@@ -44,6 +44,10 @@ public class MyRecyclerAdapter extends CheckableChannelRecyclerViewAdapter<myGro
         holder.g_reg_date.setText(R.string.Registration_date);
         holder.g_reg_date.setTextSize(holder.g_name.getTextSize()/4);
 
+        // myGroupViewHolder에서 아래와 거의 유사한 코드가 존재한다.
+        // 중복되는 이유는, myGroupViewHolder에서는 당장 항목이 사용자에 의해 선택되었을때의 이벤트를 처리하는 것이고,
+        // 이 클래스에서는 리스트에서 사용자가 스크롤을 할때, 숨겨진 항목이 스크롤을 통하여 다시 화면에 보여질때
+        // 이미 선택되었던 항목이면 색을 달리하여 보여주기 위해 사용된다.
         if(selected_groups.contains(group)){
             //TODO 선택된 항목임..색 다르게 설정해준다.
             holder.g_name.setTextColor(view.getResources().getColor(R.color.colorBackground));

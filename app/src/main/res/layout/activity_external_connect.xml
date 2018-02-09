@@ -1,76 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tistory.chebaum.endasapp.ExternalConnect">
+    android:orientation="vertical"
+    android:layout_margin="15dp"
+    android:weightSum="100"
+    tools:context="com.tistory.chebaum.endasapp.ExternalConnectActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
-
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/channel_name" />
-
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:gravity="center_vertical"
+            android:text="@string/channel_name"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/editName"
-            android:text=""
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="70"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/id" />
-
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:gravity="center_vertical"
+            android:text="@string/id"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
             android:id="@+id/editId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/password" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="70"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:gravity="center_vertical"
+            android:text="@string/password"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"/>
         <EditText
             android:id="@+id/editPw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="70"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"/>
     </LinearLayout>
-    <LinearLayout
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:gravity="center"
+        android:weightSum="100">
         <Button
             android:id="@+id/buttonScan"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="30"
             android:layout_height="match_parent"
-            android:text="@string/scan_code" />
+            android:layout_marginRight="10dp"
+            android:text="@string/scan_code"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12"
+        android:orientation="horizontal"
+        android:gravity="center|bottom"
+        android:weightSum="100"
+        android:layout_marginTop="20dp">
         <Button
             android:id="@+id/okbtn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="30"
             android:layout_height="match_parent"
-            android:text="@string/registerbtn"/>
+            android:layout_marginRight="10dp"
+            android:text="@string/registerbtn"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite" />
         <Button
             android:id="@+id/cancelbtn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="30"
             android:layout_height="match_parent"
-            android:text="@string/cancel"/>
-
+            android:layout_marginLeft="10dp"
+            android:text="@string/cancel"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

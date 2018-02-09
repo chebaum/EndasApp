@@ -30,31 +30,24 @@ public class ServerChannel {
     public int getNumber() {
         return number;
     }
-
     public void setNumber(int number) {
         this.number = number;
     }
-
     public boolean isActive() {
         return isActive;
     }
-
     public void setActive(boolean active) {
         isActive = active;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public boolean getIsSelected() {
         return isSelected;
     }
-
     public void setIsSelected(boolean selected) {
         isSelected = selected;
     }

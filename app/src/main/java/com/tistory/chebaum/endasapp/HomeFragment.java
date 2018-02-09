@@ -88,10 +88,14 @@ public class HomeFragment extends Fragment {
         if(mHomeFragView==null) mHomeFragView = inflater.inflate(R.layout.fragment_home, container, false);
 
         ((MainActivity)mHomeFragView.getContext()).selection_mode=false;
+        Log.d(TAG, "onCreateView() called");
 
         setBroadcastReceiver();
+        // DB에서 저장된 장비와 채널을 읽어들이고, groups 라는 이름의 listArray 에 해당 값들을 저장시킵니다.
         get_channels_from_database();
+        // 리스트 뷰에 대한 속성값 설정
         setRecyclerViewAttrs(mHomeFragView);
+        // 화면 상단에 있는 세개의 버튼에 대한 이벤트 리스너 등록
         setBtnListeners(mHomeFragView);
 
         return mHomeFragView;
@@ -121,6 +125,7 @@ public class HomeFragment extends Fragment {
         mChannelDBOpenHelper.close();
         getActivity().unregisterReceiver(receiver);
         super.onDetach();
+        Log.d(TAG, "onDetach() called");
     }
 
     @Override
@@ -128,13 +133,12 @@ public class HomeFragment extends Fragment {
         if(((MainActivity)mHomeFragView.getContext()).getHasDirtyData()) {
             ((MainActivity)mHomeFragView.getContext()).setHasDirtyData(false);
             restartFragment();
-            Log.e(TAG, "onResume called!");
+            Log.d(TAG, "onResume() called");
         }
         super.onResume();
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -168,8 +172,6 @@ public class HomeFragment extends Fragment {
                         Log.e(TAG, selected.getG_title());
                         group=selected;
                     }
-                    if(group==null)
-                        Log.e(TAG, "널~"+Long.toString(group.getG_id()));
 
                     Log.e(TAG, "선택된 그룹객체 id: "+Long.toString(group.getG_id()));
                     Log.e(TAG, "selected groups 내의 객체 개수: "+Integer.toString(selected_groups.size()));
@@ -217,7 +219,6 @@ public class HomeFragment extends Fragment {
         ((MainActivity)mHomeFragView.getContext()).setGroups(groups);
         ((MainActivity)mHomeFragView.getContext()).setSelected_groups(selected_groups);
 
-        // TODO 지우기
         //getContext().deleteDatabase("channelDB.db");
         //getContext().deleteDatabase("groupDB.db");
 
@@ -230,9 +231,6 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
 
-        // TODO 지우기
-        //insertExampleInputsToDB();
-
         // 테이블의 모든 열을 가져와서 channels 배열에 삽입한다.
         cursor = mGroupDBOpenHelper.getAllColumns();
         // 로그에 개수 찍음ㅇ
@@ -244,8 +242,9 @@ public class HomeFragment extends Fragment {
             long id = cursor.getInt(cursor.getColumnIndex("gId"));
             Log.d(TAG, Long.toString(id)+"번째 장비 볼 차례입니다.");
             childCursor = mChannelDBOpenHelper.getColumnByGroupID(id);
-            //childCursor=mChannelDBOpenHelper.getAllColumns();
+
             // 해당 장비에 속하는 채널들을 담게 될 ArrayList입니다.
+            // 모든 채널들을 담은 뒤, 생성자를 통하여 장비객체에 들어갑니다.
             ArrayList<Channel> list = new ArrayList<>();
             Log.i(TAG,"channel row count = "+childCursor.getCount());
             // 배열에 현재 장비에 속하는 채널들(childChannels)을 모두 담은 뒤에, 배열을 장비 객체(channels)에 넣어줍니다.
@@ -264,7 +263,7 @@ public class HomeFragment extends Fragment {
             // 장비 객체에 연결 시켜주면 된다.
 
             Group group = new Group(
-                    list,
+                    list, // 채널목록
                     cursor.getLong(cursor.getColumnIndex("gId")),
                     cursor.getString(cursor.getColumnIndex("gTitle")),
                     cursor.getString(cursor.getColumnIndex("gUrl")),
@@ -273,7 +272,6 @@ public class HomeFragment extends Fragment {
                     cursor.getString(cursor.getColumnIndex("gLoginId")),
                     cursor.getString(cursor.getColumnIndex("gLoginPw"))
             );
-            //channel.setChildObjectList(childList);
             groups.add(group);
 
             Log.d(TAG,"DEBUG *** gid="+id+"gTitle="+group.getG_title()+"gUrl="+group.getG_url()); // for DEBUG
@@ -309,10 +307,6 @@ public class HomeFragment extends Fragment {
         EditText editText = (EditText)DialogView.findViewById(R.id.dialog_group_title);
         editText.setText(group.getG_title());
 
-        editText = (EditText)DialogView.findViewById(R.id.dialog_group_url);
-        editText.setText(group.getG_url());
-
-        builder.setMessage("값을 입력하십시오 - 일단 채널이름과 URL만!");
         builder.setTitle(R.string.modify_channel_value)
                 .setCancelable(false)
                 .setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
@@ -320,7 +314,6 @@ public class HomeFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // 입력받은값 group 객체에 업데이트
                         group.setG_title(((EditText) DialogView.findViewById(R.id.dialog_group_title)).getText().toString());
-                        group.setG_url(((EditText) DialogView.findViewById(R.id.dialog_group_url)).getText().toString());
                         groups.set(idx, group);
                         mGroupDBOpenHelper.updateColumn(group);
                         selected_groups.clear();
@@ -347,35 +340,6 @@ public class HomeFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),1));
     }
-
-    public void insertExampleInputsToDB(){
-/*
-        List<Channel> list = new ArrayList<>();
-        list.add(new Channel(1,"channel 1",1));
-        list.add(new Channel(2,"channel 2",1));
-        list.add(new Channel(3,"channel 3",1));
-        for(Channel ch:list)
-            mChannelDBOpenHelper.insertColumn(ch);
-        mGroupDBOpenHelper.insertColumn(new Group(null, 1, "장비","http://www.androidbegin.com/tutorial/AndroidCommercial.3gp"));
-
-        list = new ArrayList<>();
-        list.add(new Channel(1,"channel 1",2));
-        list.add(new Channel(2,"channel 2",2));
-        list.add(new Channel(3,"channel 3",2));
-        for(Channel ch:list)
-            mChannelDBOpenHelper.insertColumn(ch);
-        mGroupDBOpenHelper.insertColumn(new Group(null, 2, "자택1","http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"));
-
-        list = new ArrayList<>();
-        list.add(new Channel(1,"channel 1",3));
-        list.add(new Channel(2,"channel 2",3));
-        list.add(new Channel(3,"channel 3",3));
-        for(Channel ch:list)
-            mChannelDBOpenHelper.insertColumn(ch);
-        mGroupDBOpenHelper.insertColumn(new Group(list, 3,"자택2","http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"));
-        //mGroupDBOpenHelper.insertColumn(new Group("주차장","http://content.jwplatform.com/manifests/vM7nH0Kl.m3u8"));
-        //mGroupDBOpenHelper.insertColumn(new Group("현관","http://cdn-fms.rbs.com.br/hls-vod/sample1_1500kbps.f4v.m3u8"));
-   */ }
 
     public void setBtnListeners(View view){
         final Button addGroup = (Button) view.findViewById(R.id.btn_add_group);
@@ -404,7 +368,7 @@ public class HomeFragment extends Fragment {
                                     startActivityForResult(intent, 0);
                                 }
                                 else if(which == 1){
-                                    Intent intent = new Intent(alertDialogBuilder.getContext(),ExternalConnect.class);
+                                    Intent intent = new Intent(alertDialogBuilder.getContext(),ExternalConnectActivity.class);
                                     startActivityForResult(intent, 1);
                                 }
                                 dialog.dismiss();
@@ -489,13 +453,15 @@ public class HomeFragment extends Fragment {
                     case "notify.adapter.dirtydata.action":
                         ((MainActivity)mHomeFragView.getContext()).setHasDirtyData(true);
                         break;
-                    }
+                }
+
             }
         };
         getActivity().registerReceiver(receiver,intentFilter);
     }
 
     public void sendDataToLiveViewFragment(int size, ArrayList<String> bundleData, View view){
+        // *** '선택채널재생' 버튼을 클릭 했을때 사용되는 메소드입니다. 사용자가 선택한 채널들의 정보 전달이 목적
         // bundle객체 안에 동영상 재생과 관련된 정보를 담아서 LiveViewFragment에게 전송한다.
         // LiveViewFragment에서는 전달된 정보를 받은뒤 해당 영상을 재생한다.
         LiveViewFragment fragment = new LiveViewFragment();

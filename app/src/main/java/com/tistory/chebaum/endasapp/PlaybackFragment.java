@@ -88,6 +88,24 @@ public class PlaybackFragment extends Fragment {
         mSpinner = (Spinner)view.findViewById(R.id.channel_spinner);
         mTimePicker = (TimePicker)view.findViewById(R.id.timePicker);
 
+        // 스피너에서 아이템이 선택된 경우에 대한 리스너
+        setSpinnerOnItemSelectedListener();
+
+        // 선택가능한 채널들을 스피너에 추가해준다. TODO 지금은 임시데이터를 삽입하고있다. DB에서 불러와야한다.
+        addDataToSpinner();
+        // 스피너 관련한 속성값 설정
+        setSpinnerAttrs(view);
+
+        // 날짜/시간 선택 위젯 부분 속성값 설정 메소드 - 현재의 날짜 및 시간이 화면에 표시되도록 하고, '날짜변경' 버튼에 대한 이벤트 리스너 등록
+        setTimeAndDatePickerAttrs(view);
+
+        // 재생버튼에 대한 이벤트 리스너 등록
+        setPlayButtonOnClickListener(view);
+
+        return view;
+    }
+
+    private void setSpinnerOnItemSelectedListener() {
         // 채널 선택 관련 부분
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -101,31 +119,63 @@ public class PlaybackFragment extends Fragment {
 
             }
         });
+    }
 
-        // 임시데이터... 실제로는 channel 목록들 가져와서 하나씩 add 해야한다. ******
+    private void setSpinnerAttrs(View view) {
+        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, spinner_items);
+        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(spinner_adapter);
+    }
+
+    private void addDataToSpinner() {
+        // TODO: 임시데이터... 실제로는 channel 목록들 가져와서 하나씩 add 해야한다. ******
         spinner_items.add("사무실");
         spinner_items.add("자택1");
         spinner_items.add("자택2");
         spinner_items.add("주차장");
         spinner_items.add("현관");
+    }
 
+    private void setPlayButtonOnClickListener(View view) {
+        // 재생버튼 클릭 시 설정한 채널/날짜/시간을 바탕으로 새로운 액티비티에서 영상을 재생한다.
+        Button playBtn = (Button) view.findViewById(R.id.start_playback);
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO 미래의 시점을 선택한 경우 에러 처리해야
 
-        //List<Group> groups = ((MainActivity)view.getContext()).get_group();
-        //for(Group item:groups){
-        //    spinner_items.add(item.)
-       // }
+                if (Build.VERSION.SDK_INT < 23) {
+                    mDatetime.set(Calendar.HOUR_OF_DAY, mTimePicker.getCurrentHour());
+                    mDatetime.set(Calendar.MINUTE, mTimePicker.getCurrentMinute());
+                } else {
+                    mDatetime.set(Calendar.HOUR_OF_DAY, mTimePicker.getHour());
+                    mDatetime.set(Calendar.MINUTE, mTimePicker.getMinute());
+                }
 
-        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, spinner_items);
+                // 재생 전 입력한 채널 체크 (DEBUG용 코드임)
+                String str = selected_channel;
+                str += " 채널 \n";
+                // 재생 전 입력한 날짜 / 시간 체크
+                str += mToastDateFormat.format(mDatetime.getTime());
+                Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
 
-        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(spinner_adapter);
+                Intent intent = new Intent(view.getContext(), PlaybackActivity.class);
+                intent.putExtra("startingPoint", mDatetime);
+                // 일단은 채널의 이름만을 string객체로 보낸다
+                // 실제로는 채널객체에서 필요한 속성값을 보내줘야한다.
+                intent.putExtra("channel", selected_channel);
+                startActivity(intent);
+            }
+        });
+    }
 
-
+    private void setTimeAndDatePickerAttrs(View view) {
         // 현재 날짜 시간 화면에 표시
-        mTextView=(TextView)view.findViewById(R.id.textview_date);
+        mTextView = (TextView) view.findViewById(R.id.textview_date);
         mTextView.setText(mTextViewFormat.format(mDatetime.getTime()));
 
-        Button date_select_Btn = (Button)view.findViewById(R.id.select_date);
+
+        Button date_select_Btn = (Button) view.findViewById(R.id.select_date);
         date_select_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,60 +183,19 @@ public class PlaybackFragment extends Fragment {
                 new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        // month에 계속 실제로 선택된 값보다 1씩 작은 값이 전달됨...임시방편으로 직접 month 인자에 (+1) 함.....근본적인 해결책? ******************
-                        Toast.makeText(v.getContext(), Integer.toString(year)+"년 "+Integer.toString(month+1)+"월 "+Integer.toString(day)+"일이 선택되었습니다.",Toast.LENGTH_SHORT).show();
-                        //여기까지 임시코드
-
-                        // 실제 코드 시작
                         mDatetime.set(year, month, day);
                         mTextView.setText(mTextViewFormat.format(mDatetime.getTime()));
                     }
-                },mDatetime.get(Calendar.YEAR), mDatetime.get(Calendar.MONTH), mDatetime.get(Calendar.DAY_OF_MONTH)).show();
+                }, mDatetime.get(Calendar.YEAR), mDatetime.get(Calendar.MONTH), mDatetime.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
-        // 재생버튼 클릭 시 설정한 채널/날짜/시간을 바탕으로 새로운 액티비티에서 영상을 재생한다.
-        // 일단은 새 액티비티로 넘어가지 않고, Toast를 사용하여 입력값만 확인한다. - valid 입력값 까지 확인완료
-        Button playBtn = (Button)view.findViewById(R.id.start_playback);
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // *** 미래의 시점을 선택한 경우 에러 메세지 dialog 표시하기...아직 구현 안함! ***
-
-                if(Build.VERSION.SDK_INT < 23){
-                    mDatetime.set(Calendar.HOUR_OF_DAY, mTimePicker.getCurrentHour());
-                    mDatetime.set(Calendar.MINUTE, mTimePicker.getCurrentMinute());
-                } else{
-                    mDatetime.set(Calendar.HOUR_OF_DAY, mTimePicker.getHour());
-                    mDatetime.set(Calendar.MINUTE, mTimePicker.getMinute());
-                }
-
-                // 재생 전 입력한 채널 체크
-                String str = selected_channel;
-                str+=" 채널 \n";
-                // 재생 전 입력한 날짜 / 시간 체크
-                str += mToastDateFormat.format(mDatetime.getTime());
-                Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(view.getContext(),PlaybackActivity.class);
-                intent.putExtra("startingPoint",mDatetime);
-                // 일단은 채널의 이름만을 string객체로 보낸다
-                // 후에는 채널의 모든 속성값을 가지고 있는 직접 작성한 클래스의 객체를 넘기면 될듯싶다.
-                intent.putExtra("channel", selected_channel);
-                startActivity(intent);
-            }
-        });
-
-        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -196,23 +205,11 @@ public class PlaybackFragment extends Fragment {
             Toast.makeText(context, R.string.Play_Back_Fragment, Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

@@ -12,6 +12,13 @@ import com.tistory.chebaum.endasapp.Channel;
 
 /**
  * Created by cheba on 2018-01-02.
+ * 채널 정보를 저장하는 데이터베이스
+ * 모든 채널들이 들어가있으며, cGroupID라는 칼럼의 값을 통해 어느 장비에 속한 채널인지 구분지을 수 있습니다.
+ * 현재는 채널번호/이름/장비번호 3개의 칼럼만을 가지고 있으며, 영상재생을 위해서는 실제로는 더 필요할 것으로 보인다.
+ * 무엇이 필요한지 몰라서 일단 이대로 두었습니다.
+ *
+ * cNum은 primary key값은 아니고 장비마다 같은 번호의 채널을 가질 수는 있지만,
+ * cNum과 cGroupID를 짝짓는 경우 유일한 값이 됩니다.
  */
 
 public class ChannelDBOpenHelper {
@@ -56,7 +63,6 @@ public class ChannelDBOpenHelper {
     }
 
     public long insertColumn(Channel channel){
-        Log.d(TAG,"insert column 출력됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         ContentValues values = new ContentValues();
         values.put("cNum", channel.getC_num());
         values.put("cTitle", channel.getC_title());

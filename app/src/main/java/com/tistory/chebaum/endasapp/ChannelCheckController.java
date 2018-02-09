@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by cheba on 2018-01-31.
+ * 사용자가 홈화면에서 재생할 채널을 선택하면 체크박스에 체크가 되고 다시 선택하면 체크가 사라지는데,
+ * 그때 선택여부를 저장하고 보여주는 역할을 하는 check controller이다.
+ * https://github.com/thoughtbot/expandable-recycler-view
+ * 홈화면의 recyclerview 구조는 위의 링크에서 많이 참조해서 작성하였습니다
+ * 이 ChannelCheckController 클래스 또한 위의 링크에서 가져와 활용하였습니다.
  */
 
 public class ChannelCheckController {

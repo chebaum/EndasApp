@@ -17,22 +17,11 @@ public abstract class CheckableChannelViewHolder extends ChildViewHolder {
 
     public CheckableChannelViewHolder(View itemView) {
         super(itemView);
-        //itemView.setOnClickListener(this);
     }
     public void onBindViewHolder(int flatPos, boolean checked){
         checkable=getCheckable();
         checkable.setChecked(checked);
     }
-/*
-TODO 제대로 작동안하면 myChannelViewHolder에서 다시 빼온다
-    @Override
-    public void onClick(View view) {
-        checkable.toggle();
-        if(listener!=null){
-            listener.onChildCheckChanged(view, checkable.isChecked(), getAdapterPosition());
-        }
-    }
-*/
     public void setOnChannelCheckedListener(OnChannelCheckChangedListener listener){
         this.listener=listener;
     }

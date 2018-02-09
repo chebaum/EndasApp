@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -22,7 +23,28 @@ public class MainActivity extends AppCompatActivity {
     private List<Group> groups;
     private List<Group> selected_groups;
     private BottomNavigationView navigation;
+    private static String TAG = "MainActivity DEBUG";
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // main activity에서는 하는 일이 크게있지 않습니다.
+        // 하단의 네비게이션 메뉴바를 세팅하는 즉시 HomeFragment으로 넘어가며 홈화면을 보여줍니다.
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Log.d(TAG, "onCreate() called");
+
+        navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
+        getSupportActionBar().setTitle(R.string.mng_device);
+        hasDirtyData=selection_mode=false;
+    }
+
+    // 하단 네비게이션 바 클릭 리스너
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -49,39 +71,30 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frame_layout, new HomeFragment()).commit();
-        getSupportActionBar().setTitle(R.string.mng_device);
-        hasDirtyData=selection_mode=false;
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
     }
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
     public List<Group> get_group(){
         return groups;
     }
     public List<Group> get_selected_groups(){ return selected_groups; }
-
     public void setGroups(List<Group> groups) {
         this.groups = groups;
     }
     public void setSelected_groups(List<Group> selected_groups) {
         this.selected_groups = selected_groups;
     }
-
     public boolean getHasDirtyData() {
         return hasDirtyData;
     }
-
     public void setHasDirtyData(boolean hasDirtyData) {
         this.hasDirtyData = hasDirtyData;
     }
-
     public BottomNavigationView getNavigationView(){ return navigation; }
 }

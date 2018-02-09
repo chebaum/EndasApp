@@ -9,19 +9,15 @@ import java.util.List;
 
 /**
  * Created by cheba on 2018-01-23.
+ * 홈화면의 리스트(RecyclerView list)를 구성할때 사용되는 클래스.
+ * 거의 대부분의 리스트관련 클래스들은 최종적으로 CheckableChannelRecyclerViewAdapter 클래스에서 사용된다.
  */
 
 public abstract class myCheckedExpandableGroup extends ExpandableGroup {
-    //private String id;
-    //private String ip;
-    //private String reg_date;
     public boolean[] selectedChannels;
 
     public myCheckedExpandableGroup(String title, List items) {
         super(title, items);
-        //this.id=id;
-        //this.ip = ip;
-        //this.reg_date = reg_date;
         selectedChannels=new boolean[items.size()];
         for(int i=0;i<items.size();i++)
             selectedChannels[i]=false;
@@ -51,28 +47,4 @@ public abstract class myCheckedExpandableGroup extends ExpandableGroup {
         return 0;
     }
     public abstract void onChannelClicked(int channelIndex, boolean checked);
-/*
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getReg_date() {
-        return reg_date;
-    }
-
-    public void setReg_date(String reg_date) {
-        this.reg_date = reg_date;
-    }*/
 }
