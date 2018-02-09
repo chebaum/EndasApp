@@ -41,7 +41,7 @@ public abstract class CheckableChannelRecyclerViewAdapter<GVH extends myGroupVie
 
     @Override
     public void onBindChildViewHolder(CVH holder, int flatPosition, ExpandableGroup group, int childIndex) {
-        ExpandableListPosition listPosition=expandableList.getUnflattenedPosition(flatPosition);
+        ExpandableListPosition listPosition = expandableList.getUnflattenedPosition(flatPosition);
         holder.onBindViewHolder(flatPosition,channelCheckController.isChildChecked(listPosition));
         onBindCheckChildViewHolder(holder,flatPosition,(myCheckedExpandableGroup)group, childIndex);
     }
@@ -69,7 +69,7 @@ public abstract class CheckableChannelRecyclerViewAdapter<GVH extends myGroupVie
 
     public void checkChannel(boolean checked, int groupIndex, int channelIndex){
         channelCheckController.checkChild(checked, groupIndex, channelIndex);
-        if(channelClickListener!=null){
+        if(channelClickListener != null){
             channelClickListener.onCheckChildClick(null, checked, (myCheckedExpandableGroup)expandableList.groups.get(groupIndex),channelIndex);
         }
     }
